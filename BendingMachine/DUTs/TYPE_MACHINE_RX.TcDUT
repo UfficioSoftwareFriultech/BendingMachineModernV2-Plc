@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_MACHINE_RX" Id="{4739c3f9-f490-4a73-8072-4fcf36ce55e8}">
+    <Declaration><![CDATA[TYPE TYPE_MACHINE_RX :
+STRUCT
+	ERLCalibrated			: BOOL;
+	USELCalibrated			: BOOL;
+	UR2Calibrated			: BOOL;
+	ERRCalibrated			: BOOL;
+	USERCalibrated			: BOOL;
+	ERLPresent				: BOOL;
+	USELPresent				: BOOL;
+	UR2Present				: BOOL;
+	ERRPresent				: BOOL;
+	USERPresent				: BOOL;
+	ERLCheckDone			: BOOL;
+	USELCheckDone			: BOOL;
+	ER2CheckDone			: BOOL;
+	ERRCheckDone			: BOOL;
+	USERCheckDone			: BOOL;
+	EnableSirenOverride		: BOOL;
+	UseLUpperLimit			: LREAL;
+	UseLLowerLimit			: LREAL;
+	UseRUpperLimit			: LREAL;
+	UseRLowerLimit			: LREAL;
+	ErLUpperLimit			: LREAL;
+	ErLLowerLimit			: LREAL;
+	ErRUpperLimit			: LREAL;
+	ErRLowerLimit			: LREAL;
+	UrRUpperLimit			: LREAL;
+	UrRLowerLimit			: LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

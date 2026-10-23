@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_MACHINE_TX" Id="{679f0142-881e-4051-9362-af7d641f7a24}">
+    <Declaration><![CDATA[TYPE TYPE_MACHINE_TX :
+STRUCT
+	lastERLKnownPosition	: LREAL;
+	lastUSELKnownPosition	: LREAL;
+	lastUR2KnownPosition	: LREAL;
+	lastERRKnownPosition	: LREAL;
+	lastUSERKnownPosition	: LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

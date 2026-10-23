@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HmiSts" Id="{42d61f68-5b1c-47ce-b93b-5adb247fd4fb}">
+    <Declaration><![CDATA[// Stato della macchina per l'HMI (PLC -> HMI): un solo blocco letto a ogni scambio.
+TYPE ST_HmiSts :
+STRUCT
+	nCmdAck			: UDINT;		// nSeq dell'ultimo comando trattato
+	eCmdResult		: E_HmiResult;
+	bConnected		: BOOL;			// il PLC vede vivo il watchdog v2
+	nState			: UINT;			// passo del ciclo (E_CycleState)
+	nSubStep		: UINT;			// passo interno (Diag.Data.nSubStep)
+	eCycleEndReason	: E_CycleEndReason;
+	bIdle			: BOOL;
+	bCanExecute		: BOOL;
+	bRunning		: BOOL;
+	bStopped		: BOOL;
+	bAborted		: BOOL;
+	bHomingDone		: BOOL;
+	bManualMode		: BOOL;
+	bAutoMode		: BOOL;
+	bMotorsOn		: BOOL;			// tutti gli azionamenti in uso abilitati
+	bMotorsEnable	: BOOL;			// nessun azionamento in errore
+	bLimitsWriting	: BOOL;
+	bWriteParametersDone : BOOL;
+	nCount			: UINT;			// contapezzi
+	nSeqIdx			: UINT;
+	sProgramName	: STRING(23);
+	aLineNo			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UDINT;
+	aChannelDone	: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF BOOL;
+	nMpgSelector	: DINT;
+	nMpgSpeed		: DINT;
+	aAxis			: ARRAY[1..Core_Param.MAX_AXIS] OF ST_HmiAxisSts;
+	aValve			: ARRAY[1..Core_Param.MAX_VALVE] OF ST_HmiValveSts;
+	aInput			: ARRAY[1..Core_Param.MAX_INPUT] OF BOOL;
+	aAlarmActive	: ARRAY[0..Core_Param.MAX_ALARM] OF BOOL;		// copia di Alarms.Active
+	aAlarmInfo		: ARRAY[0..Core_Param.MAX_ALARM] OF UDINT;	// copia di Alarms.Info
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

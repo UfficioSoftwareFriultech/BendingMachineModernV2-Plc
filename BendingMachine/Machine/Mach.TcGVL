@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Mach" Id="{836f46fc-8734-4547-8be1-d70769534f46}">
+    <Declaration><![CDATA[// Configurazione di Aut260045 usata dal Core: valvole, funzioni M, interblocchi.
+// La riempie FB_MachineConfig (MAIN.fbMachineConfig) a ogni ciclo.
+{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	MAX_VALVE		: UINT := Core_Param.MAX_VALVE;
+	MAX_MFUNC		: UINT := 96;
+	MAX_INTERLOCK	: UINT := 8;
+	MAX_AXIS_CFG	: UINT := Core_Param.MAX_AXIS;	// valori di AXIS_ENUM configurabili (1..16)
+	NC_GROUP_BASE	: UDINT := 7;	// ID NC del gruppo di interpolazione del canale 0 (canali 7, 8, 9)
+	MAX_MPG_SEL		: UINT := 8;	// posizioni del selettore del volantino
+
+	// Indici degli assi in aAxisCfg e in MAIN.aAxisMod (= valori di AXIS_ENUM)
+	AX_USEL			: UINT := 1;
+	AX_USER			: UINT := 2;
+	AX_ERL			: UINT := 3;
+	AX_ERR			: UINT := 4;
+	AX_UR2			: UINT := 5;
+	AX_UR_SIM		: UINT := 6;
+
+	// Interblocchi (indice in aInterlock)
+	IL_UR2_AT_ZERO	: UINT := 1;	// UR2 entro 3 gradi da zero, o UR2 non usato: l'espulsore puo' partire (M102)
+
+	// Flag di sincronismo tra i canali (bit di MAIN.syncFlags)
+	SYNC_ACK_L		: DWORD := 16#0001;	// USE SX in posizione (M62), atteso da DX (M60) e UR2 (M116)
+	SYNC_ACK_R		: DWORD := 16#0002;	// USE DX in posizione (M63), atteso da SX (M61) e UR2 (M116)
+	SYNC_ACK_UR2	: DWORD := 16#0004;	// riservato (azzerato da M150 sull'UR2)
+	SYNC_UR2_DONE	: DWORD := 16#0008;	// UR2 in posizione (M78), atteso dalle USE (M80)
+	SYNC_UR2_ACK_L	: DWORD := 16#0010;	// USE SX ha visto l'UR2 (M112), atteso dall'UR2 (M110)
+	SYNC_UR2_ACK_R	: DWORD := 16#0020;	// USE DX ha visto l'UR2 (M113), atteso dall'UR2 (M110)
+	SYNC_DONE_L		: DWORD := 16#0040;	// riservato (azzerato da M150 su SX)
+	SYNC_DONE_R		: DWORD := 16#0080;	// riservato (azzerato da M150 su DX)
+	SYNC_UR2_REQ_L	: DWORD := 16#0100;	// riservato (azzerato da M150 sull'UR2)
+	SYNC_UR2_REQ_R	: DWORD := 16#0200;	// riservato (azzerato da M150 sull'UR2)
+END_VAR
+VAR_GLOBAL
+	aAxisCfg		: ARRAY[1..Mach.MAX_AXIS_CFG] OF ST_AxisCfg;	// indice = valore di AXIS_ENUM
+	aValve			: ARRAY[1..Mach.MAX_VALVE] OF ST_Valve;
+	aInput			: ARRAY[1..Core_Param.MAX_INPUT] OF ST_Input;	// ingressi mostrati all'HMI (sensori)
+	aMFunc			: ARRAY[1..Mach.MAX_MFUNC] OF ST_MFuncDef;
+	nMFuncCount		: UINT;		// righe valide di aMFunc
+	aInterlock		: ARRAY[0..Mach.MAX_INTERLOCK] OF BOOL;	// l'indice 0 non si usa (0 = nessun interblocco)
+	// Pulsanti del volantino per posizione del selettore: [selettore, 1] = pulsante 1, [selettore, 2] = pulsante 3.
+	// Valore = valvola (E_Valve) da commutare, 0 = nessuna.
+	aMpgButton		: ARRAY[1..Mach.MAX_MPG_SEL, 1..2] OF UINT;
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

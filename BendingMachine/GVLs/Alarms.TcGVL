@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Alarms" Id="{fbe568e0-4e81-44a3-a022-0be59458ff70}">
+    <Declaration><![CDATA[// Allarmi macchina: un BOOL per allarme, indicizzato con E_Alarm (l'indice 0 non si usa).
+// - allarmi a livello: ricalcolati a ogni ciclo in MAIN.AlarmManager, rientrano da soli;
+// - allarmi memorizzati: RaiseAlarm(), restano attivi fino al Reset (ClearAlarms() nello stato 800).
+// L'HMI legge Active e Info via ADS a ogni scambio.
+{attribute 'qualified_only'}
+VAR_GLOBAL
+	Active					: ARRAY[0..Size.MAX_ALARM] OF BOOL;		// allarme attivo
+	Info					: ARRAY[0..Size.MAX_ALARM] OF UDINT;	// dettaglio: ErrorID NC/azionamento, numero funzione M, 0 = nessuno
+	Count					: UINT;		// allarmi attivi
+	CountBlocking			: UINT;		// allarmi attivi esclusi avvisi (63-66, 90-99): accendono la torretta rossa e spengono la spia start
+	StartBlockedByCabinet	: BOOL;		// almeno un allarme quadro elettrico (40-45) attivo: lo start viene rifiutato
+	// Per la diagnosi (Diag.Data.aEvent): ultimo allarme memorizzato con RaiseAlarm che non era gia' attivo.
+	RaisedCount				: UDINT;	// cresce a ogni nuovo allarme memorizzato
+	LastRaisedId			: UINT;
+	LastRaisedInfo			: UDINT;
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

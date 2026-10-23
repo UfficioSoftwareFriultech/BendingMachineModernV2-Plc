@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_AxisCfg" Id="{bf642596-bbc7-437c-a5cd-57843a27a9fb}">
+    <Declaration><![CDATA[// Come un asse dei programmi (valore di AXIS_ENUM in ProgramDB) entra nelle tabelle NC.
+// Indice in Mach.aAxisCfg = valore di AXIS_ENUM. Un asse nuovo (es. trascinamento): una riga in FB_MachineConfig.
+TYPE ST_AxisCfg :
+STRUCT
+	bDefined				: BOOL;			// riga configurata
+	sName					: STRING(23);	// nome per HMI e diagnosi
+	fSpeedScale				: LREAL;		// fVelo della riga NC = velocita' del programma * fSpeedScale
+	bCenteringCorrection	: BOOL;			// alla quota si somma la correzione del centraggio TB (assi USE)
+	bTargetZero				: BOOL;			// asse simulato: la quota in tabella e' sempre 0
+	// Movimento manuale e servizio (FB_AxisModule)
+	nMpgSelector			: UINT;			// posizione del selettore del volantino che muove l'asse (0 = nessuna)
+	fJogVelocity			: LREAL;
+	fJogAcceleration		: LREAL;
+	fJogDeceleration		: LREAL;		// 0 = default di MC_Jog
+	fJogJerk				: LREAL;
+	bSoEReset				: BOOL;			// azionamento SoE reale (FB_SoEReset)
+	nCalibrationAlarmId		: UINT;			// allarme per calibrazione fallita (E_Alarm della macchina)
+	nLimitsAlarmId			: UINT;			// allarme per scrittura limiti fallita
+	// Aggiornati dalla macchina a ogni ciclo (FB_MachineConfig)
+	nNcAxisId				: UDINT;		// ID dell'asse NC (per i gruppi di interpolazione)
+	fActPos					: LREAL;		// posizione attuale (punto di partenza delle tabelle)
+	fActVelo				: LREAL;
+	nErrorCode				: UDINT;
+	bDisabled				: BOOL;
+	bMoving					: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

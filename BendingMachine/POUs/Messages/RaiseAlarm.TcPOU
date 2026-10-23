@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="RaiseAlarm" Id="{acbfbf37-0b03-4b39-a185-499ececb6cef}" SpecialFunc="None">
+    <Declaration><![CDATA[// Attiva un allarme memorizzato: resta attivo fino al Reset (ClearAlarms).
+// Info = dettaglio mostrato dall'HMI (ErrorID, numero funzione M, ...); 0 = nessun dettaglio.
+// Id e' un valore di E_Alarm; e' UINT perche' arriva anche dal Core (dispatcher delle funzioni M), che non conosce E_Alarm.
+FUNCTION RaiseAlarm : BOOL
+VAR_INPUT
+	Id			: UINT;
+	Info		: UDINT := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF Id > 0 AND Id <= Size.MAX_ALARM THEN
+	IF NOT Alarms.Active[Id] THEN
+		Alarms.RaisedCount := Alarms.RaisedCount + 1;
+		Alarms.LastRaisedId := Id;
+		Alarms.LastRaisedInfo := Info;
+	END_IF
+	Alarms.Active[Id] := TRUE;
+	Alarms.Info[Id] := Info;
+	RaiseAlarm := TRUE;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

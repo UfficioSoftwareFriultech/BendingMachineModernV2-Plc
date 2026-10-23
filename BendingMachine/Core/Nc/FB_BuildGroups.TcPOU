@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_BuildGroups" Id="{77c61383-3cf5-461b-832d-f7afa014d340}" SpecialFunc="None">
+    <Declaration><![CDATA[// Costruisce un gruppo di interpolazione 3D per ogni task attivo della sequenza (gruppo nGroupIdBase + task):
+// gli assi dell'axisGroup nell'ordine X, Y, Z, Q1, Q2. L'ID NC di ogni asse viene da aAxisCfg (indice = AXIS_ENUM).
+FUNCTION_BLOCK FB_BuildGroups
+VAR_INPUT
+	bExecute					: BOOL;
+	sequence					: POINTER TO TYPE_SEQUENCE;
+	nGroupIdBase				: UDINT := 7;	// ID NC del gruppo del task 0
+END_VAR
+VAR_IN_OUT
+	aAxisCfg					: ARRAY[*] OF ST_AxisCfg;
+END_VAR
+VAR_OUTPUT
+	bDone						: BOOL;
+	bBusy						: BOOL;
+	bError						: BOOL;
+END_VAR
+VAR
+	startTriggerOutput			: BOOL;
+	buildGroupsExecute			: BOOL;
+	groupCordFound				: BOOL;
+	channelIndex				: UINT;
+	state						: UINT;
+	taskIdx						: UINT;
+	AXISIdx						: UINT;
+	fbStartTrigger				: R_TRIG;
+	fbBuildGroup				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF CfgBuildExt3DGroup;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbStartTrigger(CLK := bExecute, Q => startTriggerOutput);
+
+
+CASE state OF
+	(************************** state 0 - IDLE *************************)  
+	0:	
+		bBusy := FALSE;
+		bDone := FALSE;
+		buildGroupsExecute := FALSE;
+		
+		IF startTriggerOutput THEN
+			bError := FALSE;
+			state := 10;
+		END_IF
+		
+	(************** state 10 - Prepare Groups *************)  
+	10:
+		bBusy := TRUE;
+		taskIdx := 0;
+		WHILE taskIdx < Size.MAX_TASK AND_THEN sequence^.task[taskIdx].active DO
+			fbBuildGroup[taskIdx](
+				nGroupId:=nGroupIdBase+taskIdx,
+				nXAxisId := 0,
+				nYAxisId := 0,
+				nZAxisId := 0,
+				nQ1AxisId := 0,
+				nQ2AxisId := 0,
+				nQ3AxisId := 0,
+				nQ4AxisId := 0,
+				nQ5AxisId := 0,
+				bExecute:=FALSE );
+				
+			axisIdx := 0;
+			
+			WHILE axisIdx < Size.MAX_AXIS AND_THEN sequence^.task[taskIdx].axisGroup[axisIdx] <> AXIS_ENUM.null DO
+				groupCordFound := FALSE;
+				
+				IF (fbBuildGroup[taskIdx].nXAxisId = 0) AND NOT groupCordFound THEN
+					fbBuildGroup[taskIdx](nXAxisId := aAxisCfg[TO_UINT(sequence^.task[taskIdx].axisGroup[axisIdx])].nNcAxisId);
+					groupCordFound := TRUE;
+				END_IF
+				
+				IF (fbBuildGroup[taskIdx].nYAxisId = 0) AND NOT groupCordFound THEN
+					fbBuildGroup[taskIdx](nYAxisId := aAxisCfg[TO_UINT(sequence^.task[taskIdx].axisGroup[axisIdx])].nNcAxisId);
+					groupCordFound := TRUE;
+				END_IF
+				
+				IF (fbBuildGroup[taskIdx].nZAxisId = 0) AND NOT groupCordFound THEN
+					fbBuildGroup[taskIdx](nZAxisId := aAxisCfg[TO_UINT(sequence^.task[taskIdx].axisGroup[axisIdx])].nNcAxisId);
+					groupCordFound := TRUE;
+				END_IF
+				
+				IF (fbBuildGroup[taskIdx].nQ1AxisId = 0) AND NOT groupCordFound THEN
+					fbBuildGroup[taskIdx](nQ1AxisId := aAxisCfg[TO_UINT(sequence^.task[taskIdx].axisGroup[axisIdx])].nNcAxisId);
+					groupCordFound := TRUE;
+				END_IF
+				
+				IF (fbBuildGroup[taskIdx].nQ2AxisId = 0) AND NOT groupCordFound THEN
+					fbBuildGroup[taskIdx](nQ2AxisId := aAxisCfg[TO_UINT(sequence^.task[taskIdx].axisGroup[axisIdx])].nNcAxisId);
+					groupCordFound := TRUE;
+				END_IF
+				
+				axisIdx := axisIdx +1;
+			END_WHILE
+			taskIdx := taskIdx + 1;
+		END_WHILE
+		
+		state := 20;
+		
+	(************** state 20 - Execute Build Group *************)  
+	20:
+		FOR channelIndex:=0 TO 2 DO
+			fbBuildGroup[channelIndex](
+			bExecute:=TRUE,
+			tTimeOut:=T#100MS );
+		END_FOR
+		
+		IF (NOT fbBuildGroup[0].bBusy) AND (NOT fbBuildGroup[1].bBusy) AND (NOT fbBuildGroup[2].bBusy) THEN
+			fbBuildGroup[0]( bExecute:=FALSE );
+			fbBuildGroup[1]( bExecute:=FALSE );
+			fbBuildGroup[2]( bExecute:=FALSE );
+			state := 100;
+		END_IF
+		
+		IF fbBuildGroup[0].bErr OR fbBuildGroup[1].bErr OR fbBuildGroup[2].bErr THEN
+			state := 200;
+		END_IF
+		
+	(************** state 100 - End *************)  
+	100:
+		bDone := TRUE;
+		state := 0;
+		
+	(************** state 200 - Error *************)  
+	200:
+		bError := TRUE;
+		state := 0;
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

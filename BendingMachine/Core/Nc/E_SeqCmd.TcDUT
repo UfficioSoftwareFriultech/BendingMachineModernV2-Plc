@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_SeqCmd" Id="{3237300b-c582-4450-83ee-f2ccc5818e61}">
+    <Declaration><![CDATA[// Cosa il ciclo chiede a FB_SequenceRunner in questo ciclo PLC. Un comando diverso dal precedente riparte da capo.
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_SeqCmd :
+(
+	None		:= 0,	// niente: solo le chiamate di servizio dei FB dei gruppi
+	Prepare		:= 1,	// prepara la sequenza pSequence e la invia ai canali
+	Run			:= 2,	// sequenza in esecuzione: legge la fine dei canali
+	ResetTables	:= 3	// reset delle tabelle e dei canali dopo uno stop fuori dal RUN
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

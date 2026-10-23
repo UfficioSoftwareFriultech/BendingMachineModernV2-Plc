@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_MSimple" Id="{98606d1b-7ba3-46e8-9998-7505aa20ed5e}" SpecialFunc="None">
+    <Declaration><![CDATA[// Funzione M senza parametri: Nop, WaitH, LineNo, WaitStart.
+FUNCTION F_MSimple : ST_MFuncDef
+VAR_INPUT
+	nChannel	: UINT;
+	nMFunc		: UINT;
+	eKind		: E_MFuncKind;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_MSimple.nChannel := nChannel;
+F_MSimple.nMFunc := nMFunc;
+F_MSimple.eKind := eKind;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

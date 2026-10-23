@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_TASK" Id="{0ed4f1a6-70c3-444f-bef7-6022607e97b2}">
+    <Declaration><![CDATA[TYPE TYPE_TASK :
+STRUCT
+	active : BOOL;
+	axisGroup : ARRAY[0..Size.MAX_AXIS-1] OF AXIS_ENUM;
+	actions : ARRAY[0..Size.MAX_ACTION-1] OF TYPE_ACTION;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

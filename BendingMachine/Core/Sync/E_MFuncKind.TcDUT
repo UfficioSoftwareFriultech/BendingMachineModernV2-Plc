@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_MFuncKind" Id="{bd06c2ba-0af4-4904-8f50-5c3075fc6ff9}">
+    <Declaration><![CDATA[// Cosa fa il PLC quando un canale NC chiede una funzione M (handshake).
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_MFuncKind :
+(
+	Nop			:= 0,	// concessa subito
+	Valve		:= 1,	// muove una valvola e aspetta la conferma (timeout, post-delay): SetMacro
+	ValveDirect	:= 2,	// scrive le uscite della valvola e concede subito, senza conferma
+	Sync		:= 3,	// sincronismo tra canali: flag a maschera (set/clear in attesa, condizione, set/clear alla concessione)
+	WaitH		:= 4,	// attesa di H millisecondi (parametro H della riga)
+	LineNo		:= 5,	// numero di riga del programma nel parametro H
+	WaitStart	:= 6	// attende lo start dell'operatore (passo-passo)
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

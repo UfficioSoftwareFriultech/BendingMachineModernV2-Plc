@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HmiCfg" Id="{7b188599-3be8-4201-8561-c4dcbfeb42b1}">
+    <Declaration><![CDATA[// Configurazione della macchina per l'HMI (PLC -> HMI): si legge alla connessione.
+// Le pagine dei comandi manuali e i controlli di capacita' del programma si costruiscono da qui.
+TYPE ST_HmiCfg :
+STRUCT
+	nInterfaceVersion	: UINT;		// 2
+	sMachine			: STRING(23);	// identificativo della macchina
+	nMaxSequence		: UINT;		// capacita' di ProgramDB (Size.MAX_*)
+	nMaxTask			: UINT;
+	nMaxAction			: UINT;
+	nMaxPosition		: UINT;
+	nMaxMacro			: UINT;
+	nMaxAxisInGroup		: UINT;
+	nChannels			: UINT;
+	aAxis				: ARRAY[1..Core_Param.MAX_AXIS] OF ST_HmiNamedItem;	// indice = AXIS_ENUM
+	aValve				: ARRAY[1..Core_Param.MAX_VALVE] OF ST_HmiNamedItem;
+	aInput				: ARRAY[1..Core_Param.MAX_INPUT] OF ST_HmiNamedItem;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

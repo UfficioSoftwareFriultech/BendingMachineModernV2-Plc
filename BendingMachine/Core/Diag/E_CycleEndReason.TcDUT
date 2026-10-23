@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_CycleEndReason" Id="{42df773b-17dd-4e58-94cd-a07760c93418}">
+    <Declaration><![CDATA[// Perche' il ciclo automatico si e' fermato l'ultima volta (Diag.Data.eCycleEndReason).
+// Si azzera allo start (passo 10).
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_CycleEndReason :
+(
+	None				:= 0,	// ciclo in corso o mai partito
+	PieceDone			:= 1,	// pezzo finito, il ciclo continuo riparte (o aspetta lo start con EJECT NO 2 START)
+	SingleCycle			:= 2,	// pezzo finito in ciclo singolo
+	BatchCompleted		:= 3,	// lotto completato (pcsCounter)
+	NewProgram			:= 4,	// e' arrivato un nuovo programma: ciclo chiuso a fine pezzo
+	UnknownEjectMode	:= 5,	// modo di espulsione sconosciuto (es. il vecchio EJECT 3)
+	StartRefused		:= 6,	// start rifiutato nei controlli del passo 10 (vedi allarmi 63-66 e 90)
+	Stopped				:= 7,	// stop dell'operatore
+	Aborted				:= 8,	// abort per allarme
+	ManualMode			:= 9	// passaggio a manuale
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

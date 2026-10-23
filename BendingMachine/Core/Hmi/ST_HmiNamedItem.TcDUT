@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HmiNamedItem" Id="{b4cd18b9-62ef-4434-b16f-3d50d7c63bbe}">
+    <Declaration><![CDATA[// Voce di un elenco di configurazione (assi, valvole, ingressi) per costruire le pagine dell'HMI.
+TYPE ST_HmiNamedItem :
+STRUCT
+	bDefined		: BOOL;
+	sName			: STRING(23);
+	nOption			: UINT;			// assi: selettore del volantino; valvole: 1 = bistabile; ingressi: 0
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

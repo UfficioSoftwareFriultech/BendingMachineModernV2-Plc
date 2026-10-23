@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_POSITION" Id="{71a0c64f-7167-47dc-ba48-c15d715bfd5f}">
+    <Declaration><![CDATA[TYPE TYPE_POSITION :
+STRUCT
+	active : BOOL;
+	value : LREAL;
+	axis : AXIS_ENUM;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Safety" Id="{ed799cda-b77a-45d8-9468-0183945b000e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Run 				AT %Q* : BOOL;
+	Ack 				AT %Q* : BOOL;
+	ModuleFault         AT %Q* : BOOL;
+	
+	USER_ERR_Run 		AT %Q* : BOOL;
+	USER_ERR_Ack 		AT %Q* : BOOL;
+	
+	USEL_ERL_Run 		AT %Q* : BOOL;
+	USEL_ERL_Ack 		AT %Q* : BOOL;
+	
+	UR_Run 				AT %Q* : BOOL;
+	UR_Ack 				AT %Q* : BOOL;
+	
+	FBErr 				AT %I* : BOOL;
+	FBRun				AT %I* : BOOL;
+	ComErr 				AT %I* : BOOL;
+	OutErr 				AT %I* : BOOL;
+	OtherErr 			AT %I* : BOOL;
+	ComStartup 			AT %I* : BOOL;
+	FBDeactivate 		AT %I* : BOOL;
+	InRun 				AT %I* : BOOL;
+	EmergenzaResettata 	AT %I* : BOOL;
+	bimanualStart		AT %I* : BOOL;
+	
+	USEL_ERL_FBErr			AT %I* : BOOL;
+	USEL_ERL_FBRun			AT %I* : BOOL;
+	USEL_ERL_ComErr 		AT %I* : BOOL;
+	USEL_ERL_OutErr 		AT %I* : BOOL;
+	USEL_ERL_OtherErr 		AT %I* : BOOL;
+	USEL_ERL_ComStartup 	AT %I* : BOOL;
+	USEL_ERL_FBDeactivate	AT %I* : BOOL;
+	USEL_ERL_InRun 			AT %I* : BOOL;
+		
+	USER_ERR_FBErr			AT %I* : BOOL;
+	USER_ERR_FBRun			AT %I* : BOOL;
+	USER_ERR_ComErr 		AT %I* : BOOL;
+	USER_ERR_OutErr 		AT %I* : BOOL;
+	USER_ERR_OtherErr 		AT %I* : BOOL;
+	USER_ERR_ComStartup 	AT %I* : BOOL;
+	USER_ERR_FBDeactivate	AT %I* : BOOL;
+	USER_ERR_InRun 			AT %I* : BOOL;
+	
+	UR_FBErr			AT %I* : BOOL;
+	UR_FBRun			AT %I* : BOOL;
+	UR_ComErr 			AT %I* : BOOL;
+	UR_OutErr 			AT %I* : BOOL;
+	UR_OtherErr 		AT %I* : BOOL;
+	UR_ComStartup 		AT %I* : BOOL;
+	UR_FBDeactivate		AT %I* : BOOL;
+	UR_InRun 			AT %I* : BOOL;
+	
+	ERLDatumRequest		AT %I* : BOOL;
+	ERLDatumDone		AT %I* : BOOL;
+	ERLSafetyReset		AT %Q* : SINT;
+	ERLDatumExecute		AT %Q* : BOOL;
+	ERLCommErrorAck		AT %Q* : BOOL;
+	
+	ERL_STO			AT %I* : BOOL;
+	ERL_SSM1		AT %I* : BOOL;
+	ERL_SSM2		AT %I* : BOOL;
+	ERL_SOS			AT %I* : BOOL;
+	ERL_SSR			AT %I* : BOOL;
+	ERL_SDI_p		AT %I* : BOOL;
+	ERL_SDI_n		AT %I* : BOOL;
+	ERL_Error		AT %I* : BOOL;
+	
+	USEL_STO		AT %I* : BOOL;
+	USEL_SSM1		AT %I* : BOOL;
+	USEL_SSM2		AT %I* : BOOL;
+	USEL_SOS		AT %I* : BOOL;
+	USEL_SSR		AT %I* : BOOL;
+	USEL_SDI_p		AT %I* : BOOL;
+	USEL_SDI_n		AT %I* : BOOL;
+	USEL_Error		AT %I* : BOOL;
+	
+	ERR_STO			AT %I* : BOOL;
+	ERR_SSM1		AT %I* : BOOL;
+	ERR_SSM2		AT %I* : BOOL;
+	ERR_SOS			AT %I* : BOOL;
+	ERR_SSR			AT %I* : BOOL;
+	ERR_SSR2		AT %I* : BOOL;
+	ERR_SDI_p		AT %I* : BOOL;
+	ERR_SDI_n		AT %I* : BOOL;
+	ERR_Error		AT %I* : BOOL;
+	
+	USER_STO		AT %I* : BOOL;
+	USER_SSM1		AT %I* : BOOL;
+	USER_SSM2		AT %I* : BOOL;
+	USER_SOS		AT %I* : BOOL;
+	USER_SSR		AT %I* : BOOL;
+	USER_SSR2		AT %I* : BOOL;
+	USER_SDI_p		AT %I* : BOOL;
+	USER_SDI_n		AT %I* : BOOL;
+	USER_Error		AT %I* : BOOL;
+	
+	UR_STO		AT %I* : BOOL;
+	UR_SSM1		AT %I* : BOOL;
+	UR_SSM2		AT %I* : BOOL;
+	UR_SOS		AT %I* : BOOL;
+	UR_SSR		AT %I* : BOOL;
+	UR_SDI_p		AT %I* : BOOL;
+	UR_SDI_n		AT %I* : BOOL;
+	UR_Error		AT %I* : BOOL;
+
+	USELDatumRquest		AT %I* : BOOL;
+	USELDatumDone		AT %I* : BOOL;
+	USELSafetyReset		AT %Q* : SINT;
+	USELDatumExecute	AT %Q* : BOOL;
+	USELCommErrorAck	AT %Q* : BOOL;
+	
+	URDatumRequest		AT %I* : BOOL;
+	URDatumDone			AT %I* : BOOL;
+	URSafetyReset		AT %Q* : SINT;
+	URDatumExecute		AT %Q* : BOOL;
+	URCommErrorAck		AT %Q* : BOOL;
+	
+	ERRDatumRequest		AT %I* : BOOL;
+	ERRDatumDone		AT %I* : BOOL;
+	ERRSafetyReset		AT %Q* : SINT;
+	ERRDatumExecute		AT %Q* : BOOL;
+	ERRCommErrorAck		AT %Q* : BOOL;
+	
+	USERDatumRequest	AT %I* : BOOL;
+	USERDatumDone		AT %I* : BOOL;
+	USERSafetyReset		AT %Q* : SINT;
+	USERDatumExecute	AT %Q* : BOOL;
+	USERCommErrorAck	AT %Q* : BOOL;
+	
+	ResetEmergenza		AT %Q* : BOOL;
+	ResetBarriere		AT %Q* : BOOL;
+	PulsanteResetBarriere AT %I* : BOOL;
+	PulsanteResetEmergenza AT %I* : BOOL;
+	BarriereResettate      AT %I* : BOOL;
+	
+	SpiaPulsanteRipristinoSicurezze 	AT %Q* : BOOL;
+	SpiaPulsanteRipristinoBarriere 		AT %Q* : BOOL;
+	ModoSemiAuto						AT %I* : BOOL;
+	ModoManuale							AT %I* : BOOL;
+	ModoAuto1Op							AT %I* : BOOL;
+	ModoAuto2Op							AT %I* : BOOL;
+	AbilitazionePeriferiche				AT %I* : BOOL;
+	
+	SSR1_Enable 						AT %I* : BOOL;
+	SSR2_Enable 						AT %I* : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

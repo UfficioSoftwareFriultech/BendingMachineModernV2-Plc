@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_HmiCommandHandler" Id="{5f32afa4-72c2-4fa2-b180-ae8929bf1bba}" SpecialFunc="None">
+    <Declaration><![CDATA[// Riceve i comandi dell'HMI con numero di sequenza (Hmi.Cmd): bNew vale TRUE per un ciclo quando arriva un
+// comando nuovo; chi lo esegue risponde con Ack(). nAck/eResult vanno in Hmi.Sts.
+// Al primo ciclo dopo l'avvio del PLC il comando presente non si esegue (si allinea nAck): niente comandi
+// vecchi rieseguiti dopo un riavvio.
+FUNCTION_BLOCK FB_HmiCommandHandler
+VAR_INPUT
+	stCmd			: ST_HmiCmd;
+END_VAR
+VAR_OUTPUT
+	bNew			: BOOL;
+	nAck			: UDINT;
+	eResult			: E_HmiResult;
+END_VAR
+VAR
+	bInit			: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT bInit THEN
+	bInit := TRUE;
+	nAck := stCmd.nSeq;
+END_IF
+
+bNew := stCmd.nSeq <> nAck AND stCmd.eCommand <> E_HmiCommand.None;
+IF stCmd.nSeq <> nAck AND stCmd.eCommand = E_HmiCommand.None THEN
+	nAck := stCmd.nSeq;
+	eResult := E_HmiResult.UnknownCommand;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Ack" Id="{278b14c6-a18b-460d-9c1b-c13387ba0d7f}">
+      <Declaration><![CDATA[// Risposta al comando nuovo di questo ciclo.
+METHOD Ack
+VAR_INPUT
+	eAnswer		: E_HmiResult;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nAck := stCmd.nSeq;
+eResult := eAnswer;
+bNew := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

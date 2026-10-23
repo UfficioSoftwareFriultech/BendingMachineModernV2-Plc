@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ClearAlarms" Id="{d935c1c8-3aba-4f0f-89df-db714f348e7e}" SpecialFunc="None">
+    <Declaration><![CDATA[// Reset: azzera tutti gli allarmi. Quelli a livello ancora presenti vengono riattivati
+// da MAIN.AlarmManager nello stesso ciclo (e' chiamata dopo la macchina a stati).
+FUNCTION ClearAlarms : BOOL
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[MEMSET(ADR(Alarms.Active), 0, SIZEOF(Alarms.Active));
+MEMSET(ADR(Alarms.Info), 0, SIZEOF(Alarms.Info));
+ClearAlarms := TRUE;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

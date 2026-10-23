@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_MFuncDef" Id="{321b6ab9-6a35-469a-a409-0ea8a9bf63a4}">
+    <Declaration><![CDATA[// Una funzione M su un canale: una riga della tabella che FB_MFuncDispatcher esegue.
+// Si costruisce con F_MValve, F_MValveDirect, F_MSync, F_MSimple.
+TYPE ST_MFuncDef :
+STRUCT
+	nChannel			: UINT;				// canale NC (0 .. Core_Param.MAX_CHANNEL-1)
+	nMFunc				: UINT;				// numero della funzione M
+	eKind				: E_MFuncKind;
+
+	// Valve / ValveDirect
+	nValve				: UINT;				// indice nella tabella delle valvole
+	eAction				: OUTPUT_ACTION_ENUM;	// SET o RESET
+	tTimeout			: TIME;				// conferma attesa al massimo per...
+	tPostDelay			: TIME;				// attesa dopo la conferma
+	bPostDelayFromH		: BOOL;				// il post-delay e' il parametro H della riga (ms)
+	nAlarmId			: UINT;				// allarme se la conferma non arriva (Info = numero M)
+	eOnError			: E_MFuncOnError;
+	nInterlock			: UINT;				// 0 = nessuno; altrimenti la valvola parte solo con aInterlock[nInterlock] = TRUE
+
+	// Sync (bit di un DWORD di flag comune ai canali)
+	dwSetWhileWaiting	: DWORD;			// bit messi a 1 a ogni ciclo mentre la funzione e' richiesta
+	dwClearWhileWaiting	: DWORD;			// bit messi a 0 a ogni ciclo mentre la funzione e' richiesta
+	dwWaitSet			: DWORD;			// condizione: questi bit tutti a 1...
+	dwWaitClear			: DWORD;			// ...e questi tutti a 0
+	dwSetOnGrant		: DWORD;			// bit messi a 1 alla concessione
+	dwClearOnGrant		: DWORD;			// bit messi a 0 alla concessione
+
+	nWaitAlarmId		: UINT;				// allarme di time-out mentre la condizione (sync o interlock) non e' soddisfatta; 0 = nessun time-out
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

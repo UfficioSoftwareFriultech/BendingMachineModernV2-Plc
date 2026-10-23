@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HmiLive" Id="{bc4b855f-9677-46fd-8ef0-025697efa1d8}">
+    <Declaration><![CDATA[// Ingressi continui dell'HMI (HMI -> PLC, scritti a ogni scambio).
+TYPE ST_HmiLive :
+STRUCT
+	nWatchdog		: UDINT;		// l'HMI lo incrementa almeno ogni secondo: se resta fermo 3 s l'interfaccia v2 e' scollegata
+	fOverride		: LREAL;		// override velocita' 0-100 %
+	bLoopMode		: BOOL;			// ciclo continuo (FALSE = pezzo singolo)
+	nNcMode			: UINT;			// modo dell'interprete NC (E_ItpSingleBlockMode: 0 = continuo)
+	nJogAxis		: UINT;			// asse in jog (indice di Hmi.Cfg.aAxis), 0 = nessuno; solo in manuale a ciclo fermo
+	nJogDirection	: INT;			// 1 avanti, -1 indietro, 0 fermo
+	bForceOutputs	: BOOL;			// test uscite: le valvole seguono aValveForce
+	aValveForce		: ARRAY[1..Core_Param.MAX_VALVE] OF BOOL;	// uscita "set" voluta per valvola (la "reset" e' il contrario)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

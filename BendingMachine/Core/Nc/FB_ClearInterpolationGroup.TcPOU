@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_ClearInterpolationGroup" Id="{2e506dbd-b068-4e27-a8d7-d48ba3fce3f4}" SpecialFunc="None">
+    <Declaration><![CDATA[// Svuota i gruppi di interpolazione dei canali (ID nGroupIdBase .. nGroupIdBase + MAX_CHANNEL - 1).
+{attribute 'hide_all_locals'}
+FUNCTION_BLOCK FB_ClearInterpolationGroup
+VAR_INPUT
+	bExecute 				: BOOL;
+	tTimeOut 				: TIME;
+	nGroupIdBase			: UDINT := 7;	// ID NC del gruppo del canale 0
+END_VAR
+VAR_OUTPUT
+	bDone					: BOOL;
+	bBusy					: BOOL;
+	bError					: BOOL;
+END_VAR
+VAR
+	startTriggerOutput		: BOOL;
+	clearGroupExecute		: BOOL;
+	state					: UINT;
+	groupIndex				: UINT;
+	fbClearGroup			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF CfgReconfigGroup;
+	fbStartTrigger			: R_TRIG;
+	anyBusy					: BOOL;
+	anyErr					: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbStartTrigger(CLK := bExecute, Q => startTriggerOutput);
+
+CASE state OF
+	(************************** state 0 - IDLE *************************)
+	0:
+		bBusy := FALSE;
+		bDone := FALSE;
+		clearGroupExecute := FALSE;
+
+		IF startTriggerOutput THEN
+			bBusy := TRUE;
+			bError := FALSE;
+			clearGroupExecute := TRUE;
+			state := 10;
+		END_IF
+
+	(************** state 10 - Execute clear groups *************)
+	10:
+		bBusy := TRUE;
+
+		anyBusy := FALSE;
+		anyErr := FALSE;
+		FOR groupIndex := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			anyBusy := anyBusy OR fbClearGroup[groupIndex].bBusy;
+			anyErr := anyErr OR fbClearGroup[groupIndex].bErr;
+		END_FOR
+
+		IF NOT anyBusy THEN
+			state := 20;
+		END_IF
+
+		IF anyErr THEN
+			state := 30;
+		END_IF
+
+	(************** state 20 - End *************)
+	20:
+		bDone := TRUE;
+		state := 0;
+
+	(************** state 30 - Error *************)
+	30:
+		bError := TRUE;
+		state := 0;
+
+END_CASE
+
+FOR groupIndex := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	fbClearGroup[groupIndex](
+	nGroupId:=nGroupIdBase+groupIndex,
+	bExecute:=clearGroupExecute,
+	tTimeOut:=tTimeOut,
+	bErr => );
+END_FOR]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

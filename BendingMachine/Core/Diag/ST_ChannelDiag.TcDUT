@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ChannelDiag" Id="{ee23d64c-ca58-4973-be59-37b8dac4d073}">
+    <Declaration><![CDATA[// Stato di un canale NC visto dal ciclo.
+TYPE ST_ChannelDiag :
+STRUCT
+	bUsed			: BOOL;		// la sequenza in esecuzione ha un task su questo canale
+	bDone			: BOOL;		// il canale ha finito la sua parte della sequenza
+	bMWaiting		: BOOL;		// il canale chiede una funzione M e il PLC non l'ha ancora concessa
+	nMFunc			: UINT;		// funzione M richiesta (0 = nessuna richiesta)
+	tMWait			: TIME;		// da quanto aspetta la concessione
+	nLineNo			: UDINT;	// riga del programma (M135)
+	nItpState		: UDINT;	// stato dell'interprete NC (ItpGetStateInterpreter)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

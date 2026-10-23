@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_SequenceRunner" Id="{9e0be373-7713-44d9-abb5-118aa681ad47}" SpecialFunc="None">
+    <Declaration><![CDATA[// Le tabelle NC di una sequenza di ProgramDB, per tutti i canali: preparazione, esecuzione, reset.
+// La stessa per le sequenze del pezzo e per l'homing (prima erano due catene di passi uguali, 120-402).
+// Va chiamato a ogni ciclo PLC con il comando del ciclo (eCmd):
+// - Prepare: reset gruppi -> costruzione gruppi -> reset tabelle -> GeoStart -> riempimento -> invio; poi bReady;
+// - Run: legge la fine dei canali (aChannelDone, non memorizzata: la memorizza il ciclo);
+// - ResetTables: reset di FB_NciFeedTable (tabella interrotta e canale NC dopo un arresto); poi bResetDone;
+// - None: solo i FB dei gruppi, che devono girare sempre.
+// Un comando diverso dal ciclo precedente riparte da capo. Gli errori restano in bError (con il passo e
+// l'ErrorID) finche' il comando non cambia: l'allarme lo sceglie il ciclo.
+FUNCTION_BLOCK FB_SequenceRunner
+VAR_INPUT
+	eCmd					: E_SeqCmd;
+	pSequence				: POINTER TO TYPE_SEQUENCE;	// sequenza da preparare/eseguire (homing o ProgramDB.sequence[i])
+	nGroupIdBase			: UDINT := 7;		// ID NC del gruppo del canale 0
+	tGroupTimeOut			: TIME := T#100MS;	// timeout dei comandi ai gruppi
+	bCenteringCorrection	: BOOL;				// centraggio TB: correzione delle quote
+	fToleranceMeasure		: LREAL;			// tolleranza misurata dal centraggio
+	bSingleBlock			: BOOL;				// passo-passo: le M di start entrano in tabella
+	nDefCount				: UINT;				// righe valide di aDef
+	bLogFeederEntries		: BOOL;				// log delle righe inviate (FB_NciFeedTable)
+END_VAR
+VAR_IN_OUT
+	aNciToPlc				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF NCTOPLC_NCICHANNEL_REF;
+	aAxisCfg				: ARRAY[*] OF ST_AxisCfg;
+	aDef					: ARRAY[*] OF ST_MFuncDef;
+END_VAR
+VAR_OUTPUT
+	eStep					: E_SeqStep;
+	bReady					: BOOL;		// Prepare: tabelle inviate ai canali
+	bResetDone				: BOOL;		// ResetTables: reset finito
+	aChannelDone			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF BOOL;	// Run: il canale ha finito (bChannelDone)
+	bError					: BOOL;
+	eErrorStep				: E_SeqStep;	// passo in cui e' nato l'errore
+	nErrorId				: UDINT;		// ErrorID del FB NC (0 se non c'e')
+END_VAR
+VAR
+	eLastCmd				: E_SeqCmd;
+	fbClearGroups			: FB_ClearInterpolationGroup;
+	fbBuildGroups			: FB_BuildGroups;
+	fbTablePrep				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF FB_NciFeedTablePreparation;
+	fbBuilder				: FB_FeedTableBuilder;
+	fbFeedTable				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF FB_NciFeedTable;
+	aFeedGroupTable			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciFeedGroupTable;
+	stGeoStart				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciGeoStart;
+	bClearExecute			: BOOL;
+	bBuildExecute			: BOOL;
+	nResetScans				: UINT;
+	bAnyBusy				: BOOL;
+	ch						: UINT;
+	i						: UINT;
+	nAxis					: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bClearExecute := FALSE;
+bBuildExecute := FALSE;
+bReady := FALSE;
+bResetDone := FALSE;
+
+IF eCmd <> eLastCmd THEN
+	eLastCmd := eCmd;
+	bError := FALSE;
+	eErrorStep := E_SeqStep.Idle;
+	nErrorId := 0;
+	CASE eCmd OF
+		E_SeqCmd.Prepare:		eStep := E_SeqStep.ClearGroups;
+		E_SeqCmd.Run:			eStep := E_SeqStep.Running;
+		E_SeqCmd.ResetTables:	eStep := E_SeqStep.Resetting;
+								nResetScans := 0;
+	ELSE
+		eStep := E_SeqStep.Idle;
+	END_CASE
+END_IF
+
+IF eStep >= E_SeqStep.ClearGroups AND eStep <= E_SeqStep.Running AND pSequence = 0 THEN
+	Fail(eStep, 0);
+END_IF
+
+CASE eStep OF
+	E_SeqStep.ClearGroups:
+		// I FB dei gruppi girano in fondo: qui si legge l'esito della chiamata precedente.
+		bClearExecute := TRUE;
+		IF fbClearGroups.bDone THEN
+			eStep := E_SeqStep.BuildGroups;
+		END_IF
+		IF fbClearGroups.bError THEN
+			Fail(E_SeqStep.ClearGroups, 0);
+		END_IF
+
+	E_SeqStep.BuildGroups:
+		bBuildExecute := TRUE;
+		IF fbBuildGroups.bDone THEN
+			eStep := E_SeqStep.TableReset;
+		END_IF
+		IF fbBuildGroups.bError THEN
+			Fail(E_SeqStep.BuildGroups, 0);
+		END_IF
+
+	E_SeqStep.TableReset:
+		FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			IF pSequence^.task[ch].active THEN
+				fbTablePrep[ch](bResetAll := TRUE, stFeedGroupTable := aFeedGroupTable[ch]);
+			END_IF
+			fbTablePrep[ch].bResetAll := FALSE;
+		END_FOR
+		CheckTablePrep(E_SeqStep.TableReset);
+		IF NOT bError THEN
+			eStep := E_SeqStep.TableStart;
+		END_IF
+
+	E_SeqStep.TableStart:
+		// Punto di partenza = posizione attuale degli assi del gruppo, nell'ordine di FB_BuildGroups (X, Y, Z).
+		// FB_FeedTableBuilder poi azzera la tabella (come faceva FB_FeedTablesPrep): il passo resta per fedelta'.
+		FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			IF pSequence^.task[ch].active THEN
+				FOR i := 0 TO 2 DO
+					nAxis := TO_UINT(pSequence^.task[ch].axisGroup[i]);
+					IF nAxis >= LOWER_BOUND(aAxisCfg, 1) AND nAxis <= UPPER_BOUND(aAxisCfg, 1) THEN
+						CASE i OF
+							0: stGeoStart[ch].fPosX := aAxisCfg[nAxis].fActPos;
+							1: stGeoStart[ch].fPosY := aAxisCfg[nAxis].fActPos;
+							2: stGeoStart[ch].fPosZ := aAxisCfg[nAxis].fActPos;
+						END_CASE
+					END_IF
+				END_FOR
+				fbTablePrep[ch](
+					nEntryType			:= E_NciEntryTypeGeoStart,
+					pEntry				:= ADR(stGeoStart[ch]),
+					bResetAll			:= FALSE,
+					bResetTable			:= FALSE,
+					stFeedGroupTable	:= aFeedGroupTable[ch]);
+			END_IF
+		END_FOR
+		CheckTablePrep(E_SeqStep.TableStart);
+		IF NOT bError THEN
+			eStep := E_SeqStep.TableFill;
+		END_IF
+
+	E_SeqStep.TableFill:
+		fbBuilder(
+			pSequence				:= pSequence,
+			bCenteringCorrection	:= bCenteringCorrection,
+			fToleranceMeasure		:= fToleranceMeasure,
+			bSingleBlock			:= bSingleBlock,
+			nDefCount				:= nDefCount,
+			aFeedGroupTable			:= aFeedGroupTable,
+			aAxisCfg				:= aAxisCfg,
+			aDef					:= aDef);
+		IF fbBuilder.bError THEN
+			Fail(E_SeqStep.TableFill, fbBuilder.nErrorId);
+		ELSE
+			eStep := E_SeqStep.TableFeed;
+		END_IF
+
+	E_SeqStep.TableFeed:
+		bAnyBusy := FALSE;
+		FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			IF pSequence^.task[ch].active THEN
+				fbFeedTable[ch](
+					bExecute			:= TRUE,
+					bReset				:= FALSE,
+					bLogFeederEntries	:= bLogFeederEntries,
+					stFeedGroupTable	:= aFeedGroupTable[ch],
+					stNciToPlc			:= aNciToPlc[ch]);
+				IF fbFeedTable[ch].bError AND NOT bError THEN
+					Fail(E_SeqStep.TableFeed, fbFeedTable[ch].nErrorId);
+				END_IF
+			END_IF
+			bAnyBusy := bAnyBusy OR fbFeedTable[ch].bFeedBusy;
+		END_FOR
+
+		IF NOT bAnyBusy AND NOT bError THEN
+			FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+				fbFeedTable[ch](bExecute := FALSE, bReset := FALSE, stFeedGroupTable := aFeedGroupTable[ch], stNciToPlc := aNciToPlc[ch]);
+			END_FOR
+			eStep := E_SeqStep.Ready;
+			bReady := TRUE;		// gia' in questo ciclo, come prima il passaggio 400 -> 410
+		END_IF
+
+	E_SeqStep.Ready:
+		bReady := TRUE;
+
+	E_SeqStep.Running:
+		FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			aChannelDone[ch] := FALSE;
+			IF pSequence^.task[ch].active THEN
+				fbFeedTable[ch](bExecute := FALSE, bReset := FALSE, stFeedGroupTable := aFeedGroupTable[ch], stNciToPlc := aNciToPlc[ch]);
+				aChannelDone[ch] := fbFeedTable[ch].bChannelDone;
+				IF fbFeedTable[ch].bError AND NOT bError THEN
+					Fail(E_SeqStep.Running, fbFeedTable[ch].nErrorId);
+				END_IF
+			END_IF
+		END_FOR
+
+	E_SeqStep.Resetting:
+		// Reset di FB_NciFeedTable su tutti i canali: azzera la tabella interrotta e resetta il canale NC
+		// dopo l'arresto (ItpResetEx2 interno). bResetBusy si legge dal secondo ciclo.
+		bAnyBusy := FALSE;
+		FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+			fbFeedTable[ch](bExecute := FALSE, bReset := TRUE, stFeedGroupTable := aFeedGroupTable[ch], stNciToPlc := aNciToPlc[ch]);
+			bAnyBusy := bAnyBusy OR fbFeedTable[ch].bResetBusy;
+			IF fbFeedTable[ch].bError AND NOT bError THEN
+				Fail(E_SeqStep.Resetting, fbFeedTable[ch].nErrorId);
+			END_IF
+		END_FOR
+
+		IF nResetScans > 0 AND NOT bAnyBusy AND NOT bError THEN
+			FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+				fbFeedTable[ch](bExecute := FALSE, bReset := FALSE, stFeedGroupTable := aFeedGroupTable[ch], stNciToPlc := aNciToPlc[ch]);
+			END_FOR
+			eStep := E_SeqStep.ResetDone;
+			bResetDone := TRUE;	// gia' in questo ciclo, come prima il passo 745
+		END_IF
+		nResetScans := nResetScans + 1;
+
+	E_SeqStep.ResetDone:
+		bResetDone := TRUE;
+END_CASE
+
+// FB dei gruppi: a ogni ciclo, come prima in MAIN.AxisFunctionBlocks; partono sul fronte di bExecute.
+fbClearGroups(bExecute := bClearExecute, tTimeOut := tGroupTimeOut, nGroupIdBase := nGroupIdBase);
+fbBuildGroups(bExecute := bBuildExecute, sequence := pSequence, nGroupIdBase := nGroupIdBase, aAxisCfg := aAxisCfg);]]></ST>
+    </Implementation>
+    <Method Name="Fail" Id="{a92ab9d3-b7d6-44c1-bb50-f821ceb6cd5a}">
+      <Declaration><![CDATA[// Ferma la preparazione/esecuzione con un errore (il primo vince).
+METHOD PRIVATE Fail
+VAR_INPUT
+	eAt			: E_SeqStep;
+	nId			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT bError THEN
+	bError := TRUE;
+	eErrorStep := eAt;
+	nErrorId := nId;
+END_IF
+eStep := E_SeqStep.Error;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckTablePrep" Id="{ba1bfecb-ac14-4216-b5b1-7eea2c2fadb4}">
+      <Declaration><![CDATA[// Errore di uno dei FB_NciFeedTablePreparation dopo un passo sulle tabelle.
+METHOD PRIVATE CheckTablePrep
+VAR_INPUT
+	eAt			: E_SeqStep;
+END_VAR
+VAR
+	k			: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR k := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	IF fbTablePrep[k].bError THEN
+		Fail(eAt, fbTablePrep[k].nErrorId);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

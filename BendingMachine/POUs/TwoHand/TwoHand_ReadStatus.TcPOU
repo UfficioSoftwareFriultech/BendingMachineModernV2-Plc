@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="TwoHand_ReadStatus" Id="{42bceccc-c5a1-44d5-af4d-3385aa3f534d}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+FUNCTION_BLOCK TwoHand_ReadStatus
+
+VAR_IN_OUT
+	stTwoHandControl	: ST_TwoHandControl;
+END_VAR
+
+VAR
+	fbButton1RTrigger				: R_TRIG;
+	fbStartRTrigger					: R_TRIG;
+	fbStop1RTrigger					: R_TRIG;
+	fbTwoHandRTrigger				: R_TRIG;
+	fbSafetySwitchRTrigger			: R_TRIG;
+	fbStopButtonDelayTrigger		: R_TRIG;
+	fbButton1FTrigger				: F_TRIG;
+	fbStartFTrigger					: F_TRIG;
+	fbStop1FTrigger					: F_TRIG;
+	fbTwoHandFTrigger				: F_TRIG;
+	fbSafetySwitchFTrigger			: F_TRIG;
+	fbStopButtonTimer				: TON;
+	_xButton1TriggerClk				: BOOL;
+	_xStartTriggerClk				: BOOL;
+	_xStopTriggerClk				: BOOL;
+	_XStopButtonDelayClk			: BOOL;
+	_xTwoHandTriggerClk				: BOOL;
+	_xSafetySwitchTriggerClk		: BOOL;
+	_xButton1TriggerRising			: BOOL;
+	_xStartTriggerRising			: BOOL;
+	_xStopTriggerRising				: BOOL;
+	_xTwoHandTriggerRising			: BOOL;
+	_xSafetySwitchTriggerRising		: BOOL;
+	_xButton1TriggerFalling			: BOOL;
+	_xStartTriggerFalling			: BOOL;
+	_xStopTriggerFalling			: BOOL;
+	_xTwoHandTriggerFalling			: BOOL;
+	_xSafetySwitchTriggerFalling	: BOOL;
+	_xStopButtonDelayRising			: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*******************************************************************************************************************
+// Mapping inputs 
+//*******************************************************************************************************************
+_xButton1TriggerClk			:= stTwoHandControl.diButton1;	
+_xStartTriggerClk			:= stTwoHandControl.diStartButton;		
+_xStopTriggerClk			:= stTwoHandControl.diStopButton;		
+_xTwoHandTriggerClk			:= stTwoHandControl.diTwoHand;		
+_xSafetySwitchTriggerClk	:= stTwoHandControl.diSafetySwitch;		
+
+//*******************************************************************************************************************
+// FB calls
+//*******************************************************************************************************************
+fbButton1RTrigger(CLK := _xButton1TriggerClk, Q => _xButton1TriggerRising);
+fbStartRTrigger(CLK := _xStartTriggerClk, Q => _xStartTriggerRising);
+fbStop1RTrigger(CLK := _xStopTriggerClk, Q => _xStopTriggerRising);
+fbTwoHandRTrigger(CLK := _xTwoHandTriggerClk, Q => _xTwoHandTriggerRising);
+fbSafetySwitchRTrigger(CLK := _xSafetySwitchTriggerClk, Q => _xSafetySwitchTriggerRising);
+
+fbButton1FTrigger(CLK := _xButton1TriggerClk, Q => _xButton1TriggerFalling);
+fbStartFTrigger(CLK := _xStartTriggerClk, Q => _xStartTriggerFalling);
+fbStop1FTrigger(CLK := _xStopTriggerClk, Q => _xStopTriggerFalling);
+fbTwoHandFTrigger(CLK := _xTwoHandTriggerClk, Q => _xTwoHandTriggerFalling);
+fbSafetySwitchFTrigger(CLK := _xSafetySwitchTriggerClk, Q => _xSafetySwitchTriggerFalling);
+
+fbStopButtonTimer(IN := _xStopTriggerClk, PT := T#1000MS, Q => _xStopButtonDelayClk);
+
+fbStopButtonDelayTrigger(CLK := _xStopButtonDelayClk, Q =>_xStopButtonDelayRising);
+//*******************************************************************************************************************
+// Mapping  outputs  
+//*******************************************************************************************************************
+stTwoHandControl.xButton1RTrigger		:= _xButton1TriggerRising;
+stTwoHandControl.xStartRTrigger			:= _xStartTriggerRising;
+stTwoHandControl.xStopRTrigger			:= _xStopTriggerRising;
+stTwoHandControl.xTwoHandRTrigger		:= _xTwoHandTriggerRising;
+stTwoHandControl.xSafetySwitchRTrigger	:= _xSafetySwitchTriggerRising;
+
+stTwoHandControl.xButton1FTrigger		:= _xButton1TriggerFalling;
+stTwoHandControl.xStartFTrigger			:= _xStartTriggerFalling;
+stTwoHandControl.xStopFTrigger			:= _xStopTriggerFalling;
+stTwoHandControl.xTwoHandFTRigger		:= _xTwoHandTriggerFalling;
+stTwoHandControl.xSafetySwitchFTrigger	:= _xSafetySwitchTriggerFalling;
+stTwoHandControl.xStopButtonDelayTrigger := _xStopButtonDelayRising;]]></ST>
+    </Implementation>
+    <LineIds Name="TwoHand_ReadStatus">
+      <LineId Id="40" Count="6" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="48" Count="3" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="64" Count="4" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="61" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="70" Count="3" />
+      <LineId Id="75" Count="4" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="121" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

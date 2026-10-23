@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Size" Id="{f1320224-1200-4c08-9429-f65294034b84}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+// Capacita' di ProgramDB: ogni MAX_* e' il NUMERO di elementi, gli array vanno da 0 a MAX_*-1.
+// Devono restare uguali ai limiti dell'HMI (PlcSequenceBuilder): cambiarli cambia il layout ADS di ProgramDB.
+VAR_GLOBAL	CONSTANT
+	MAX_SEQUENCE 	: UINT := 100;
+	MAX_TASK 		: UINT := 3;
+	MAX_ACTION 		: UINT := 24;
+	MAX_POSITION 	: UINT := 8;
+	MAX_AXIS 		: UINT := 8;
+	MAX_MACRO 		: UINT := 8;
+	MAX_ALARM		: UINT := 255;	// ultimo indice di Alarms.Active / Alarms.Info (E_Alarm)
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

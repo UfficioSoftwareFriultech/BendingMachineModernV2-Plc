@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_MSync" Id="{bf50668c-4cab-4964-8cf0-edd9d4fdbb3b}" SpecialFunc="None">
+    <Declaration><![CDATA[// Funzione M di sincronismo tra canali sui bit di un DWORD comune.
+// A ogni ciclo in cui e' richiesta: dwSetWhileWaiting a 1, dwClearWhileWaiting a 0.
+// Concessa quando i bit di dwWaitSet sono tutti a 1 e quelli di dwWaitClear tutti a 0;
+// alla concessione dwSetOnGrant a 1 e dwClearOnGrant a 0.
+FUNCTION F_MSync : ST_MFuncDef
+VAR_INPUT
+	nChannel			: UINT;
+	nMFunc				: UINT;
+	dwWaitSet			: DWORD;
+	dwWaitClear			: DWORD;
+	dwSetOnGrant		: DWORD;
+	dwClearOnGrant		: DWORD;
+	dwSetWhileWaiting	: DWORD;
+	dwClearWhileWaiting	: DWORD;
+	nWaitAlarmId		: UINT;		// allarme di time-out dell'attesa, 0 = nessuno
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_MSync.nChannel := nChannel;
+F_MSync.nMFunc := nMFunc;
+F_MSync.eKind := E_MFuncKind.Sync;
+F_MSync.dwWaitSet := dwWaitSet;
+F_MSync.dwWaitClear := dwWaitClear;
+F_MSync.dwSetOnGrant := dwSetOnGrant;
+F_MSync.dwClearOnGrant := dwClearOnGrant;
+F_MSync.dwSetWhileWaiting := dwSetWhileWaiting;
+F_MSync.dwClearWhileWaiting := dwClearWhileWaiting;
+F_MSync.nWaitAlarmId := nWaitAlarmId;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

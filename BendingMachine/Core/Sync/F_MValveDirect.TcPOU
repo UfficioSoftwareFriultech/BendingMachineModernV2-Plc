@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_MValveDirect" Id="{ae65f7de-93ae-41be-9942-6091f2086df1}" SpecialFunc="None">
+    <Declaration><![CDATA[// Funzione M che scrive le uscite di una valvola e viene concessa subito, senza aspettare la conferma.
+FUNCTION F_MValveDirect : ST_MFuncDef
+VAR_INPUT
+	nChannel	: UINT;
+	nMFunc		: UINT;
+	nValve		: UINT;
+	eAction		: OUTPUT_ACTION_ENUM;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_MValveDirect.nChannel := nChannel;
+F_MValveDirect.nMFunc := nMFunc;
+F_MValveDirect.eKind := E_MFuncKind.ValveDirect;
+F_MValveDirect.nValve := nValve;
+F_MValveDirect.eAction := eAction;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

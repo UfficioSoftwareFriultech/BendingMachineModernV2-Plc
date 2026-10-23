@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_SeqStep" Id="{365375cb-d93b-47c8-91cf-c3ff7bdc5b5d}">
+    <Declaration><![CDATA[// Passo interno di FB_SequenceRunner (Diag.Data.nSubStep). Tra parentesi i vecchi passi del ciclo
+// (sequenza / homing) che il passo sostituisce.
+{attribute 'qualified_only'}
+TYPE E_SeqStep :
+(
+	Idle			:= 0,
+	ClearGroups		:= 10,	// reset gruppi di interpolazione (120 / 122)
+	BuildGroups		:= 20,	// costruzione gruppi (130 / 132)
+	TableReset		:= 30,	// reset tabelle (150 / 140)
+	TableStart		:= 40,	// GeoStart dalle posizioni attuali (200 / 202)
+	TableFill		:= 50,	// righe di movimento e funzioni M (210 / 212)
+	TableFeed		:= 60,	// invio delle tabelle ai canali (400 / 402)
+	Ready			:= 100,	// tabelle inviate: la sequenza puo' girare
+	Running			:= 200,	// sequenza in esecuzione (410 / 412)
+	Resetting		:= 300,	// reset tabelle e canali (740 / 745)
+	ResetDone		:= 310,
+	Error			:= 900	// errore: vedi eErrorStep e nErrorId
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

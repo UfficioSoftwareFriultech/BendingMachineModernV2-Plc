@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_AxisAlarm" Id="{ff1800c5-5d12-4c94-89b3-9a7bb20d03fd}">
+    <Declaration><![CDATA[// Allarme chiesto da FB_AxisModule in questo ciclo; il numero lo sceglie la macchina (ST_AxisCfg).
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_AxisAlarm :
+(
+	None			:= 0,
+	Calibration		:= 1,	// homing, lettura/scrittura offset o datum di sicurezza falliti (Info = ErrorID, 0 per il datum)
+	Limits			:= 2	// scrittura dei limiti software fallita (Info = ErrorID)
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

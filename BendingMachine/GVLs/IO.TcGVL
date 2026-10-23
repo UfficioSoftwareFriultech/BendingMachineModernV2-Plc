@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="IO" Id="{bbeaf7c3-040f-4049-ab0c-079fc471fb5a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+ 	erLeftIn				AT %I* : BOOL;
+	erLeftOut				AT %I* : BOOL;
+	useLeftUp 				AT %I* : BOOL;
+	useLeftDown 			AT %I* : BOOL;
+	erRightIn 				AT %I* : BOOL;
+	erRightOut 				AT %I* : BOOL;
+	useRighttUp				AT %I* : BOOL;
+	useRightDown			AT %I* : BOOL;
+	centering1LeftIn		AT %I* : BOOL;
+	centering2LeftIn		AT %I* : BOOL;
+	centering3LeftIn		AT %I* : BOOL;
+	centering4LeftIn		AT %I* : BOOL;
+	//selectorSwitchAut1Op 	AT %I* : BOOL;
+	//selectorSwitchAut2Op 	AT %I* : BOOL;
+	//selectorSwitchAut 		AT %I* : BOOL;
+	//selectorSwitchMan		AT %I* : BOOL;
+	doorRightClosed			AT %I* : BOOL;
+	doorLeftClosed			AT %I* : BOOL;
+	epLeftIn				AT %I* : BOOL;
+	epLeftOut				AT %I* : BOOL;
+	epLeftBendDown			AT %I* : BOOL;
+	epLeftBendUp			AT %I* : BOOL;
+	epRightIn				AT %I* : BOOL;
+	epRightOut				AT %I* : BOOL;
+	epRightBendDown			AT %I* : BOOL;
+	epRightBendUp			AT %I* : BOOL;
+	clampIn					AT %I* : BOOL;
+	bimanualStop			AT %I* : BOOL;
+	bimanualOpenClamp		AT %I* : BOOL;
+	fixedClampEncode		AT %I* : BOOL;
+	mobileClampEncode		AT %I* : BOOL;
+	clampOpen				AT %I* : BOOL;
+	fuseAlarm				AT %I* : BOOL;
+	leftAxisMagnetTrip		AT %I* : BOOL;
+	rightAxisMagnetTrip		AT %I* : BOOL;
+	ur2MagnetTrip			AT %I* : BOOL;
+	chillerAlarm			AT %I* : BOOL;
+	chillerMagnetTrip		AT %I* : BOOL;
+	pressureSwMinPressure	AT %I* : BOOL;
+	cabinetThermostat		AT %I* : BOOL;
+	
+	fuseReset				AT %Q* : BOOL;
+	chillerEnabled			AT %Q* : BOOL;
+	turretRed				AT %Q* : BOOL;
+	turretYellow			AT %Q* : BOOL;
+	turretGreen				AT %Q* : BOOL;
+	turretSiren				AT %Q* : BOOL;
+	smc1 					AT %Q* : ARRAY[0..3] OF USINT;
+	smc2 					AT %Q* : ARRAY[0..3] OF USINT;
+	
+	useLeftUpSet 			: BOOL;
+	useLeftUpReset 			: BOOL;
+	useRightUpSet 			: BOOL;
+	useRightUpReset 		: BOOL;
+	
+	erLeftOutSet 			: BOOL;
+	erLeftOutReset 			: BOOL;
+	erRightOutSet 			: BOOL;
+	erRightOutReset 		: BOOL;
+	
+	supportLeftOutSet 		: BOOL;
+	supportLeftOutReset 	: BOOL;
+	supportRightOutSet 		: BOOL;
+	supportRightOutReset	: BOOL;
+	
+	clampClosedSet 			: BOOL;
+	clampClosedReset		: BOOL;
+	
+	clampEjectSet 			: BOOL;
+	clampEjectReset			: BOOL;
+	
+	centringClamp1Left 		: BOOL;
+	centringClamp2Left 		: BOOL;
+	centringClamp3Left 		: BOOL;
+	centringClamp4Left 		: BOOL;
+	
+	centeringLeft1Set 		: BOOL;
+	centeringLeft2Set 		: BOOL;
+	centeringLeft3Set 		: BOOL;
+	centeringLeft4Set 		: BOOL;
+	
+	centeringLeft1Reset 	: BOOL;
+	centeringLeft2Reset 	: BOOL;
+	centeringLeft3Reset 	: BOOL;
+	centeringLeft4Reset 	: BOOL;
+		
+	centeringRight1Set 		: BOOL;
+	centeringRight2Set 		: BOOL;
+	centeringRight3Set 		: BOOL;
+	centeringRight4Set 		: BOOL;
+	
+	centeringRight1Reset 	: BOOL;
+	centeringRight2Reset 	: BOOL;
+	centeringRight3Reset 	: BOOL;
+	centeringRight4Reset 	: BOOL;
+	
+	centringClampSet		: BOOL;
+	
+	centringLeftUpSet 		: BOOL;
+	centringLeftUpReset 	: BOOL;
+	
+	centringRightUpSet 		: BOOL;
+	centringRightUpReset 	: BOOL;
+	
+	centeringLeftReset		: BOOL;
+	centeringRightReset		: BOOL;
+	
+	centringSet 			: BOOL;
+	centringReset 			: BOOL;
+	
+	centeringOutSet			: BOOL; //Estrazione verso destra supporto bloccaggio / centraggio
+	
+	Pc1CenteringLock		: BOOL;
+	Pc2CenteringLock		: BOOL;
+	
+	epLeftOutSet			: BOOL;
+	epLeftOutReset			: BOOL;
+	epLeftBend				: BOOL;
+	
+	epRightOutSet			: BOOL;
+	epRightOutReset			: BOOL;
+	epRightBend				: BOOL;
+	
+	spiaPulsanteStart 		AT %Q* : BOOL;
+	spiaPulsanteStop 		AT %Q* : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

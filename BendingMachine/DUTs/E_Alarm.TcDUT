@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_Alarm" Id="{9594d841-026a-4f92-89c0-9b43c382f3ac}">
+    <Declaration><![CDATA[// Indice degli allarmi in Alarms.Active / Alarms.Info.
+// I testi (titolo, causa, rimedio) sono nell'HMI: chiavi Ui.Alarm.<numero>.*
+// Un numero non si riusa mai per un significato diverso: l'HMI e lo storico allarmi lo usano come codice.
+// Niente 'strict': i valori servono da indice di array.
+{attribute 'qualified_only'}
+TYPE E_Alarm :
+(
+	// --- Sicurezza (a livello) ---
+	EmergencyStop := 1,	// circuito di emergenza non ripristinato
+	DoorLeftOpen := 2,	// portiera sinistra aperta
+	DoorRightOpen := 3,	// portiera destra aperta
+	LightCurtainNotReset := 4,	// barriere fotoelettriche da ripristinare
+	SafetyMainGroupError := 5,	// errore gruppo TwinSAFE principale
+	SafetyGroupLeftError := 6,	// errore gruppo TwinSAFE USE SX / ER SX
+	SafetyGroupRightError := 7,	// errore gruppo TwinSAFE USE DX / ER DX
+	SafetyGroupUrError := 8,	// errore gruppo TwinSAFE UR
+	// --- Azionamenti (a livello, Info = ErrorCode NC) ---
+	DriveErl := 20,	// azionamento ER SX in errore
+	DriveUsel := 21,	// azionamento USE SX in errore
+	DriveUr2 := 22,	// azionamento UR2 in errore
+	DriveErr := 23,	// azionamento ER DX in errore
+	DriveUser := 24,	// azionamento USE DX in errore
+	// --- Quadro elettrico (a livello, ingresso TRUE = guasto, bloccano lo start) ---
+	FuseTripped := 40,	// fusibile intervenuto
+	BreakerLeftAxis := 41,	// magnetotermico assi lato sinistro
+	BreakerRightAxis := 42,	// magnetotermico assi lato destro
+	BreakerUr2 := 43,	// magnetotermico UR2
+	BreakerChiller := 44,	// magnetotermico climatizzatore
+	AirPressureLow := 45,	// pressione aria sotto il minimo
+	// --- Ciclo (memorizzati fino al Reset) ---
+	CycleResetRequired := 60,	// ciclo interrotto: eseguire il Reset
+	CenteringPartAlreadyPresent := 61,	// centratore: pezzo gia' presente prima della ricerca (passo 62)
+	CenteringPartNotFound := 62,	// centratore: pezzo non trovato entro la corsa massima (passo 65)
+	StartDriveError := 63,	// start rifiutato: azionamento in errore
+	StartMotorsOff := 64,	// start rifiutato: motori non attivi
+	StartNoProgram := 65,	// start rifiutato: nessun programma caricato
+	StartCabinetAlarm := 66,	// start rifiutato: allarme quadro elettrico
+	CenteringModeNotSupported := 67,	// modo di centraggio non gestito dal PLC (es. ACC); Info = valore di centering (passo 50)
+	UnknownMFunction := 68,	// funzione M non gestita: il canale resterebbe fermo; Info = canale*1000 + M (1 SX, 2 DX, 3 UR2)
+	StateTimeout := 69,	// passo tecnico del ciclo (reset/costruzione gruppi, tabelle, stop, reset assi) bloccato; Info = passo
+	// --- Avvisi (non bloccanti) ---
+	BatchCompleted := 90,	// lotto completato (contapezzi raggiunto)
+	ChillerAlarm := 91,	// climatizzatore quadro in allarme
+	CabinetOverTemperature := 92,	// temperatura quadro elevata
+	// --- Timeout movimenti (Info = numero funzione M) ---
+	ErLeftUp := 100,	// ER SX salita (M40)
+	ErLeftDown := 101,	// ER SX discesa (M41)
+	ErRightUp := 102,	// ER DX salita (M42)
+	ErRightDown := 103,	// ER DX discesa (M43)
+	UseLeftUp := 104,	// USE SX salita (M44)
+	UseLeftDown := 105,	// USE SX discesa (M45)
+	UseRightUp := 106,	// USE DX salita (M46)
+	UseRightDown := 107,	// USE DX discesa (M47)
+	SupportLeftOut := 108,	// spallamento SX uscita (M50)
+	SupportLeftIn := 109,	// spallamento SX rientro (M51)
+	SupportRightOut := 110,	// spallamento DX uscita (M48)
+	SupportRightIn := 111,	// spallamento DX rientro (M49)
+	EpLeftBend := 112,	// EP SX trazione (M70)
+	EpLeftOut := 113,	// EP SX uscita (M72)
+	EpLeftIn := 114,	// EP SX rientro (M73)
+	EpLeftBendReturn := 115,	// EP SX ritorno trazione (M74)
+	EpRightBend := 116,	// EP DX trazione (M70)
+	EpRightOut := 117,	// EP DX uscita (M72)
+	EpRightIn := 118,	// EP DX rientro (M73)
+	EpRightBendReturn := 119,	// EP DX ritorno trazione (M74)
+	// Attese di sincronismo e di espulsione: 15 s con il ciclo fermo su quell'attesa (MacroManager)
+	SyncLeftWaitRight := 120,	// USE SX aspetta la USE DX (M61)
+	SyncRightWaitLeft := 121,	// USE DX aspetta la USE SX (M60)
+	SyncLeftWaitUr2 := 122,	// USE SX aspetta l'UR2 (M80)
+	SyncRightWaitUr2 := 123,	// USE DX aspetta l'UR2 (M80)
+	SyncLeftWaitUr2Ack := 124,	// USE SX aspetta che l'UR2 riceva la conferma (M112)
+	SyncRightWaitUr2Ack := 125,	// USE DX aspetta che l'UR2 riceva la conferma (M113)
+	SyncUr2WaitUseAck := 126,	// UR2 aspetta la conferma delle due USE (M110)
+	SyncUr2WaitUse := 127,	// UR2 aspetta il posizionamento delle due USE (M116)
+	EjectUr2NotAtZero := 128,	// espulsione: UR2 non a zero (M102)
+	// --- Calibrazione e scrittura parametri (Info = ErrorID) ---
+	HomingErl := 160,	// calibrazione ER SX fallita
+	HomingUsel := 161,	// calibrazione USE SX fallita
+	HomingUr2 := 162,	// calibrazione UR2 fallita
+	HomingErr := 163,	// calibrazione ER DX fallita
+	HomingUser := 164,	// calibrazione USE DX fallita
+	ParamWriteErl := 170,	// scrittura limiti ER SX fallita
+	ParamWriteUsel := 171,	// scrittura limiti USE SX fallita
+	ParamWriteUr2 := 172,	// scrittura limiti UR2 fallita
+	ParamWriteErr := 173,	// scrittura limiti ER DX fallita
+	ParamWriteUser := 174,	// scrittura limiti USE DX fallita
+	// --- Errori NC interni (Info = ErrorID NC) ---
+	NcCenteringClearGroup := 200,	// centratore: reset gruppi (passo 55)
+	NcCenteringApproach := 201,	// centratore: avvicinamento (passo 61)
+	NcCenteringSearch := 202,	// centratore: ricerca pezzo (passo 65)
+	NcCenteringStopSearch := 203,	// centratore: arresto dopo pezzo trovato (passo 67)
+	NcCenteringStop := 204,	// centratore: arresto finale (passo 72)
+	NcCenteringExtra := 205,	// centratore: posizionamento extra (passo 76)
+	NcClearGroups := 206,	// reset gruppi di interpolazione (passo 120)
+	NcClearGroupsInit := 207,	// reset gruppi di interpolazione INIT (passo 122)
+	NcBuildGroups := 208,	// costruzione gruppi (passo 120)
+	NcBuildGroupsInit := 209,	// costruzione gruppi INIT (passo 122)
+	NcFeedTableReset := 210,	// reset tabelle avanzamento (passo 120)
+	NcFeedTableResetInit := 211,	// reset tabelle avanzamento INIT (passo 122)
+	NcFeedTablePrep := 212,	// preparazione tabelle avanzamento (passo 120)
+	NcFeedTablePrepInit := 213,	// preparazione tabelle avanzamento INIT (passo 122)
+	NcFeedTableStart := 214,	// avvio tabelle avanzamento (passo 120)
+	NcFeedTableStartInit := 215,	// avvio tabelle avanzamento INIT (passo 122)
+	NcFeedTableRun := 216,	// tabella avanzamento durante il ciclo (passo 410)
+	NcFeedTableRunInit := 217,	// tabella avanzamento durante INIT (passo 412)
+	NcAbort := 218,	// arresto di emergenza NC in abort (passo 600)
+	NcStop := 219,	// arresto NC in stop (passo 700)
+	NcStepOn := 220,	// ripartenza dopo stop (passo 730)
+	NcResetAxes := 221,	// reset assi (passo 800)
+	NcManualEStop := 222,	// passaggio in manuale: arresto NC (passo 905)
+	NcManualClearGroup := 223,	// passaggio in manuale: reset gruppi (passo 910)
+	NcManualResetAxes := 224,	// passaggio in manuale: reset assi (passo 920)
+	NcResumeReset := 225	// ripresa dopo stop fuori dal RUN: reset canali NC (passo 745)
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

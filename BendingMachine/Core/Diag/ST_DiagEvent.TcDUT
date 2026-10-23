@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_DiagEvent" Id="{193b3ce8-1733-423f-85b3-8e769b1e862d}">
+    <Declaration><![CDATA[// Un cambio di passo del ciclo, con la fotografia dei canali in quel momento.
+TYPE ST_DiagEvent :
+STRUCT
+	nIndex			: UDINT;	// progressivo dall'avvio del PLC (1 = primo evento)
+	nTime			: ULINT;	// F_GetSystemTime: FILETIME, 100 ns dal 1/1/1601 UTC
+	nFromState		: UINT;		// passo lasciato (E_CycleState)
+	nToState		: UINT;		// passo raggiunto (E_CycleState)
+	nSeqIdx			: UINT;		// sequenza corrente
+	aLineNo			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UDINT;	// riga del programma per canale (M135)
+	aMFunc			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UINT;	// funzione M richiesta e non ancora concessa, 0 = nessuna
+	nAlarmId		: UINT;		// allarme memorizzato dall'evento precedente, 0 = nessuno
+	nAlarmInfo		: UDINT;	// dettaglio di quell'allarme
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

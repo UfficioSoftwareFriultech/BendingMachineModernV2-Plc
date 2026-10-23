@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_FeedTableBuilder" Id="{45440060-e33c-4864-bc61-cd6097b8730d}" SpecialFunc="None">
+    <Declaration><![CDATA[// Riempie le tabelle NC (una per canale) con una sequenza di ProgramDB: per ogni task azzera la tabella,
+// aggiunge le righe di movimento e le funzioni M nell'ordine del programma, poi la fine tabella.
+// Ex FB_FeedTablesPrep, con gli assi letti dalla configurazione invece che cablati:
+// - la quota di un asse va nella coordinata del gruppo NC in cui FB_BuildGroups l'ha messo
+//   (1o asse dell'axisGroup = X, 2o = Y, 3o = Z), la velocita' e' speed * fSpeedScale dell'asse;
+// - le funzioni M di tipo WaitStart (start del passo-passo) entrano in tabella solo con bSingleBlock.
+// Si chiama una volta (un ciclo PLC) per sequenza.
+FUNCTION_BLOCK FB_FeedTableBuilder
+VAR_INPUT
+	pSequence				: POINTER TO TYPE_SEQUENCE;
+	bCenteringCorrection	: BOOL;		// centraggio TB attivo: le quote degli assi con bCenteringCorrection si correggono
+	fToleranceMeasure		: LREAL;	// tolleranza misurata dal centraggio
+	bSingleBlock			: BOOL;		// passo-passo: anche le funzioni M WaitStart vanno in tabella
+	nDefCount				: UINT;		// righe valide di aDef
+END_VAR
+VAR_IN_OUT
+	aFeedGroupTable			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciFeedGroupTable;
+	aAxisCfg				: ARRAY[*] OF ST_AxisCfg;
+	aDef					: ARRAY[*] OF ST_MFuncDef;
+END_VAR
+VAR_OUTPUT
+	bError					: BOOL;		// una riga non e' entrata in tabella (es. tabella piena)
+	nErrorId				: UDINT;	// errore di FB_NciFeedTablePreparation
+	nErrorChannel			: UINT;
+END_VAR
+VAR
+	fbFeedTablePrep			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF FB_NciFeedTablePreparation;
+	// Restano da una chiamata all'altra: una riga che non muove un asse lascia la sua ultima quota.
+	stGeoLine				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciGeoLine;
+	stMFuncHsk				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciMFuncHsk;
+	stHParam				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciHParam;
+	stEndOfTables			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_NciEndOfTables;
+	ch						: UINT;
+	actionIdx				: UINT;
+	posIdx					: UINT;
+	macroIdx				: UINT;
+	slot					: UINT;
+	nAxis					: UINT;
+	fValue					: LREAL;
+	bAddMacro				: BOOL;
+	i						: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bError := FALSE;
+nErrorId := 0;
+
+// Tabelle dei task usati azzerate (come FB_FeedTablesPrep: anche il GeoStart scritto prima si perde).
+FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	IF pSequence^.task[ch].active THEN
+		fbFeedTablePrep[ch](bResetAll := TRUE, stFeedGroupTable := aFeedGroupTable[ch]);
+		fbFeedTablePrep[ch].bResetAll := FALSE;
+	END_IF
+END_FOR
+
+FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	IF pSequence^.task[ch].active THEN
+		actionIdx := 0;
+		WHILE actionIdx < Size.MAX_ACTION AND_THEN pSequence^.task[ch].actions[actionIdx].active DO
+			CASE pSequence^.task[ch].actions[actionIdx].aType OF
+
+				ACTION_ENUM.MOVEMENT:
+					posIdx := 0;
+					WHILE posIdx < Size.MAX_POSITION AND_THEN pSequence^.task[ch].actions[actionIdx].pos[posIdx].active DO
+						nAxis := TO_UINT(pSequence^.task[ch].actions[actionIdx].pos[posIdx].axis);
+
+						// Coordinata del gruppo NC in cui sta l'asse
+						slot := Size.MAX_AXIS;
+						FOR i := 0 TO Size.MAX_AXIS - 1 DO
+							IF TO_UINT(pSequence^.task[ch].axisGroup[i]) = nAxis THEN
+								slot := TO_UINT(i);
+								EXIT;
+							END_IF
+						END_FOR
+
+						IF (nAxis >= LOWER_BOUND(aAxisCfg, 1) AND nAxis <= UPPER_BOUND(aAxisCfg, 1))
+							AND_THEN (aAxisCfg[nAxis].bDefined AND slot <= 2) THEN
+							IF aAxisCfg[nAxis].bTargetZero THEN
+								fValue := 0;
+							ELSE
+								fValue := pSequence^.task[ch].actions[actionIdx].pos[posIdx].value;
+								IF aAxisCfg[nAxis].bCenteringCorrection AND bCenteringCorrection
+									AND pSequence^.task[ch].actions[actionIdx].centeringVerse <> 0 THEN
+									fValue := fValue + pSequence^.task[ch].actions[actionIdx].centeringAmount
+										* pSequence^.task[ch].actions[actionIdx].centeringVerse * fToleranceMeasure;
+								END_IF
+							END_IF
+
+							CASE slot OF
+								0: stGeoLine[ch].fEndPosX := fValue;
+								1: stGeoLine[ch].fEndPosY := fValue;
+								2: stGeoLine[ch].fEndPosZ := fValue;
+							END_CASE
+							stGeoLine[ch].fVelo := pSequence^.task[ch].actions[actionIdx].speed * aAxisCfg[nAxis].fSpeedScale;
+						END_IF
+						posIdx := posIdx + 1;
+					END_WHILE
+
+					stGeoLine[ch].bRapidTraverse := FALSE;
+					stGeoLine[ch].bAccurateStop := TRUE;
+					fbFeedTablePrep[ch](
+						nEntryType			:= E_NciEntryTypeGeoLine,
+						pEntry				:= ADR(stGeoLine[ch]),
+						bResetTable			:= FALSE,
+						stFeedGroupTable	:= aFeedGroupTable[ch]);
+					CheckError(ch);
+
+				ACTION_ENUM.MACRO:
+					macroIdx := 0;
+					WHILE macroIdx < Size.MAX_MACRO AND_THEN pSequence^.task[ch].actions[actionIdx].macros[macroIdx].active DO
+						stMFuncHsk[ch].nMFunc := UDINT_TO_INT(pSequence^.task[ch].actions[actionIdx].macros[macroIdx].mNo);
+						stHParam[ch].nHParam := UDINT_TO_DINT(pSequence^.task[ch].actions[actionIdx].macros[macroIdx].delay);
+
+						// Lo start del passo-passo serve solo in passo-passo.
+						bAddMacro := TRUE;
+						IF NOT bSingleBlock THEN
+							i := LOWER_BOUND(aDef, 1);
+							WHILE i < LOWER_BOUND(aDef, 1) + nDefCount AND_THEN i <= UPPER_BOUND(aDef, 1) DO
+								IF aDef[i].nChannel = ch AND aDef[i].nMFunc = INT_TO_UINT(stMFuncHsk[ch].nMFunc) THEN
+									bAddMacro := aDef[i].eKind <> E_MFuncKind.WaitStart;
+									EXIT;
+								END_IF
+								i := i + 1;
+							END_WHILE
+						END_IF
+
+						IF bAddMacro THEN
+							fbFeedTablePrep[ch](
+								nEntryType			:= E_NciEntryTypeHParam,
+								pEntry				:= ADR(stHParam[ch]),
+								bResetTable			:= FALSE,
+								stFeedGroupTable	:= aFeedGroupTable[ch]);
+							CheckError(ch);
+							fbFeedTablePrep[ch](
+								nEntryType			:= E_NciEntryTypeMFuncHsk,
+								pEntry				:= ADR(stMFuncHsk[ch]),
+								bResetTable			:= FALSE,
+								stFeedGroupTable	:= aFeedGroupTable[ch]);
+							CheckError(ch);
+						END_IF
+						macroIdx := macroIdx + 1;
+					END_WHILE
+			END_CASE
+			actionIdx := actionIdx + 1;
+		END_WHILE
+
+		fbFeedTablePrep[ch](
+			nEntryType			:= E_NciEntryTypeEndOfTables,
+			pEntry				:= ADR(stEndOfTables[ch]),
+			bResetTable			:= FALSE,
+			stFeedGroupTable	:= aFeedGroupTable[ch]);
+		CheckError(ch);
+	END_IF
+END_FOR]]></ST>
+    </Implementation>
+    <Method Name="CheckError" Id="{53f607e2-bb57-4c9f-b650-1b227cea24cb}">
+      <Declaration><![CDATA[// Ricorda il primo errore di FB_NciFeedTablePreparation della chiamata.
+METHOD PRIVATE CheckError
+VAR_INPUT
+	nChannel	: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbFeedTablePrep[nChannel].bError AND NOT bError THEN
+	bError := TRUE;
+	nErrorId := fbFeedTablePrep[nChannel].nErrorId;
+	nErrorChannel := nChannel;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

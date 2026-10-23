@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="WaitMacro" Id="{48495372-d230-42ba-8dfc-c954e4f636c5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK WaitMacro
+VAR_INPUT
+	Start 							: BOOL;
+	WaitTime						: TIME;
+END_VAR
+VAR_OUTPUT
+	Busy 							: BOOL;
+	Done							: BOOL;
+END_VAR
+VAR
+	state 							: UINT;
+	fbStartTrigger					: R_TRIG;
+	startTriggerOutput				: BOOL;
+	fbTimerOn 						: TON;
+	fbTimerOnStart					: BOOL;
+	fbTimerOnEnd 					: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbTimerOn(IN:=fbTimerOnStart, PT := WaitTime, Q => fbTimerOnEnd);
+fbStartTrigger(CLK := Start, Q => startTriggerOutput);
+		
+CASE state OF
+	(************************** state 0 - IDLE *************************)  
+	0:	
+		Busy := FALSE;
+		Done := FALSE;
+		
+		IF startTriggerOutput THEN
+			Busy := TRUE;
+			fbTimerOnStart := TRUE;
+			state := 10;
+		END_IF
+	10:
+		IF fbTimerOnEnd OR (WaitTime = T#0MS) THEN
+			fbTimerOnStart := FALSE;
+			state := 100;
+		END_IF
+	
+	(************** state 100 - End *************)  
+	100:
+		Done := TRUE;
+		state := 0;
+		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="WaitMacro">
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="34" Count="7" />
+      <LineId Id="43" Count="4" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="97" Count="3" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

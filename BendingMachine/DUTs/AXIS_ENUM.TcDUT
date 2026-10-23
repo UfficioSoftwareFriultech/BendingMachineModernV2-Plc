@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="AXIS_ENUM" Id="{02deb80c-2efe-4341-92c5-ae4717d5f1e4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE AXIS_ENUM :
+(
+	null := 0,
+	USEL := 1,
+	USER := 2,
+	ERL := 3,
+	ERR := 4,
+	UR2 := 5,
+	UR_SIM := 6
+)UDINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

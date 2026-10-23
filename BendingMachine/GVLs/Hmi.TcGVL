@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Hmi" Id="{3aafc9de-f825-4462-a97a-8cdd84a9d667}">
+    <Declaration><![CDATA[// Interfaccia HMI v2 (contratto in docs/ADS_CONTRACT_V2.md). Ogni blocco si legge o scrive con una chiamata ADS.
+// E' l'unica interfaccia con l'HMI: la v1 (GVL Ads) e' stata tolta.
+{attribute 'qualified_only'}
+VAR_GLOBAL
+	Cfg			: ST_HmiCfg;		// PLC -> HMI, alla connessione: assi, valvole, ingressi, capacita'
+	Cmd			: ST_HmiCmd;		// HMI -> PLC: comando con numero di sequenza
+	Live		: ST_HmiLive;		// HMI -> PLC, ciclico: watchdog, override, jog, test uscite
+	Param		: ST_HmiParam;		// HMI -> PLC: parametri macchina, applicati con il comando WriteParameters
+	Sts			: ST_HmiSts;		// PLC -> HMI, ciclico: stato, assi, valvole, ingressi, allarmi
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

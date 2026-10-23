@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Input" Id="{07da6ef5-62f8-40ad-9905-6e5de1f23cb9}">
+    <Declaration><![CDATA[// Un ingresso (sensore) della macchina mostrato all'HMI. Il puntatore lo assegna FB_MachineConfig a ogni ciclo.
+TYPE ST_Input :
+STRUCT
+	sName			: STRING(23);
+	pInput			: POINTER TO BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

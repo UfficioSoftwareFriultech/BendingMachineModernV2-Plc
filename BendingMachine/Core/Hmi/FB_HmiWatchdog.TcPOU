@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_HmiWatchdog" Id="{3d23939a-772d-4f66-9a61-3af062acb5cf}" SpecialFunc="None">
+    <Declaration><![CDATA[// Interfaccia viva finche' il contatore cambia almeno una volta ogni tTimeOut.
+FUNCTION_BLOCK FB_HmiWatchdog
+VAR_INPUT
+	nCounter		: UDINT;
+	tTimeOut		: TIME := T#3S;
+END_VAR
+VAR_OUTPUT
+	bAlive			: BOOL;
+END_VAR
+VAR
+	nLast			: UDINT;
+	fbTimer			: TON;
+	bSeen			: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF nCounter <> nLast THEN
+	nLast := nCounter;
+	bSeen := TRUE;
+	fbTimer(IN := FALSE);
+END_IF
+fbTimer(IN := TRUE, PT := tTimeOut);
+bAlive := bSeen AND NOT fbTimer.Q;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

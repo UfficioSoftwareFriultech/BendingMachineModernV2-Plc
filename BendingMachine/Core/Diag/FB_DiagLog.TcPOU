@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_DiagLog" Id="{1bbfe66e-8ab3-4e89-a254-374dd1146fba}" SpecialFunc="None">
+    <Declaration><![CDATA[// Storico dei cambi di passo del ciclo. Va chiamato una volta per ciclo PLC, dopo tutto cio' che puo'
+// cambiare il passo (macchina a stati, funzioni M, allarmi), con stDiag.aChannel gia' aggiornato.
+// Non conosce la macchina: riceve il passo, la sequenza e l'ultimo allarme come numeri.
+FUNCTION_BLOCK FB_DiagLog
+VAR_INPUT
+	nState			: UINT;		// passo attuale del ciclo
+	nSeqIdx			: UINT;		// sequenza corrente
+	nAbortState		: UINT;		// passo che vale come abort: il suo evento si copia in stLastAbort
+	nAlarmCount		: UDINT;	// quante volte e' stato memorizzato un allarme (cresce a ogni RaiseAlarm)
+	nAlarmId		: UINT;		// ultimo allarme memorizzato
+	nAlarmInfo		: UDINT;	// suo dettaglio
+END_VAR
+VAR_IN_OUT
+	stDiag			: ST_Diag;	// aChannel, nSeqCount ed eCycleEndReason li scrive chi chiama
+END_VAR
+VAR
+	bInit			: BOOL;
+	tStateSince		: TIME;
+	nAlarmCountSeen	: UDINT;
+	stEvent			: ST_DiagEvent;
+	i				: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT bInit THEN
+	bInit := TRUE;
+	stDiag.nState := nState;
+	stDiag.nPrevState := nState;
+	tStateSince := TIME();
+	nAlarmCountSeen := nAlarmCount;
+END_IF
+
+IF nState <> stDiag.nState THEN
+	stEvent.nIndex := stDiag.nEventCount + 1;
+	stEvent.nTime := F_GetSystemTime();
+	stEvent.nFromState := stDiag.nState;
+	stEvent.nToState := nState;
+	stEvent.nSeqIdx := nSeqIdx;
+
+	FOR i := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+		stEvent.aLineNo[i] := stDiag.aChannel[i].nLineNo;
+		IF stDiag.aChannel[i].bMWaiting THEN
+			stEvent.aMFunc[i] := stDiag.aChannel[i].nMFunc;
+		ELSE
+			stEvent.aMFunc[i] := 0;
+		END_IF
+	END_FOR
+
+	// Solo un allarme memorizzato dopo l'evento precedente: e' quello che ha causato questo cambio di passo.
+	IF nAlarmCount <> nAlarmCountSeen THEN
+		stEvent.nAlarmId := nAlarmId;
+		stEvent.nAlarmInfo := nAlarmInfo;
+		nAlarmCountSeen := nAlarmCount;
+	ELSE
+		stEvent.nAlarmId := 0;
+		stEvent.nAlarmInfo := 0;
+	END_IF
+
+	stDiag.aEvent[stDiag.nEventCount MOD Core_Param.DIAG_EVENTS] := stEvent;
+	stDiag.nEventCount := stDiag.nEventCount + 1;
+
+	IF nState = nAbortState THEN
+		stDiag.stLastAbort := stEvent;
+	END_IF
+
+	stDiag.nPrevState := stDiag.nState;
+	stDiag.nState := nState;
+	tStateSince := TIME();
+END_IF
+
+stDiag.tInState := TIME() - tStateSince;
+stDiag.nSeqIdx := nSeqIdx;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

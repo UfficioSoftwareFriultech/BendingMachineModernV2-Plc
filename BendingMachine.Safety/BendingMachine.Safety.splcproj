@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Crc="2564186787" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a9eeb44a-6fdb-47bf-bf86-afc04c9b014e}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TwinCAT3SafePlcProject</RootNamespace>
+    <AssemblyName>TwinCAT3SafePlcProject</AssemblyName>
+    <FileUpgradeFlags />
+    <UpgradeBackupLocation />
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetSystem>EL6900</TargetSystem>
+    <ProgrammingLanguage>Graphical Editor</ProgrammingLanguage>
+    <Worker>Claudio</Worker>
+    <IntProjName>Untitled3</IntProjName>
+    <IsNewCreated>false</IsNewCreated>
+    <SPlcProjVersion>1.8.0.0</SPlcProjVersion>
+    <NextSdsId>201</NextSdsId>
+    <SafeAddressVerification>ProjectWideUnique</SafeAddressVerification>
+    <FbInPortActivationVerification>Strict</FbInPortActivationVerification>
+    <AliasDeviceAutoLinkingVerification>MismatchAsWarning</AliasDeviceAutoLinkingVerification>
+    <Name>BendingMachine.Safety</Name>
+    <DocuEditor>FRT-Alessio</DocuEditor>
+    <PlotDate>2025-12-16</PlotDate>
+    <CompanyName>Beckhoff Automation GmbH &amp; Co. KG</CompanyName>
+    <CompanyLogo>Beckhoff Automation GmbH &amp; Co. KG</CompanyLogo>
+    <FbPerPage>0</FbPerPage>
+    <AddUserAdministrationPages>False</AddUserAdministrationPages>
+    <AddProjectVersionHistoryPages>False</AddProjectVersionHistoryPages>
+    <AddCustomPages>False</AddCustomPages>
+    <TextBox />
+    <AddMultiSettingDocuments>False</AddMultiSettingDocuments>
+    <AddHashValueTablePages>False</AddHashValueTablePages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="GVLs\Globals.sgvl" />
+    <None Include="GVLs\UR.sgvl" />
+    <None Include="GVLs\USEL_ERL.sgvl" />
+    <None Include="GVLs\USER_ERR.sgvl" />
+    <None Include="GVLs\IO.sgvl" />
+    <None Include="MainSafetyGroup\Alias Devices\Devices\Term 13 %28EL2904%29.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\Devices\Term 11 %28EL1918%29.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\Devices\Term 12 %28EL1918%29.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\SSR1_Enable.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\AbilitazionePeriferiche.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\BarrieraResettata.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\Bimanuale.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ComErr.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ComStartup.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\EmergenzaResettata.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ErrorAcknowledgement.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\FBDeactive.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\FBErr.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\FBInRun.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\FBRun.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ModoAutomatico1Op.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ModoAutomatico2Op.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ModoManuale.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ModoSemiAuto.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ModuleFault.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\OtherErr.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ResetBarriera.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\ResetEmergenza.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\Run.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\SSR2_Enable.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\UomoMortoP1.sds" />
+    <None Include="MainSafetyGroup\Alias Devices\UomoMortoP2.sds" />
+    <None Include="MainSafetyGroup\MainSafetyGroup.sal" />
+    <None Include="MainSafetyGroup\MainSafetyGroup.sal.diagram">
+      <DependentUpon>MainSafetyGroup\MainSafetyGroup.sal</DependentUpon>
+      <Visible>false</Visible>
+    </None>
+    <None Include="TargetSystemConfig.xml">
+      <Visible>false</Visible>
+    </None>
+    <None Include="UR_SafetyGroup\Alias Devices\FBRun.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\OtherErr.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\ComErr.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\ComStartup.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\FBDeactive.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\FBErr.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\FBInRun.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\Term 20 %28AX5805%29 - Module 1 %28Safety Process Data, 1 axis%29.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_Error.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SDI_n.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SDI_p.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SOS.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SSM1.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SSM2.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_SSR.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\UR\UR_STO.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\ErrorAcknowledgement.sds" />
+    <None Include="UR_SafetyGroup\Alias Devices\Run.sds" />
+    <None Include="UR_SafetyGroup\UR_SafetyGroup.sal" />
+    <None Include="UR_SafetyGroup\UR_SafetyGroup.sal.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>UR_SafetyGroup\UR_SafetyGroup.sal</DependentUpon>
+    </None>
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_Error.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SDI_n.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SDI_p.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SOS.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SSM1.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SSM2.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_SSR.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ERL\ERL_STO.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\Term 16 %28AX5805%29 - Module 1 %28Safety Process Data, 2 axis%29.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_Error.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SDI_n.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SDI_p.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SOS.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SSM1.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SSM2.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_SSR.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\USEL\USEL_STO.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ComErr.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ComStartup.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\ErrorAcknowledgement.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\FBDeactive.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\FBErr.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\FBInRun.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\FBRun.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\OtherErr.sds" />
+    <None Include="USEL_ERL_SafetyGroup\Alias Devices\Run.sds" />
+    <None Include="USEL_ERL_SafetyGroup\USEL_ERL_SafetyGroup.sal" />
+    <None Include="USEL_ERL_SafetyGroup\USEL_ERL_SafetyGroup.sal.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>USEL_ERL_SafetyGroup\USEL_ERL_SafetyGroup.sal</DependentUpon>
+    </None>
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SSR2.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_Error.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SDI_n.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SDI_p.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SOS.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SSM1.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SSM2.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_SSR.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ERR\ERR_STO.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\Term 18 %28AX5805%29 - Module 1 %28Safety Process Data, 2 axis%29.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SSR2.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_Error.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SDI_n.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SDI_p.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SOS.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SSM1.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SSM2.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_SSR.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\USER\USER_STO.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\FBInRun.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\FBRun.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ComErr.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ComStartup.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\FBDeactive.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\FBErr.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\ErrorAcknowledgement.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\OtherErr.sds" />
+    <None Include="USER_ERR_SafetyGroup\Alias Devices\Run.sds" />
+    <None Include="USER_ERR_SafetyGroup\USER_ERR_SafetyGroup.sal" />
+    <None Include="USER_ERR_SafetyGroup\USER_ERR_SafetyGroup.sal.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>USER_ERR_SafetyGroup\USER_ERR_SafetyGroup.sal</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GVLs" />
+    <Folder Include="MainSafetyGroup" />
+    <Folder Include="MainSafetyGroup\Alias Devices" />
+    <Folder Include="MainSafetyGroup\Alias Devices\Devices" />
+    <Folder Include="UR_SafetyGroup" />
+    <Folder Include="UR_SafetyGroup\Alias Devices" />
+    <Folder Include="UR_SafetyGroup\Alias Devices\UR" />
+    <Folder Include="USEL_ERL_SafetyGroup" />
+    <Folder Include="USEL_ERL_SafetyGroup\Alias Devices" />
+    <Folder Include="USEL_ERL_SafetyGroup\Alias Devices\ERL" />
+    <Folder Include="USEL_ERL_SafetyGroup\Alias Devices\USEL" />
+    <Folder Include="User FBs" />
+    <Folder Include="USER_ERR_SafetyGroup" />
+    <Folder Include="USER_ERR_SafetyGroup\Alias Devices" />
+    <Folder Include="USER_ERR_SafetyGroup\Alias Devices\ERR" />
+    <Folder Include="USER_ERR_SafetyGroup\Alias Devices\USER" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <DocumentationProperty>
+      <ProjectVersionHistories />
+    </DocumentationProperty>
+  </ProjectExtensions>
+</Project>

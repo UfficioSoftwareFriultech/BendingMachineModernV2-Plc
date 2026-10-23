@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Valve" Id="{5cde3e44-553a-477d-860e-a57855d68ad7}">
+    <Declaration><![CDATA[// Una valvola (attuatore pneumatico) della macchina: le sue uscite e le sue conferme.
+// I puntatori li assegna la configurazione della macchina a ogni ciclo (FB_MachineConfig), cosi' restano
+// validi anche dopo un online change. Un feedback senza sensore puo' puntare all'uscita stessa.
+TYPE ST_Valve :
+STRUCT
+	sName			: STRING(23);			// nome per HMI e diagnosi
+	eType			: OUTPUT_ENUM;			// MONOSTABLE: solo pSet; BISTABLE: pSet e pReset
+	pSet			: POINTER TO BOOL;		// uscita lato "set" (per la monostabile l'unica uscita)
+	pReset			: POINTER TO BOOL;		// uscita lato "reset" (0 per la monostabile)
+	pFbSet			: POINTER TO BOOL;		// conferma di fine corsa lato set
+	pFbReset		: POINTER TO BOOL;		// conferma di fine corsa lato reset
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

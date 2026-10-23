@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_CenteringStep" Id="{073f8729-20e5-41af-b9b4-e38051377363}">
+    <Declaration><![CDATA[// Passi di FB_Centering (Diag.Data.nSubStep durante il centraggio). Stessi numeri dei vecchi passi del ciclo.
+{attribute 'qualified_only'}
+TYPE E_CenteringStep :
+(
+	Idle				:= 0,
+	ClearGroups			:= 55,	// reset dei gruppi NC per i movimenti PTP delle USE
+	ApproachPrepare		:= 60,	// calcolo della corsa rapida IN STROKE
+	Approach			:= 61,	// corsa rapida di avvicinamento
+	ApproachCheck		:= 62,	// pezzo gia' presente prima della ricerca?
+	SearchPrepare		:= 64,	// calcolo della corsa MAX STROKE
+	Search				:= 65,	// ricerca dei pezzi sui sensori del centratore
+	PieceClamp			:= 67,	// pezzo trovato: arresto e chiusura del palpatore
+	StopAxes			:= 72,	// tutti i pezzi trovati: arresto USE
+	StopDelay			:= 73,	// attesa chiusura palpatori
+	Clamp				:= 74,	// chiusura morsa e calcolo della corsa EXTRA
+	Extra				:= 76,	// corsa EXTRA
+	ResetUnits			:= 78,	// risalita dei centratori
+	Done				:= 80,	// finito
+	Failed				:= 90,	// pezzo gia' presente o non trovato
+	Error				:= 600	// errore NC
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_Valve" Id="{e2f01e3b-a3b2-4584-b77f-ef71343b9cf5}">
+    <Declaration><![CDATA[// Valvole di Aut260045: indice in Mach.aValve. Una valvola nuova: un valore qui, poi le sue uscite e
+// conferme in FB_MachineConfig e le sue funzioni M nella tabella. Niente 'strict': e' un indice.
+{attribute 'qualified_only'}
+TYPE E_Valve :
+(
+	ErLeft			:= 1,	// testa ER SX fuori/dentro (M40/M41)
+	UseLeftUp		:= 2,	// movimento trasversale ER SX su/giu' (M44/M45, diretto M54/M55)
+	SupportLeft		:= 3,	// spallamento SX (M50/M51)
+	EpLeftBend		:= 4,	// EP SX trazione (M70/M74), monostabile
+	EpLeftOut		:= 5,	// EP SX estrazione (M72/M73)
+	ErRight			:= 6,	// testa ER DX fuori/dentro (M42/M43)
+	UseRightUp		:= 7,	// movimento trasversale ER DX su/giu' (M46/M47, diretto M56/M57)
+	SupportRight	:= 8,	// spallamento DX (M48/M49)
+	EpRightBend		:= 9,	// EP DX trazione (M70/M74), monostabile
+	EpRightOut		:= 10,	// EP DX estrazione (M72/M73)
+	Clamp			:= 11,	// morsa chiusa/aperta (M100/M101)
+	Eject			:= 12,	// espulsore (M102/M103)
+	CenteringLeftUp		:= 13,	// centratore SX su/giu' (pulsante del volantino)
+	CenteringRightUp	:= 14,	// centratore DX su/giu' (pulsante del volantino)
+	// Solo comandi manuali (test uscite dell'HMI); il ciclo le muove direttamente da I/O.
+	CenteringUp			:= 15,	// centratori su/giu'
+	CenteringClamp		:= 16,	// bloccaggio centratori, monostabile
+	CenteringOut		:= 17,	// estrazione supporto centraggio, monostabile
+	CenteringPiece1		:= 18,	// palpatore pezzo 1, monostabile
+	CenteringPiece2		:= 19,
+	CenteringPiece3		:= 20,
+	CenteringPiece4		:= 21,
+	CenteringAir1		:= 22,	// esclusione aria centratore 1, monostabile
+	CenteringAir2		:= 23,
+	CenteringAir3		:= 24,
+	CenteringAir4		:= 25
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

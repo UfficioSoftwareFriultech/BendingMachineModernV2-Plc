@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ACTION_ENUM" Id="{42f86818-7e0a-4e2d-8124-17a68d383842}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ACTION_ENUM :
+(
+	null 		:= 0,
+	MOVEMENT 	:= 1,
+	MACRO 		:= 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

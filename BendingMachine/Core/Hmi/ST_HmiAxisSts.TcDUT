@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HmiAxisSts" Id="{1e5513bf-4e33-4e55-a88e-e70fc3a14b63}">
+    <Declaration><![CDATA[// Stato di un asse per l'HMI.
+TYPE ST_HmiAxisSts :
+STRUCT
+	fActPos			: LREAL;
+	fActVelo		: LREAL;
+	nErrorCode		: UDINT;
+	bEnabled		: BOOL;		// alimentato
+	bMoving			: BOOL;
+	bInUse			: BOOL;		// usato dalla macchina (UR2 o UR_SIM secondo la morsa)
+	nCalibrationStep: UINT;		// 0 = nessuna calibrazione in corso
+	bCalibrated		: BOOL;		// impulso a calibrazione finita
+	bLimitsBusy		: BOOL;
+	fLastKnownPos	: LREAL;	// ultima posizione salvata (persistente)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

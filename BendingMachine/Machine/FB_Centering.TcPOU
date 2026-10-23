@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Centering" Id="{7a63a0c0-93c8-4447-87af-cfee004419e8}" SpecialFunc="None">
+    <Declaration><![CDATA[// Centraggio TL/TB di Aut260045 (ex passi 55-78 di MAIN.StateMachine, stessi numeri in nStep).
+// Corsa rapida IN STROKE, ricerca dei pezzi fino a MAX STROKE con chiusura dei palpatori, arresto,
+// chiusura morsa e corsa EXTRA, risalita dei centratori. Usa direttamente I/O e parametri del programma:
+// e' un modulo della macchina, non del Core.
+// Va chiamato a ogni ciclo PLC (gli FB di movimento e i timer devono girare sempre); con bExecute
+// esegue, senza torna a Idle. Gli allarmi li memorizza qui (RaiseAlarm); il ciclo legge bDone, bFailed, bAbort.
+FUNCTION_BLOCK FB_Centering
+VAR_INPUT
+	bExecute		: BOOL;				// il ciclo e' nel passo Centering
+	bStart			: BOOL;				// consenso start (attese del passo-passo)
+	bStepMode		: BOOL;				// passo-passo: tra le fasi si aspetta lo start
+	fMoveSpeed		: LREAL := 200;		// velocita' USE nelle corse IN STROKE ed EXTRA
+	fSearchSpeed	: LREAL := 30;		// velocita' USE nella ricerca dei pezzi
+	nGroupIdBase	: UDINT := 7;		// ID NC dei gruppi da svuotare prima delle corse PTP
+END_VAR
+VAR_IN_OUT
+	stUseL			: AXIS_REF;
+	stUseR			: AXIS_REF;
+END_VAR
+VAR_OUTPUT
+	nStep			: E_CenteringStep;
+	bDone			: BOOL;		// centraggio finito: fMeasureL/R valide
+	bFailed			: BOOL;		// pezzo gia' presente o non trovato: si rifa' il posizionamento iniziale
+	bAbort			: BOOL;		// errore NC: il ciclo va in abort
+	fMeasureL		: LREAL;	// corsa di ricerca SX (inizio - fine), per la tolleranza TB
+	fMeasureR		: LREAL;
+END_VAR
+VAR
+	fbClearGroup	: ARRAY[0..2] OF CfgReconfigGroup;
+	fbMoveL			: MC_MoveAbsolute;
+	fbMoveR			: MC_MoveAbsolute;
+	fbStopL			: MC_Halt;
+	fbStopR			: MC_Halt;
+	fbClampsDelay	: TON;
+	fbTlClampsDelay	: TON;
+	fbUpDownDelay	: TON;
+	fStrokeInL		: LREAL;
+	fStrokeInR		: LREAL;
+	fStartL			: LREAL;
+	fStartR			: LREAL;
+	fMaxStrokeL		: LREAL;
+	fMaxStrokeR		: LREAL;
+	fEndL			: LREAL;
+	fEndR			: LREAL;
+	fExtraL			: LREAL;
+	fExtraR			: LREAL;
+	pz1Found		: BOOL;
+	pz2Found		: BOOL;
+	pz3Found		: BOOL;
+	pz4Found		: BOOL;
+	i				: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Valori di riposo a ogni ciclo (prima in MAIN.InitCyclic): i passi li riaccendono.
+fbStopL.Execute := FALSE;
+fbStopR.Execute := FALSE;
+fbMoveL.Execute := FALSE;
+fbMoveL.Velocity := 0;
+fbMoveR.Execute := FALSE;
+fbMoveR.Velocity := 0;
+fbClampsDelay.IN := FALSE;
+fbClampsDelay.PT := T#800MS;
+fbTlClampsDelay.IN := FALSE;
+fbTlClampsDelay.PT := T#250MS;
+fbUpDownDelay.IN := FALSE;
+fbUpDownDelay.PT := T#800MS;
+bDone := FALSE;
+bFailed := FALSE;
+bAbort := FALSE;
+
+IF NOT bExecute THEN
+	nStep := E_CenteringStep.Idle;
+ELSIF nStep = E_CenteringStep.Idle THEN
+	nStep := E_CenteringStep.ClearGroups;
+END_IF
+
+CASE nStep OF
+	(******************* Clear groups for centering *******************)  
+	E_CenteringStep.ClearGroups:
+		FOR i:=0 TO 2 DO
+			fbClearGroup[i](
+				nGroupId:=nGroupIdBase+i,
+				bExecute:=TRUE,
+				tTimeOut:=T#100MS );
+		END_FOR
+		
+		IF (NOT fbClearGroup[0].bBusy) AND (NOT fbClearGroup[1].bBusy) AND (NOT fbClearGroup[2].bBusy) THEN
+			fbClearGroup[0]( bExecute:=FALSE );
+			fbClearGroup[1]( bExecute:=FALSE );
+			fbClearGroup[2]( bExecute:=FALSE );
+			nStep := E_CenteringStep.ApproachPrepare;
+			
+			//IO.centeringLeft1Set := FALSE;
+			//IO.centeringLeft2Set := FALSE;
+			//IO.centeringLeft3Set := FALSE;
+			//IO.centeringLeft4Set := FALSE;
+			io.centeringOutSet := TRUE;
+		END_IF
+		
+		IF fbClearGroup[0].bErr OR fbClearGroup[1].bErr OR fbClearGroup[2].bErr THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringClearGroup, Info := MAX(fbClearGroup[0].nErrId, fbClearGroup[1].nErrId, fbClearGroup[2].nErrId));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+	
+	(*************** Prepare fast in stroke movement ***************)  
+	E_CenteringStep.ApproachPrepare:	
+		fStrokeInL := stUseL.NcToPlc.ActPos - ProgramDB.parameters.inStrokeL;
+		fStrokeInR := stUseR.NcToPlc.ActPos - ProgramDB.parameters.inStrokeR;
+	    fbMoveL(Axis := stUseL, Execute := FALSE);
+		fbMoveR(Axis := stUseR, Execute := FALSE);
+		nStep := E_CenteringStep.Approach;
+		
+	(*************** Execute fast in stroke ***************) 
+	E_CenteringStep.Approach:	
+		fbMoveL.Position := fStrokeInL;
+		fbMoveL.Velocity := fMoveSpeed;
+		fbMoveL.Execute := TRUE;
+		
+		fbMoveR.Position := fStrokeInR;
+		fbMoveR.Velocity := fMoveSpeed;
+		fbMoveR.Execute := TRUE;
+			
+		IF fbMoveL.Done AND fbMoveR.Done  THEN
+			IF bStart OR NOT bStepMode THEN
+				nStep := E_CenteringStep.ApproachCheck;
+			END_IF
+		END_IF
+		
+		IF IO.centering1LeftIn OR IO.centering2LeftIn OR IO.centering3LeftIn THEN
+			nStep := E_CenteringStep.ApproachCheck;
+		END_IF
+		
+		IF fbMoveL.Error OR fbMoveR.Error  THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringApproach, Info := MAX(fbMoveL.ErrorID, fbMoveR.ErrorID));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+	
+	(*************** Evaluation after in stroke ***************) 
+	E_CenteringStep.ApproachCheck:	
+		IF IO.centering1LeftIn OR IO.centering2LeftIn OR IO.centering3LeftIn THEN
+			RaiseAlarm(Id := E_Alarm.CenteringPartAlreadyPresent, Info := 0);
+			nStep := E_CenteringStep.Failed;
+		ELSE
+			nStep := E_CenteringStep.SearchPrepare;
+		END_IF
+		
+	(*************** Prepare max stroke movement ***************) 
+	E_CenteringStep.SearchPrepare:	
+		fStartL := stUseL.NcToPlc.ActPos;
+		fStartR := stUseR.NcToPlc.ActPos;
+		fMaxStrokeL := fStartL - ProgramDB.parameters.maxStrokeL;
+		fMaxStrokeR := fStartR - ProgramDB.parameters.maxStrokeR;
+		pz1Found := FALSE;
+		pz2Found := FALSE;
+		pz3Found := FALSE;
+		pz4Found := FALSE;
+		io.centeringOutSet := FALSE;
+		nStep := E_CenteringStep.Search;
+		
+	(*************** Execute max stroke movement ***************) 
+	E_CenteringStep.Search:	
+		fbMoveL.Position := fMaxStrokeL;
+		fbMoveL.Velocity := fSearchSpeed;
+		fbMoveL.Execute := TRUE;
+		fbMoveL.Options.IgnorePositionMonitoring := TRUE;
+		
+		fbMoveR.Position := fMaxStrokeR;
+		fbMoveR.Velocity := fSearchSpeed;
+		fbMoveR.Execute := TRUE;
+		fbMoveR.Options.IgnorePositionMonitoring := TRUE;
+		
+		IF fbMoveL.Done AND fbMoveR.Done  THEN
+			RaiseAlarm(Id := E_Alarm.CenteringPartNotFound, Info := 0);
+			nStep := E_CenteringStep.Failed;
+		END_IF
+		
+		CASE ProgramDB.parameters.pcsCycle OF
+			1:
+				IF IO.centering1LeftIn THEN
+					IO.centringClamp1Left := TRUE;
+					//IO.centeringLeft1Set := TRUE;
+					nStep := E_CenteringStep.StopAxes;
+				END_IF
+			2:
+				IF IO.centering1LeftIn AND NOT pz1Found THEN
+					IO.centringClamp1Left := TRUE;
+					//IO.centeringLeft1Set := TRUE;
+					pz1Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering2LeftIn AND NOT pz2Found THEN
+					IO.centringClamp2Left := TRUE;
+
+					//IO.centeringLeft2Set := TRUE;
+					pz2Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering1LeftIn AND IO.centering2LeftIn THEN
+					nStep := E_CenteringStep.StopAxes;
+				END_IF
+			3:
+				IF IO.centering1LeftIn AND NOT pz1Found THEN
+					IO.centringClamp1Left := TRUE;
+					//IO.centeringLeft1Set := TRUE;
+					pz1Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering2LeftIn AND NOT pz2Found THEN
+					IO.centringClamp2Left := TRUE;
+					//IO.centeringLeft2Set := TRUE;
+					pz2Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering3LeftIn AND NOT pz3Found THEN
+					IO.centringClamp3Left := TRUE;
+					//IO.centeringLeft3Set := TRUE;
+					pz3Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering1LeftIn AND IO.centering2LeftIn AND IO.centering3LeftIn THEN
+					nStep := E_CenteringStep.StopAxes;
+				END_IF
+			4:
+				IF IO.centering1LeftIn AND NOT pz1Found THEN
+					IO.centringClamp1Left := TRUE;
+					//IO.centeringLeft1Set := TRUE;
+					pz1Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering2LeftIn AND NOT pz2Found THEN
+					IO.centringClamp2Left := TRUE;
+					//IO.centeringLeft2Set := TRUE;
+					pz2Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering3LeftIn AND NOT pz3Found THEN
+					IO.centringClamp3Left := TRUE;
+					//IO.centeringLeft3Set := TRUE;
+					pz3Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering4LeftIn AND NOT pz4Found THEN
+					IO.centeringLeft4Set := TRUE;
+					//IO.centringClamp4Left := TRUE;
+					pz4Found := TRUE;
+					nStep := E_CenteringStep.PieceClamp;
+				END_IF
+				
+				IF IO.centering1LeftIn AND IO.centering2LeftIn AND IO.centering3LeftIn  AND IO.centering4LeftIn THEN
+					nStep := E_CenteringStep.StopAxes;
+				END_IF
+		
+		END_CASE
+		IF io.centering1LeftIn THEN	
+			IO.centeringLeft1Set := FALSE;
+		END_IF;
+		IF io.centering2LeftIn THEN	
+			IO.centeringLeft2Set := FALSE;
+		END_IF;
+		IF io.centering3LeftIn THEN	
+			IO.centeringLeft3Set := FALSE;
+		END_IF;
+		IF io.centering4LeftIn THEN	
+			IO.centeringLeft4Set := FALSE;
+		END_IF;				
+
+		
+		IF fbMoveL.Error OR fbMoveR.Error  THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringSearch, Info := MAX(fbMoveL.ErrorID, fbMoveR.ErrorID));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+		
+	(*************** Execute max stroke movement ***************) 
+	E_CenteringStep.PieceClamp:
+		IO.centringClampSet := TRUE;
+		fbStopL.Execute := TRUE;
+		fbStopR.Execute := TRUE;
+		fbTlClampsDelay.IN := TRUE;
+
+		IF (fbStopL.Done AND fbStopR.Done)THEN
+			IF fbTlClampsDelay.Q THEN
+				nStep := E_CenteringStep.Search;
+				io.centeringOutSet := FALSE;
+			END_IF
+		END_IF
+				
+		IF fbStopL.Error OR fbStopR.Error  THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringStopSearch, Info := MAX(fbStopL.ErrorID, fbStopR.ErrorID));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+		
+	
+	(*************** Stop execution if centering input ***************) 
+	E_CenteringStep.StopAxes:
+		fbStopL.Execute := TRUE;
+		fbStopR.Execute := TRUE;
+
+		IO.centringClamp1Left := FALSE;
+		IO.centringClamp2Left := FALSE;
+		IO.centringClamp3Left := FALSE;
+		IO.centringClamp4Left := FALSE;
+		
+		IF (fbStopL.Done AND fbStopR.Done)THEN
+			IF bStart OR NOT bStepMode THEN
+				nStep := E_CenteringStep.StopDelay;
+			END_IF
+		END_IF
+		
+		IF fbStopL.Error OR fbStopR.Error  THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringStop, Info := MAX(fbStopL.ErrorID, fbStopR.ErrorID));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+		
+	E_CenteringStep.StopDelay:
+		fbTlClampsDelay.IN := TRUE;
+		
+		IF fbTlClampsDelay.Q THEN
+			nStep := E_CenteringStep.Clamp;
+		END_IF
+		
+	(*************** Prepare extra movement ***************)  //<--------------------- CLAMP
+	E_CenteringStep.Clamp: 
+		IO.centringClampSet := FALSE;
+		fEndL := stUseL.NcToPlc.ActPos;
+		fEndR := stUseR.NcToPlc.ActPos;
+		
+		fExtraL := stUseL.NcToPlc.ActPos + ProgramDB.parameters.extraL;
+		fExtraR := stUseR.NcToPlc.ActPos + ProgramDB.parameters.extraR;
+		
+		IO.clampClosedReset := FALSE;
+		IO.clampClosedSet := TRUE;
+		fExtraL := stUseL.NcToPlc.ActPos + ProgramDB.parameters.extraL;
+
+		
+		fbClampsDelay.IN := TRUE;
+		
+		IF fbClampsDelay.Q THEN
+			nStep := E_CenteringStep.Extra;
+		END_IF
+
+	(*************** Execute extra movement ***************) 
+	E_CenteringStep.Extra:
+		fbMoveL.Execute := TRUE;
+		fbMoveL.Position := fExtraL;
+		fbMoveL.Velocity := fMoveSpeed;
+		
+		fbMoveR.Execute := TRUE;
+		fbMoveR.Position := fExtraR;
+		fbMoveR.Velocity := fMoveSpeed;
+		
+		IF fbMoveL.Done AND fbMoveR.Done THEN
+			nStep := E_CenteringStep.ResetUnits;
+		END_IF
+		
+		IF fbMoveL.Error OR fbMoveR.Error  THEN
+			RaiseAlarm(Id := E_Alarm.NcCenteringExtra, Info := MAX(fbMoveL.ErrorID, fbMoveR.ErrorID));
+			bAbort := TRUE;
+			nStep := E_CenteringStep.Error;
+		END_IF
+	
+	(*************** Reset centering units ***************) 
+	E_CenteringStep.ResetUnits:
+		IO.centringSet := FALSE;
+		IO.centringReset := TRUE;
+		IO.centringClampSet := FALSE;
+		IO.centringLeftUpSet := FALSE;
+		IO.centringLeftUpReset := TRUE;
+		IO.centringRightUpSet := FALSE;
+		IO.centringRightUpReset := TRUE;
+		IO.centringClamp1Left := FALSE;
+		IO.centringClamp2Left := FALSE;
+		IO.centringClamp3Left := FALSE;
+		IO.centringClamp4Left := FALSE;
+		
+		fbUpDownDelay.IN := TRUE;
+		
+		IF fbUpDownDelay.Q THEN
+			nStep := E_CenteringStep.Done;
+		END_IF;
+
+	(*************** Fine ***************)
+	E_CenteringStep.Done:
+		fMeasureL := fStartL - fEndL;
+		fMeasureR := fStartR - fEndR;
+		bDone := TRUE;
+
+	E_CenteringStep.Failed:
+		bFailed := TRUE;
+
+	E_CenteringStep.Error:
+		bAbort := TRUE;
+END_CASE
+
+// FB di movimento e timer: a ogni ciclo, dopo i passi (prima in MAIN.AxisFunctionBlocks).
+fbStopL(Axis := stUseL);
+fbStopR(Axis := stUseR);
+fbMoveL(Axis := stUseL);
+fbMoveR(Axis := stUseR);
+fbClampsDelay();
+fbTlClampsDelay();
+fbUpDownDelay();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

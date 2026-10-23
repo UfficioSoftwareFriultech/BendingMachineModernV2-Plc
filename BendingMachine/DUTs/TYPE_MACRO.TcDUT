@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_MACRO" Id="{7abd5343-1b2b-4680-aa2d-22226e13cca8}">
+    <Declaration><![CDATA[TYPE TYPE_MACRO :
+STRUCT
+	active 	: BOOL;
+	mNo 	: UDINT;
+	delay 	: UDINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

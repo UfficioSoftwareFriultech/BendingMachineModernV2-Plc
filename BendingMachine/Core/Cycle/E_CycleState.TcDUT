@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_CycleState" Id="{88ce3cf4-6888-40c9-b71d-9e52a9b5e47b}">
+    <Declaration><![CDATA[// Passi della macchina a stati del ciclo automatico (MAIN.state, Hmi.Sts.nState, Diag.Data.nState).
+// I numeri sono quelli storici: compaiono nei documenti, negli allarmi ("passo 150") e nelle tracce.
+// Un numero non si riusa per un passo diverso. Niente 'strict': state resta UINT e si confronta con < e >=.
+// Fasce: 0-99 avvio e centraggio, 100-499 preparazione ed esecuzione, 500 fine, 600-699 abort,
+//        700-799 stop e ripresa, 800-899 reset, 900-999 passaggio a manuale, 2000+ modi.
+{attribute 'qualified_only'}
+TYPE E_CycleState :
+(
+	Idle						:= 0,		// fermo, attende start
+	StartChecks					:= 10,		// controlli prima di partire (lotto, azionamenti, motori, programma)
+
+	CenteringSelect				:= 50,		// scelta del centraggio (NO/TL/TB) o posizionamento iniziale se non fatto
+	Centering					:= 55,		// centraggio TL/TB in corso (FB_Centering della macchina, passo interno in Diag.Data.nSubStep)
+	// 60-90: fasi del vecchio centraggio, ora dentro FB_Centering (stessi numeri). Numeri riservati.
+
+	SeqInit						:= 110,		// azzeramento indici e sincronismi prima della prima sequenza
+	SeqPrepare					:= 120,		// sequenza: gruppi e tabelle NC preparati e inviati (FB_SequenceRunner, Diag.Data.nSubStep)
+	HomingPrepare				:= 122,		// homing: come SeqPrepare, con la sequenza di posizionamento iniziale
+	// 130, 132, 140, 150, 200, 202, 210, 212, 400, 402: passi della vecchia preparazione, ora dentro
+	// FB_SequenceRunner (E_SeqStep). Numeri riservati: non si riusano.
+	SeqRun						:= 410,		// sequenza in esecuzione (RUN)
+	HomingRun					:= 412,		// homing in esecuzione (INIT), poi attesa start
+	WaitStartNextPiece			:= 420,		// EJECT NO 2 START: pezzo finito, attesa start
+
+	CycleEnd					:= 500,		// fine ciclo, torna a Idle
+
+	Abort						:= 600,		// arresto NC dei canali
+	AbortDone					:= 610,		// abort concluso, avviso "reset necessario"
+	WaitReset					:= 620,		// attende Reset
+
+	Stop						:= 700,		// arresto NC per stop
+	Stopped						:= 719,		// fermo, attende start (ripresa) o reset
+	Resume						:= 730,		// ripresa: step-on dal RUN o reset canali
+	ResumeResetTables			:= 740,		// ripresa fuori dal RUN: reset tabelle
+	ResumeResetWait				:= 745,		// ripresa fuori dal RUN: attesa fine reset
+
+	Reset						:= 800,		// reset allarmi e assi
+	ResetChannels				:= 820,		// reset canali NC (non raggiunto da nessuna transizione)
+	NewProgram					:= 850,		// nuovo programma dall'HMI: azzera il ciclo, poi Reset
+
+	ToManual					:= 900,		// passaggio a manuale
+	ToManualEStop				:= 905,		// passaggio a manuale: arresto NC
+	ToManualClearGroups			:= 910,		// passaggio a manuale: reset gruppi
+	ToManualCheckAxes			:= 915,		// passaggio a manuale: assi in errore?
+	ToManualResetAxes			:= 920,		// passaggio a manuale: reset assi
+	Manual						:= 2000,	// modo manuale attivo
+	ToAuto						:= 2100		// passaggio ad automatico
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

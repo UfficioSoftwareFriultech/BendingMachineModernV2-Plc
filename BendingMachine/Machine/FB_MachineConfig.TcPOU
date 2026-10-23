@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_MachineConfig" Id="{bcecab8f-08da-4402-9f8c-424c2c939ba7}" SpecialFunc="None">
+    <Declaration><![CDATA[// Configurazione di Aut260045 per il Core: valvole (uscite e conferme) e tabella delle funzioni M.
+// E' il solo punto da toccare per una valvola o una funzione M nuova. Si chiama a ogni ciclo, prima
+// del dispatcher: i puntatori seguono gli spostamenti di memoria di un online change e la tabella
+// e' sempre quella scritta qui.
+// Tempi, conferme e allarmi sono quelli del vecchio MacroManager (tabella di confronto in
+// _verifica_plc\macrotable). Le conferme "uguali all'uscita" sono le valvole senza sensore.
+FUNCTION_BLOCK FB_MachineConfig
+VAR
+	stDef			: ST_MFuncDef;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*******************************************************************************************************************
+// Assi dei programmi (AXIS_ENUM): nome, scala velocita' (fVelo = speed * scala), correzione centraggio TB,
+// quota sempre 0 (asse simulato), asse NC. Un asse nuovo (es. trascinamento): valore in AXIS_ENUM, asse NC, una riga qui.
+//*******************************************************************************************************************
+Axis(AXIS_ENUM.USEL,	'USE SX',		10.0,	TRUE,	FALSE,	MAIN.USEL);
+Axis(AXIS_ENUM.USER,	'USE DX',		10.0,	TRUE,	FALSE,	MAIN.USER);
+Axis(AXIS_ENUM.ERL,		'ER SX',		10.8,	FALSE,	FALSE,	MAIN.ERL);
+Axis(AXIS_ENUM.ERR,		'ER DX',		10.8,	FALSE,	FALSE,	MAIN.ERR);
+Axis(AXIS_ENUM.UR2,		'UR2',			10.8,	FALSE,	FALSE,	MAIN.UR2);
+Axis(AXIS_ENUM.UR_SIM,	'UR simulato',	10.8,	FALSE,	TRUE,	MAIN.UR_SIM);
+
+// Movimento manuale e servizio: selettore volantino, jog (velocita', accelerazione, decelerazione, jerk),
+// azionamento SoE, allarmi di calibrazione e di scrittura limiti. Valori di prima (InitCyclic, Manual).
+AxisService(AXIS_ENUM.ERL,		1,	100,	500,	0,		20000,	TRUE,	E_Alarm.HomingErl,	E_Alarm.ParamWriteErl);
+AxisService(AXIS_ENUM.USEL,		2,	250,	500,	500,	5000,	TRUE,	E_Alarm.HomingUsel,	E_Alarm.ParamWriteUsel);
+AxisService(AXIS_ENUM.UR2,		3,	100,	500,	0,		5000,	TRUE,	E_Alarm.HomingUr2,	E_Alarm.ParamWriteUr2);
+AxisService(AXIS_ENUM.UR_SIM,	3,	100,	500,	0,		5000,	FALSE,	0,					0);
+AxisService(AXIS_ENUM.ERR,		4,	100,	500,	0,		20000,	TRUE,	E_Alarm.HomingErr,	E_Alarm.ParamWriteErr);
+AxisService(AXIS_ENUM.USER,		5,	250,	500,	0,		5000,	TRUE,	E_Alarm.HomingUser,	E_Alarm.ParamWriteUser);
+
+// Pulsanti del volantino: per ogni posizione del selettore, la valvola del pulsante 1 e quella del pulsante 3.
+Mach.aMpgButton[1, 1] := E_Valve.ErLeft;			Mach.aMpgButton[1, 2] := E_Valve.UseLeftUp;
+Mach.aMpgButton[2, 1] := E_Valve.CenteringLeftUp;	Mach.aMpgButton[2, 2] := E_Valve.SupportLeft;
+Mach.aMpgButton[3, 1] := E_Valve.Eject;				Mach.aMpgButton[3, 2] := E_Valve.Clamp;
+Mach.aMpgButton[4, 1] := E_Valve.ErRight;			Mach.aMpgButton[4, 2] := E_Valve.UseRightUp;
+Mach.aMpgButton[5, 1] := E_Valve.CenteringRightUp;	Mach.aMpgButton[5, 2] := E_Valve.SupportRight;
+
+//*******************************************************************************************************************
+// Valvole: uscita set, uscita reset (0 = monostabile), conferma set, conferma reset
+//*******************************************************************************************************************
+Valve(E_Valve.ErLeft,		'ER SX testa',			OUTPUT_ENUM.BISTABLE,	ADR(IO.erLeftOutSet),		ADR(IO.erLeftOutReset),		ADR(IO.erLeftOut),			ADR(IO.erLeftIn));
+Valve(E_Valve.UseLeftUp,	'ER SX trasversale',	OUTPUT_ENUM.BISTABLE,	ADR(IO.useLeftUpSet),		ADR(IO.useLeftUpReset),		ADR(IO.useLeftUp),			ADR(IO.useLeftDown));
+Valve(E_Valve.SupportLeft,	'Spallamento SX',		OUTPUT_ENUM.BISTABLE,	ADR(IO.supportLeftOutSet),	ADR(IO.supportLeftOutReset),	ADR(IO.supportLeftOutSet),	ADR(IO.supportLeftOutReset));
+Valve(E_Valve.EpLeftBend,	'EP SX trazione',		OUTPUT_ENUM.MONOSTABLE,	ADR(IO.epLeftBend),			0,							ADR(IO.epLeftBendDown),		ADR(IO.epLeftBendUp));
+Valve(E_Valve.EpLeftOut,	'EP SX estrazione',		OUTPUT_ENUM.BISTABLE,	ADR(IO.epLeftOutSet),		ADR(IO.epLeftOutReset),		ADR(IO.epLeftOut),			ADR(IO.epLeftIn));
+Valve(E_Valve.ErRight,		'ER DX testa',			OUTPUT_ENUM.BISTABLE,	ADR(IO.erRightOutSet),		ADR(IO.erRightOutReset),	ADR(IO.erRightOut),			ADR(IO.erRightIn));
+Valve(E_Valve.UseRightUp,	'ER DX trasversale',	OUTPUT_ENUM.BISTABLE,	ADR(IO.useRightUpSet),		ADR(IO.useRightUpReset),	ADR(IO.useRighttUp),		ADR(IO.useRightDown));
+Valve(E_Valve.SupportRight,	'Spallamento DX',		OUTPUT_ENUM.BISTABLE,	ADR(IO.supportRightOutSet),	ADR(IO.supportRightOutReset),	ADR(IO.supportRightOutSet),	ADR(IO.supportRightOutReset));
+Valve(E_Valve.EpRightBend,	'EP DX trazione',		OUTPUT_ENUM.MONOSTABLE,	ADR(IO.epRightBend),		0,							ADR(IO.epRightBendDown),	ADR(IO.epRightBendUp));
+Valve(E_Valve.EpRightOut,	'EP DX estrazione',		OUTPUT_ENUM.BISTABLE,	ADR(IO.epRightOutSet),		ADR(IO.epRightOutReset),	ADR(IO.epRightOut),			ADR(IO.epRightIn));
+Valve(E_Valve.Clamp,		'Morsa',				OUTPUT_ENUM.BISTABLE,	ADR(IO.clampClosedSet),		ADR(IO.clampClosedReset),	ADR(IO.clampClosedSet),		ADR(IO.clampClosedReset));
+Valve(E_Valve.Eject,		'Espulsore',			OUTPUT_ENUM.BISTABLE,	ADR(IO.clampEjectSet),		ADR(IO.clampEjectReset),	ADR(IO.clampEjectSet),		ADR(IO.clampEjectReset));
+Valve(E_Valve.CenteringLeftUp,	'Centratore SX su',	OUTPUT_ENUM.BISTABLE,	ADR(IO.centringLeftUpSet),	ADR(IO.centringLeftUpReset),	ADR(IO.centringLeftUpSet),	ADR(IO.centringLeftUpReset));
+Valve(E_Valve.CenteringRightUp,	'Centratore DX su',	OUTPUT_ENUM.BISTABLE,	ADR(IO.centringRightUpSet),	ADR(IO.centringRightUpReset),	ADR(IO.centringRightUpSet),	ADR(IO.centringRightUpReset));
+Valve(E_Valve.CenteringUp,		'Centratori su',		OUTPUT_ENUM.BISTABLE,	ADR(IO.centringSet),		ADR(IO.centringReset),		ADR(IO.centringSet),		ADR(IO.centringReset));
+Valve(E_Valve.CenteringClamp,	'Bloccaggio centratori',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centringClampSet),	0,						ADR(IO.centringClampSet),	ADR(IO.centringClampSet));
+Valve(E_Valve.CenteringOut,		'Supporto centraggio',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringOutSet),	0,							ADR(IO.centeringOutSet),	ADR(IO.centeringOutSet));
+Valve(E_Valve.CenteringPiece1,	'Palpatore 1',			OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centringClamp1Left),	0,							ADR(IO.centringClamp1Left),	ADR(IO.centringClamp1Left));
+Valve(E_Valve.CenteringPiece2,	'Palpatore 2',			OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centringClamp2Left),	0,							ADR(IO.centringClamp2Left),	ADR(IO.centringClamp2Left));
+Valve(E_Valve.CenteringPiece3,	'Palpatore 3',			OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centringClamp3Left),	0,							ADR(IO.centringClamp3Left),	ADR(IO.centringClamp3Left));
+Valve(E_Valve.CenteringPiece4,	'Palpatore 4',			OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centringClamp4Left),	0,							ADR(IO.centringClamp4Left),	ADR(IO.centringClamp4Left));
+Valve(E_Valve.CenteringAir1,	'Esclusione aria 1',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringLeft1Set),	0,							ADR(IO.centeringLeft1Set),	ADR(IO.centeringLeft1Set));
+Valve(E_Valve.CenteringAir2,	'Esclusione aria 2',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringLeft2Set),	0,							ADR(IO.centeringLeft2Set),	ADR(IO.centeringLeft2Set));
+Valve(E_Valve.CenteringAir3,	'Esclusione aria 3',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringLeft3Set),	0,							ADR(IO.centeringLeft3Set),	ADR(IO.centeringLeft3Set));
+Valve(E_Valve.CenteringAir4,	'Esclusione aria 4',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringLeft4Set),	0,							ADR(IO.centeringLeft4Set),	ADR(IO.centeringLeft4Set));
+
+//*******************************************************************************************************************
+// Ingressi mostrati all'HMI (sensori), nell'ordine storico dell'interfaccia v1
+//*******************************************************************************************************************
+Input(1,	'ER SX dentro',			ADR(IO.erLeftIn));
+Input(2,	'ER SX fuori',			ADR(IO.erLeftOut));
+Input(3,	'ER SX trasv. su',		ADR(IO.useLeftUp));
+Input(4,	'ER SX trasv. giu',		ADR(IO.useLeftDown));
+Input(5,	'ER DX dentro',			ADR(IO.erRightIn));
+Input(6,	'ER DX fuori',			ADR(IO.erRightOut));
+Input(7,	'ER DX trasv. su',		ADR(IO.useRighttUp));
+Input(8,	'ER DX trasv. giu',		ADR(IO.useRightDown));
+Input(9,	'Centratore pezzo 1',	ADR(IO.centering1LeftIn));
+Input(10,	'Centratore pezzo 2',	ADR(IO.centering2LeftIn));
+Input(11,	'Centratore pezzo 3',	ADR(IO.centering3LeftIn));
+Input(12,	'Centratore pezzo 4',	ADR(IO.centering4LeftIn));
+Input(13,	'EP SX dentro',			ADR(IO.epLeftIn));
+Input(14,	'EP SX fuori',			ADR(IO.epLeftOut));
+Input(15,	'EP SX trazione giu',	ADR(IO.epLeftBendDown));
+Input(16,	'EP SX trazione su',	ADR(IO.epLeftBendUp));
+Input(17,	'EP DX dentro',			ADR(IO.epRightIn));
+Input(18,	'EP DX fuori',			ADR(IO.epRightOut));
+Input(19,	'EP DX trazione giu',	ADR(IO.epRightBendDown));
+Input(20,	'EP DX trazione su',	ADR(IO.epRightBendUp));
+
+//*******************************************************************************************************************
+// Funzioni M. Canali: 0 = unita' SX, 1 = unita' DX, 2 = UR2.
+//*******************************************************************************************************************
+Mach.nMFuncCount := 0;
+
+// --- Canale 0, unita' SX ---
+Add(F_MSync(0, 62, 0, 0, Mach.SYNC_ACK_L, 0, 0, 0, 0));													// USE SX in posizione
+Add(F_MSync(0, 61, Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncLeftWaitRight));			// aspetta la USE DX
+Add(F_MSync(0, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_L, E_Alarm.SyncLeftWaitUr2));		// aspetta l'UR2
+Add(F_MSync(0, 112, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_L, Mach.SYNC_UR2_ACK_L, 0, E_Alarm.SyncLeftWaitUr2Ack));	// conferma all'UR2
+Add(F_MSync(0, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_DONE_L, 0, 0, 0));							// reset sincronismi
+Add(F_MValve(0, 40, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#500MS,	E_Alarm.ErLeftUp));
+Add(F_MValve(0, 41, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#500MS,	E_Alarm.ErLeftDown));
+Add(F_MValve(0, 44, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.SET,		T#3000MS, T#500MS,	E_Alarm.UseLeftUp));
+Add(F_MValve(0, 45, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#230MS,	E_Alarm.UseLeftDown));
+Add(F_MValveDirect(0, 54, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.SET));
+Add(F_MValveDirect(0, 55, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.RESET));
+Add(F_MValve(0, 50, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.SupportLeftOut));
+Add(F_MValve(0, 51, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.SupportLeftIn));
+Add(F_MValve(0, 70, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftBend));
+Add(F_MValve(0, 72, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftOut));
+Add(F_MValve(0, 73, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpLeftIn));
+Add(F_MValve(0, 74, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpLeftBendReturn));
+Add(F_MSimple(0, 95, E_MFuncKind.WaitStart));
+Add(F_MSimple(0, 130, E_MFuncKind.WaitH));
+Add(F_MSimple(0, 135, E_MFuncKind.LineNo));
+Add(F_MSimple(0, 140, E_MFuncKind.Nop));
+
+// --- Canale 1, unita' DX ---
+Add(F_MSync(1, 63, 0, 0, Mach.SYNC_ACK_R, 0, 0, 0, 0));													// USE DX in posizione
+Add(F_MSync(1, 60, Mach.SYNC_ACK_L, 0, 0, Mach.SYNC_ACK_L, 0, 0, E_Alarm.SyncRightWaitLeft));			// aspetta la USE SX
+Add(F_MSync(1, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_R, E_Alarm.SyncRightWaitUr2));		// aspetta l'UR2
+Add(F_MSync(1, 113, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_R, Mach.SYNC_UR2_ACK_R, 0, E_Alarm.SyncRightWaitUr2Ack));	// conferma all'UR2
+Add(F_MSync(1, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_R OR Mach.SYNC_DONE_R, 0, 0, 0));							// reset sincronismi
+Add(F_MValve(1, 42, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#300MS,	E_Alarm.ErRightUp));
+Add(F_MValve(1, 43, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.RESET,	T#1000MS, T#100MS,	E_Alarm.ErRightDown));
+Add(F_MValve(1, 46, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.UseRightUp));
+Add(F_MValve(1, 47, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.UseRightDown));
+Add(F_MValveDirect(1, 56, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.SET));
+Add(F_MValveDirect(1, 57, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.RESET));
+Add(F_MValve(1, 48, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#200MS,	E_Alarm.SupportRightOut));
+Add(F_MValve(1, 49, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.SupportRightIn));
+Add(F_MValve(1, 70, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightBend));
+Add(F_MValve(1, 72, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightOut));
+Add(F_MValve(1, 73, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpRightIn));
+Add(F_MValve(1, 74, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpRightBendReturn));
+Add(F_MSimple(1, 96, E_MFuncKind.WaitStart));
+Add(F_MSimple(1, 130, E_MFuncKind.WaitH));
+Add(F_MSimple(1, 135, E_MFuncKind.LineNo));
+Add(F_MSimple(1, 140, E_MFuncKind.Nop));
+
+// --- Canale 2, UR2 ---
+Add(F_MSync(2, 78, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, 0, 0));													// UR2 in posizione
+Add(F_MSync(2, 110, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_UR2_ACK_R, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, E_Alarm.SyncUr2WaitUseAck));	// aspetta la conferma delle USE
+Add(F_MSync(2, 116, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncUr2WaitUse));	// aspetta le due USE
+Add(F_MSync(2, 150, 0, 0, 0, Mach.SYNC_ACK_UR2 OR Mach.SYNC_UR2_DONE OR Mach.SYNC_UR2_REQ_L OR Mach.SYNC_UR2_REQ_R, 0, 0, 0));	// reset sincronismi
+
+// Morsa: la conferma e' l'uscita stessa, il timeout non puo' scattare (Ignore come prima).
+stDef := F_MValve(2, 100, E_Valve.Clamp,	OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#300MS,	0);
+stDef.eOnError := E_MFuncOnError.Ignore;
+Add(stDef);
+stDef := F_MValve(2, 101, E_Valve.Clamp,	OUTPUT_ACTION_ENUM.RESET,	T#500MS, T#500MS,	0);
+stDef.eOnError := E_MFuncOnError.Ignore;
+Add(stDef);
+
+// Espulsione: parte solo con l'UR2 a zero (altrimenti attesa con time-out, allarme 128);
+// se l'espulsore non conferma la funzione viene concessa lo stesso, senza allarme (come prima).
+stDef := F_MValve(2, 102, E_Valve.Eject,	OUTPUT_ACTION_ENUM.SET,		T#500MS, T#500MS,	0);
+stDef.eOnError := E_MFuncOnError.Grant;
+stDef.nInterlock := Mach.IL_UR2_AT_ZERO;
+stDef.nWaitAlarmId := E_Alarm.EjectUr2NotAtZero;
+Add(stDef);
+
+// Ritorno espulsore: il post-delay e' il parametro H della riga (DeltaT di espulsione).
+stDef := F_MValve(2, 103, E_Valve.Eject,	OUTPUT_ACTION_ENUM.RESET,	T#1000MS, T#0MS,	0);
+stDef.bPostDelayFromH := TRUE;
+stDef.eOnError := E_MFuncOnError.Ignore;
+Add(stDef);
+
+Add(F_MSimple(2, 97, E_MFuncKind.WaitStart));
+Add(F_MSimple(2, 130, E_MFuncKind.WaitH));
+Add(F_MSimple(2, 135, E_MFuncKind.LineNo));
+Add(F_MSimple(2, 140, E_MFuncKind.Nop));]]></ST>
+    </Implementation>
+    <Method Name="Add" Id="{8905d13b-84aa-49ca-9189-210b45d23100}">
+      <Declaration><![CDATA[// Aggiunge una riga alla tabella delle funzioni M (oltre MAX_MFUNC la riga si perde: aumentare Mach.MAX_MFUNC).
+METHOD PRIVATE Add
+VAR_INPUT
+	stNew		: ST_MFuncDef;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Mach.nMFuncCount < Mach.MAX_MFUNC THEN
+	Mach.nMFuncCount := Mach.nMFuncCount + 1;
+	Mach.aMFunc[Mach.nMFuncCount] := stNew;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Axis" Id="{e3723339-493d-45e9-9891-2efcbef31041}">
+      <Declaration><![CDATA[// Descrive un asse dei programmi e ne copia ID NC e posizione attuale (a ogni ciclo).
+METHOD PRIVATE Axis
+VAR_INPUT
+	eAxis					: AXIS_ENUM;
+	sName					: STRING(23);
+	fSpeedScale				: LREAL;
+	bCenteringCorrection	: BOOL;
+	bTargetZero				: BOOL;
+END_VAR
+VAR_IN_OUT
+	stAxis					: AXIS_REF;
+END_VAR
+VAR
+	n						: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[n := TO_UINT(eAxis);
+Mach.aAxisCfg[n].bDefined := TRUE;
+Mach.aAxisCfg[n].sName := sName;
+Mach.aAxisCfg[n].fSpeedScale := fSpeedScale;
+Mach.aAxisCfg[n].bCenteringCorrection := bCenteringCorrection;
+Mach.aAxisCfg[n].bTargetZero := bTargetZero;
+Mach.aAxisCfg[n].nNcAxisId := stAxis.NcToPlc.AxisId;
+Mach.aAxisCfg[n].fActPos := stAxis.NcToPlc.ActPos;
+Mach.aAxisCfg[n].fActVelo := stAxis.NcToPlc.ActVelo;
+Mach.aAxisCfg[n].nErrorCode := stAxis.NcToPlc.ErrorCode;
+Mach.aAxisCfg[n].bDisabled := stAxis.Status.Disabled;
+Mach.aAxisCfg[n].bMoving := stAxis.Status.Moving;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AxisService" Id="{8202b84b-f772-45ac-8569-a4078022cafe}">
+      <Declaration><![CDATA[// Movimento manuale e servizio di un asse (FB_AxisModule).
+METHOD PRIVATE AxisService
+VAR_INPUT
+	eAxis				: AXIS_ENUM;
+	nMpgSelector		: UINT;
+	fJogVelocity		: LREAL;
+	fJogAcceleration	: LREAL;
+	fJogDeceleration	: LREAL;
+	fJogJerk			: LREAL;
+	bSoEReset			: BOOL;
+	nCalibrationAlarmId	: UINT;
+	nLimitsAlarmId		: UINT;
+END_VAR
+VAR
+	n					: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[n := TO_UINT(eAxis);
+Mach.aAxisCfg[n].nMpgSelector := nMpgSelector;
+Mach.aAxisCfg[n].fJogVelocity := fJogVelocity;
+Mach.aAxisCfg[n].fJogAcceleration := fJogAcceleration;
+Mach.aAxisCfg[n].fJogDeceleration := fJogDeceleration;
+Mach.aAxisCfg[n].fJogJerk := fJogJerk;
+Mach.aAxisCfg[n].bSoEReset := bSoEReset;
+Mach.aAxisCfg[n].nCalibrationAlarmId := nCalibrationAlarmId;
+Mach.aAxisCfg[n].nLimitsAlarmId := nLimitsAlarmId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Input" Id="{acd8d83b-dd19-4056-907c-0c13e8d8b922}">
+      <Declaration><![CDATA[// Descrive un ingresso mostrato all'HMI.
+METHOD PRIVATE Input
+VAR_INPUT
+	nIndex		: UINT;
+	sName		: STRING(23);
+	pInput		: POINTER TO BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Mach.aInput[nIndex].sName := sName;
+Mach.aInput[nIndex].pInput := pInput;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Valve" Id="{6c416aec-61e2-45f2-b0e6-e7bb0c08c2e6}">
+      <Declaration><![CDATA[// Descrive una valvola: uscite e conferme (pReset = 0 per la monostabile).
+METHOD PRIVATE Valve
+VAR_INPUT
+	eValve		: E_Valve;
+	sName		: STRING(23);
+	eType		: OUTPUT_ENUM;
+	pSet		: POINTER TO BOOL;
+	pReset		: POINTER TO BOOL;
+	pFbSet		: POINTER TO BOOL;
+	pFbReset	: POINTER TO BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Mach.aValve[eValve].sName := sName;
+Mach.aValve[eValve].eType := eType;
+Mach.aValve[eValve].pSet := pSet;
+Mach.aValve[eValve].pReset := pReset;
+Mach.aValve[eValve].pFbSet := pFbSet;
+Mach.aValve[eValve].pFbReset := pFbReset;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

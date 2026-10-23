@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="PRGSTATE_ENUM" Id="{7c294f41-dfa7-44a7-961c-9c8181100eb6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE PRGSTATE_ENUM :
+(
+	FREE := 0,
+	RESET := 1,
+	ACTIVE := 2,
+	END := 3,
+	STOP := 4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

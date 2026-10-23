@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Diag" Id="{73f87a93-7b62-4acd-8cb8-e85e18a1e10f}">
+    <Declaration><![CDATA[// Diagnosi del ciclo per l'HMI: una sola lettura ADS di Diag.Data (MAIN.DiagUpdate la aggiorna a ogni ciclo).
+{attribute 'qualified_only'}
+VAR_GLOBAL
+	Data		: ST_Diag;
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

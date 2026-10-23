@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_HmiResult" Id="{820d0d20-eb82-4ea6-878a-68509b58648f}">
+    <Declaration><![CDATA[// Risposta del PLC a un comando (Hmi.Sts.eCmdResult).
+{attribute 'qualified_only'}
+TYPE E_HmiResult :
+(
+	None				:= 0,	// nessun comando ancora
+	Accepted			:= 1,	// eseguito (l'esito del ciclo si legge negli stati e negli allarmi)
+	Rejected			:= 2,	// non ammesso adesso (es. calibrazione con il ciclo in corso)
+	UnknownCommand		:= 3,
+	InvalidArgument		:= 4	// asse o valore fuori dai limiti
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

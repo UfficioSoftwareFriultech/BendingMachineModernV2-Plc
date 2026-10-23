@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_HmiCommand" Id="{742eee0b-5ee9-43fb-948f-f726772ebfec}">
+    <Declaration><![CDATA[// Comandi discreti dell'HMI (Hmi.Cmd.eCommand). Ogni comando ha un numero di sequenza: il PLC lo esegue una
+// volta e risponde in Hmi.Sts.nCmdAck / eCmdResult. Un numero non si riusa per un comando diverso.
+{attribute 'qualified_only'}
+TYPE E_HmiCommand :
+(
+	None				:= 0,
+	Start				:= 1,	// start ciclo (come il pulsante)
+	Stop				:= 2,	// stop ciclo
+	Reset				:= 3,	// reset allarmi e ciclo
+	MotorsOn			:= 4,
+	MotorsOff			:= 5,
+	ProgramLoaded		:= 6,	// ProgramDB scritto: nuovo programma (azzera ciclo e contapezzi)
+	WriteParameters		:= 7,	// Hmi.Param scritto: copia nei parametri macchina e scrittura dei limiti assi
+	Calibrate			:= 8,	// calibrazione dell'asse nAxis; bFlag = usa la quota fValue, altrimenti la quota standard
+	SetCount			:= 9	// contapezzi = nValue
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

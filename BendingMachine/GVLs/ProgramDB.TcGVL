@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="ProgramDB" Id="{fcf68a51-2b91-462e-8ddc-f45260ef6fb1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	parameters	: TYPE_PARAMETERS;
+	homing		: TYPE_SEQUENCE;
+	sequence	: ARRAY[0..Size.MAX_SEQUENCE-1] OF TYPE_SEQUENCE;
+	prgState	: PRGSTATE_ENUM;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

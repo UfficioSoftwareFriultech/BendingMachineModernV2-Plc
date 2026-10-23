@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Calibration" Id="{71333338-22d4-4810-bd26-438b64cc7be4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// Quote standard usate da MC_Home quando l'override ADS non e abilitato.
+	ERLHomePosition		: LREAL := 0;
+	USELHomePosition	: LREAL := 1400;
+	URHomePosition		: LREAL := 0;
+	ERRHomePosition		: LREAL := 0;
+	USERHomePosition	: LREAL := 1400;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

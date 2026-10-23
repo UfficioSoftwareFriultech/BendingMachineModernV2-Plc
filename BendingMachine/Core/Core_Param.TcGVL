@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Core_Param" Id="{c27be974-d822-4fe2-aa69-54bd1c3f2dac}">
+    <Declaration><![CDATA[// Dimensioni del Core. Quando il Core diventera' una libreria questa lista sara' la sua parameter list:
+// ogni macchina la imposta senza toccare il codice del Core.
+{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	MAX_CHANNEL		: UINT := 3;	// canali NC di interpolazione (SX, DX, UR2)
+	DIAG_EVENTS		: UINT := 64;	// eventi tenuti nello storico della diagnosi
+	MAX_AXIS		: UINT := 16;	// assi configurabili (indice = AXIS_ENUM)
+	MAX_VALVE		: UINT := 32;	// valvole configurabili
+	MAX_INPUT		: UINT := 32;	// ingressi mostrati all'HMI
+	MAX_ALARM		: UINT := 255;	// ultimo indice degli allarmi (uguale a Size.MAX_ALARM)
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

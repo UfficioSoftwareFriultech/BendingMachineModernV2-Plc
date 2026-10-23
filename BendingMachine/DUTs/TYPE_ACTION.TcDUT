@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="TYPE_ACTION" Id="{0bb64b6e-de63-4a08-b99e-69c499b1119f}">
+    <Declaration><![CDATA[TYPE TYPE_ACTION :
+STRUCT
+	active : BOOL;
+	speed : UDINT;
+	lineNo : UDINT;
+	aType : ACTION_ENUM;
+	centeringVerse : DINT;
+	centeringAmount : LREAL;
+	autoCorrection : BOOL;
+	pos : ARRAY[0..Size.MAX_POSITION-1] OF TYPE_POSITION;
+	macros : ARRAY[0..Size.MAX_MACRO-1] OF TYPE_MACRO;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

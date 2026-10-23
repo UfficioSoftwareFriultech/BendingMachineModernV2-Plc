@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TYPE_PARAMETERS" Id="{d53c1e9e-4849-44d5-a87f-c1a415a2a3fa}">
+    <Declaration><![CDATA[TYPE TYPE_PARAMETERS :
+STRUCT
+	(*	Nome del programma.	*)
+	prgName 			: STRING[23];
+	
+	(*	Numero di istruzioni del programma.	*)
+	sequenceCount 		: UDINT;
+	
+	(*	Numero assegnato alla macchina per l'identificazione, serve per collegamento in rete (opzionale).	*)
+	machineNo 			: UDINT;
+	
+	(*	Quando arriva a zero la macchina si ferma.	*)
+	pcsCounter 			: UDINT;
+	
+	(*	Numero di pezzi da piegare per ogni ciclo macchina.
+		Il contapezzi viene decrementato di questo valore ad ogni ciclo.	*)
+	pcsCycle 			: UDINT;
+	
+	(*	Yes: il pezzo è scaricato automaticamente a fine ciclo e le unità vanno in posizione di start del ciclo successivo.
+		No 2 start: il ciclo termina con la ultime due piegature, il pezzo si deve togliere manualmente. Con uno start si portano le unità di piegatura alla posizione iniziale del ciclo successivo e con un altro start si fa ripartire il ciclo.
+		No 1 start: il ciclo termina con le ultime due piegaturre, le unità di piegatura vanno automaticamente alla posizione iniziale del ciclo successvo. Il pezzo va rimosso manualmente. (si usa solo quando la posizione finale è uguale a quella inziale del ciclo successivo).	*)
+	ejectMode 			: EJECT_ENUM;
+	
+	(*	Ritardo tra espulsione e reset ciclo (in decimi di secondo)	*)
+	deltaT 				: UDINT;
+	
+	(*	Angolo di partenza del bracio piegatore. I minimi e massimi impostabili sono quelli impostati nei parametri macchina.
+		Dopo l'azzeramento il braccio si posiziona alla quota programmata.Nome del programma.	*)
+	startDegL 			: LREAL;
+	
+	(*	Angolo di partenza del bracio piegatore. I minimi e massimi impostabili sono quelli impostati nei parametri macchina.
+		Dopo l'azzeramento il braccio si posiziona alla quota programmata.Nome del programma.	*)
+	startDegR 			: LREAL;
+	
+	(*	Angolo di partenza per le piegature a spigolo.	*)
+	startCDegL 			: LREAL;
+	
+	(*	Angolo di partenza per le piegature a spigolo.	*)
+	startCDegR 			: LREAL;
+	
+	(*	Unità di movimentazione USE bilanciata o indipendente.
+		Se bilanciata le unità USE si aspettatano dopo ogni istruzione.	*)
+	useBalance 			: BOOL; 
+	
+	(*	Tabelle dei raggi varibili. *)
+	radTable 			: UDINT;
+	
+	(*	Tabelle di elastricità. *)
+	elscTable 			: UDINT;
+	
+	(*	 Percentuale di compensazione elasticità.	*)
+	elscAdjL 			: LREAL;
+	
+	(*	 Percentuale di compensazione elasticità.	*)
+	elscAdjR			: LREAL;
+	
+	(*	Tempo ciclo teorico	*)
+	cycTime 			: LREAL;
+	
+	(*	Tempo di attrezzaggio teorico	*)
+	setupTime 			: LREAL;
+	
+	(*	Peso del pezzo in lavorazione	*)
+	pcWeight 			: LREAL;
+	
+	(*	Quando si raggiunde il numero di cicli macchina inserto la macchina si ferma con il bloccaggio chiuso o aperto. A seconda di Open Clamp	*)
+	pcsGrpCounter 		: UDINT;
+	
+	(*	*)
+	openClamp 			: BOOL;
+	
+	(*	Gradi di ritorno del braccio prima di efttuare l'inversione. Se viene messo a zero il braccio ritorna all'angolo di start.	*)
+	returnDeg 			: LREAL;
+	
+	(*	Bloccaggio delle slitte. Se presente durante le operazioni le slitte vengono bloccate per evitare sollecitazioni alle USE.
+		Funziona solo se presente nei parametri macchina.	*)
+	useLockL 			: BOOL;
+	
+	(*	Bloccaggio delle slitte. Se presente durante le operazioni le slitte vengono bloccate per evitare sollecitazioni alle USE.
+		Funziona solo se presente nei parametri macchina.	*)
+	useLockR 			: BOOL;
+	
+	(*	Spallamento *)
+	HookL 			: BOOL;
+	
+	(*	Spallamento *)
+	HookR 			: BOOL;
+	
+	(*	Centering. Centratore	
+		NO: Esclusione Centratore.
+		TL: Centratore predisposto per la ripresa della tolleranza nei terminali del pezzo.	
+		TB: Centratore predisposto per la ripresa della tolleranza in un curva (tutta la tolleranza in una curva) oppure in due curve (metà tolleranza in una curva, metà tolleranza in un'altra curva) oppure in tre o quattro curve.   *)
+	centering			: CENTERING_ENUM;
+	
+	(*	Posizione di partenza centratore sinistro.	*)
+	startL 				: LREAL;
+	
+	(*	Posizione di partenza centratore destro.	*)
+	startR 				: LREAL;
+	
+	(*	Corsa rapida di avvicinamento centratore per ogni USE	*)
+	inStrokeL			: LREAL;
+	
+	(*	Corsa rapida di avvicinamento centratore per ogni USE	*)
+	inStrokeR			: LREAL;
+	
+	(*	Corsa massima del centratore in successione alla corsa IN STROKE   *)
+	maxStrokeL			: LREAL;
+	
+	(*	Corsa massima del centratore in successione alla corsa IN STROKE   *)
+	maxStrokeR			: LREAL;
+	
+		(*	Extracorsa prima della chiusura dei palpatoi.   *)
+	extraL				: LREAL;
+	
+	(*	Extracorsa prima della chiusura dei palpatoi.   *)
+	extraR				: LREAL;
+	
+	(*	Movimento Trasversale L.   *)
+	transMovementL				: BOOL;
+	
+	(*	Movimento Trasversale R.   *)
+	transMovementR				: BOOL;
+	
+	(*	Morsa del programma. TRUE: morsa normale (unita' di bloccaggio senza rotazione, motore UR2 staccato):
+		il programma usa l'asse simulato UR_SIM e l'UR2 non si controlla. FALSE (default, anche con HMI che
+		non lo scrivono): morsa secondo UR2Present nei parametri macchina. Cade nel padding finale: la struttura resta di 232 byte.   *)
+	normalClamp					: BOOL;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

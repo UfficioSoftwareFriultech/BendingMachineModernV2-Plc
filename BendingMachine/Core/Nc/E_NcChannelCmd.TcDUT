@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_NcChannelCmd" Id="{ac7b6c39-713b-46b4-b828-6671522c5343}">
+    <Declaration><![CDATA[// Comando a tutti i canali NC insieme (FB_NcChannels).
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_NcChannelCmd :
+(
+	None		:= 0,
+	EStop		:= 1,	// arresto controllato dei canali (ItpEStopEx): stop e abort
+	StepOn		:= 2,	// ripartenza dal punto di arresto (ItpStepOnAfterEStopEx): ripresa dal RUN
+	Reset		:= 3	// reset dei canali (ItpResetEx2)
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

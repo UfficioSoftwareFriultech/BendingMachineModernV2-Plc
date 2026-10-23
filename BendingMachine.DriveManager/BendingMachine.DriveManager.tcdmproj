@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Name>Drive Manager 2</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{caa01eca-71bb-4abb-ac6c-c424ab6f2750}</ProjectGuid>
+    <TcPath>..\BendingMachine.tsproj</TcPath>
+    <AssemblyName>BendingMachine.DriveManager</AssemblyName>
+    <RootNamespace>BendingMachine.DriveManager</RootNamespace>
+    <SaveDriveDataAsFiles>False</SaveDriveDataAsFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Drive 15 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 17 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 19 %28AX5103-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 19 (AX5103-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 29 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^ReteEK_Device1_con_sync_master^Drive 29 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 31 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^ReteEK_Device1_con_sync_master^Drive 31 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 33 %28AX5103-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^ReteEK_Device1_con_sync_master^Drive 33 (AX5103-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="ERL-USEL (AX5206-0000-0216).tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^ERL-USEL (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="ERR-USER (AX5206-0000-0216).tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^ERR-USER (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="UR (AX5103-0000-0216).tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^UR (AX5103-0000-0216)</IoItemPathName>
+    </Content>
+  </ItemGroup>
+</Project>

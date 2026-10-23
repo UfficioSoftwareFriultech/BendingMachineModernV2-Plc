@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_MFuncDispatcher" Id="{0f38bb35-f961-4f56-a42d-2cd9472d488a}" SpecialFunc="None">
+    <Declaration><![CDATA[// Esegue le funzioni M con handshake chieste dai canali NC, secondo la tabella aDef della macchina.
+// Una chiamata per ciclo PLC. Per ogni canale: se c'e' una richiesta (e non e' appena stata concessa)
+// cerca la riga (canale, M) e la esegue; senza riga chiede l'allarme nUnknownAlarmId (Info = canale*1000 + M,
+// canale contato da 1) e l'abort. Non scrive allarmi ne' passi del ciclo: li chiede con bAbort e aAlarmId,
+// la macchina decide (MAIN.MacroManager).
+// Dopo la concessione il canale resta escluso per 10 ms, il tempo che l'NC abbassi la richiesta.
+FUNCTION_BLOCK FB_MFuncDispatcher
+VAR_INPUT
+	bStart				: BOOL;		// consenso start per le funzioni WaitStart (passo-passo)
+	bCycleRunning		: BOOL;		// ciclo in corso: solo allora una M sconosciuta chiede l'abort
+	nUnknownAlarmId		: UINT;		// allarme per una M senza riga in tabella
+	nDefCount			: UINT;		// righe valide di aDef, a partire dal primo indice
+END_VAR
+VAR_IN_OUT
+	aNciToPlc			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF NCTOPLC_NCICHANNEL_REF;
+	aPlcToNci			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF PLCTONC_NCICHANNEL_REF;
+	aDef				: ARRAY[*] OF ST_MFuncDef;
+	aValve				: ARRAY[*] OF ST_Valve;
+	aInterlock			: ARRAY[*] OF BOOL;
+	dwSyncFlags			: DWORD;
+END_VAR
+VAR_OUTPUT
+	bAbort				: BOOL;		// in questo ciclo una funzione M chiede l'abort del ciclo
+	aAlarmId			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UINT;		// allarme da memorizzare, 0 = nessuno
+	aAlarmInfo			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UDINT;
+	aWaiting			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF BOOL;		// fermo su un'attesa con time-out (sync o interlock)
+	aWaitAlarmId		: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UINT;		// allarme di quell'attesa
+	aLineNo				: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF UDINT;	// ultima riga del programma (funzione LineNo)
+END_VAR
+VAR
+	fbSetMacro			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF SetMacro;
+	fbWaitMacro			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF WaitMacro;
+	fbGrantTrig			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF R_TRIG;
+	fbGrantHold			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF TOF;
+	aNoResetOutput		: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF BOOL;	// uscita "reset" fittizia per le valvole monostabili
+	ch					: UINT;
+	i					: DINT;
+	nDef				: DINT;
+	nMFunc				: UINT;
+	bGrant				: BOOL;
+	stDef				: ST_MFuncDef;
+	stValve				: ST_Valve;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bAbort := FALSE;
+
+FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	aAlarmId[ch] := 0;
+	aAlarmInfo[ch] := 0;
+	aWaiting[ch] := FALSE;
+	aWaitAlarmId[ch] := 0;
+	fbSetMacro[ch].Start := FALSE;
+	fbWaitMacro[ch].Start := FALSE;
+
+	IF aNciToPlc[ch].HskMFuncReq = 1 AND NOT fbGrantHold[ch].Q THEN
+		bGrant := FALSE;
+		nMFunc := TO_UINT(aNciToPlc[ch].HskMFuncNo);
+
+		// Riga della tabella per (canale, M)
+		nDef := -1;
+		i := LOWER_BOUND(aDef, 1);
+		WHILE i < LOWER_BOUND(aDef, 1) + nDefCount AND_THEN i <= UPPER_BOUND(aDef, 1) DO
+			IF aDef[i].nChannel = ch AND aDef[i].nMFunc = nMFunc THEN
+				nDef := i;
+				EXIT;
+			END_IF
+			i := i + 1;
+		END_WHILE
+
+		IF nDef < 0 THEN
+			// Senza riga il canale resterebbe fermo per sempre.
+			IF bCycleRunning THEN
+				aAlarmId[ch] := nUnknownAlarmId;
+				aAlarmInfo[ch] := (ch + 1) * 1000 + nMFunc;
+				bAbort := TRUE;
+			END_IF
+		ELSE
+			stDef := aDef[nDef];
+
+			CASE stDef.eKind OF
+				E_MFuncKind.Nop:
+					bGrant := TRUE;
+
+				E_MFuncKind.LineNo:
+					aLineNo[ch] := DINT_TO_UDINT(ItpGetHParam(aNciToPlc[ch]));
+					bGrant := TRUE;
+
+				E_MFuncKind.WaitStart:
+					bGrant := bStart;
+
+				E_MFuncKind.WaitH:
+					fbWaitMacro[ch].Start := TRUE;
+					fbWaitMacro[ch].WaitTime := DINT_TO_TIME(ItpGetHParam(aNciToPlc[ch]));
+					IF fbWaitMacro[ch].Done THEN
+						fbWaitMacro[ch].Start := FALSE;
+						bGrant := TRUE;
+					END_IF
+
+				E_MFuncKind.Sync:
+					dwSyncFlags := (dwSyncFlags OR stDef.dwSetWhileWaiting) AND NOT stDef.dwClearWhileWaiting;
+					IF (dwSyncFlags AND stDef.dwWaitSet) = stDef.dwWaitSet AND (dwSyncFlags AND stDef.dwWaitClear) = 0 THEN
+						dwSyncFlags := (dwSyncFlags OR stDef.dwSetOnGrant) AND NOT stDef.dwClearOnGrant;
+						bGrant := TRUE;
+					ELSE
+						aWaiting[ch] := stDef.nWaitAlarmId <> 0;
+						aWaitAlarmId[ch] := stDef.nWaitAlarmId;
+					END_IF
+
+				E_MFuncKind.ValveDirect:
+					stValve := aValve[stDef.nValve];
+					IF stDef.eAction = OUTPUT_ACTION_ENUM.SET THEN
+						stValve.pSet^ := TRUE;
+						IF stValve.eType = OUTPUT_ENUM.BISTABLE THEN
+							stValve.pReset^ := FALSE;
+						END_IF
+					ELSE
+						stValve.pSet^ := FALSE;
+						IF stValve.eType = OUTPUT_ENUM.BISTABLE THEN
+							stValve.pReset^ := TRUE;
+						END_IF
+					END_IF
+					bGrant := TRUE;
+
+				E_MFuncKind.Valve:
+					IF stDef.nInterlock = 0 OR_ELSE aInterlock[stDef.nInterlock] THEN
+						stValve := aValve[stDef.nValve];
+						fbSetMacro[ch].Start := TRUE;
+						fbSetMacro[ch].OutputType := stValve.eType;
+						fbSetMacro[ch].ActionType := stDef.eAction;
+						fbSetMacro[ch].TimeOutTime := stDef.tTimeout;
+						IF stDef.bPostDelayFromH THEN
+							fbSetMacro[ch].PostDelay := DINT_TO_TIME(ItpGetHParam(aNciToPlc[ch]));
+						ELSE
+							fbSetMacro[ch].PostDelay := stDef.tPostDelay;
+						END_IF
+						IF stDef.eAction = OUTPUT_ACTION_ENUM.SET THEN
+							fbSetMacro[ch].FeedBack := stValve.pFbSet;
+						ELSE
+							fbSetMacro[ch].FeedBack := stValve.pFbReset;
+						END_IF
+						fbSetMacro[ch].SetOutput := stValve.pSet;
+						IF stValve.pReset <> 0 THEN
+							fbSetMacro[ch].ResetOutput := stValve.pReset;
+						ELSE
+							// SetMacro azzera ResetOutput^ anche per le monostabili quando va in timeout
+							fbSetMacro[ch].ResetOutput := ADR(aNoResetOutput[ch]);
+						END_IF
+
+						IF fbSetMacro[ch].Done THEN
+							fbSetMacro[ch].Start := FALSE;
+							bGrant := TRUE;
+						END_IF
+
+						IF fbSetMacro[ch].Error THEN
+							CASE stDef.eOnError OF
+								E_MFuncOnError.Abort:
+									aAlarmId[ch] := stDef.nAlarmId;
+									aAlarmInfo[ch] := nMFunc;
+									bAbort := TRUE;
+								E_MFuncOnError.Grant:
+									bGrant := TRUE;
+							END_CASE
+						END_IF
+					ELSE
+						aWaiting[ch] := stDef.nWaitAlarmId <> 0;
+						aWaitAlarmId[ch] := stDef.nWaitAlarmId;
+					END_IF
+			END_CASE
+		END_IF
+
+		IF bGrant THEN
+			aPlcToNci[ch].MFuncGranted := 1;
+		END_IF
+	ELSE
+		aPlcToNci[ch].MFuncGranted := 0;
+	END_IF
+END_FOR
+
+// Come prima in MAIN.AxisFunctionBlocks: le macro girano dopo la decisione, poi il fronte della
+// concessione apre la finestra di 10 ms in cui il canale non viene servito.
+FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	fbSetMacro[ch]();
+	fbWaitMacro[ch]();
+	fbGrantTrig[ch](CLK := aPlcToNci[ch].MFuncGranted = 1);
+	fbGrantHold[ch](IN := fbGrantTrig[ch].Q, PT := T#10MS);
+END_FOR]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

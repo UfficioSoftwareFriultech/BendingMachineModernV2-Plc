@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MPG_ReadStatus" Id="{b7260e34-8700-42fc-ae81-e1143d77f9ef}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+FUNCTION_BLOCK MPG_ReadStatus
+VAR_INPUT
+	uismoothingPercentage			: UINT;
+	tUpdateTimerPt					: TIME;
+	uiScalingFactorNumerator		: UINT;
+	uiScalingFactorDenominator		: UINT;
+END_VAR
+
+VAR_IN_OUT
+	stMpgEncoder 					: ST_MpgEncoder;
+END_VAR
+
+VAR
+	fbUpdateTimer					: TON;
+	fbButton1RTrigger				: R_TRIG;
+	fbButton2RTrigger				: R_TRIG;
+	fbButton3RTrigger				: R_TRIG;
+	fbFowardRTrigger				: R_TRIG;
+	fbBackwardRTrigger				: R_TRIG;
+	fbSafetySwitchRTrigger			: R_TRIG;
+	fbButton1FTrigger				: F_TRIG;
+	fbButton2FTrigger				: F_TRIG;
+	fbButton3FTrigger				: F_TRIG;
+	fbFowardFTrigger				: F_TRIG;
+	fbBackwardFTrigger				: F_TRIG;
+	fbSafetySwitchFTrigger			: F_TRIG;
+	_xUpdateTimerStart				: BOOL;
+	_xUpdateTimerOut				: BOOL;
+	_xButton1TriggerClk				: BOOL;
+	_xButton2TriggerClk				: BOOL;
+	_xButton3TriggerClk				: BOOL;
+	_xForwardTriggerClk				: BOOL;
+	_xBackwardTriggerClk			: BOOL;
+	_xSafetySwitchTriggerClk		: BOOL;
+	_xButton1TriggerRising			: BOOL;
+	_xButton2TriggerRising			: BOOL;
+	_xButton3TriggerRising 			: BOOL;
+	_xForwardTriggerRising			: BOOL;
+	_xBackwardTriggerRising			: BOOL;
+	_xSafetySwtichTriggerRising		: BOOL;
+	_xButton1TriggerFalling			: BOOL;
+	_xButton2TriggerFalling			: BOOL;
+	_xButton3TriggerFalling 		: BOOL;
+	_xForwardTriggerFalling			: BOOL;
+	_xBackwardTriggerFalling		: BOOL;
+	_xSafetySwtichTriggerFalling	: BOOL;
+	_uiState						: UINT;
+	_rUpdateStartPosition			: REAL;
+	_rUpdateEndPosition				: REAL;
+	_rRawPosition					: REAL;
+	_rActPosition					: REAL;
+	_rSpeedAct						: REAL;
+	_uiIndex						: UINT;
+	_uiReadsCount					: UINT;
+	_uiSum							: REAL;
+	_aReadings						: ARRAY[0..200] OF REAL;
+	_uiReadingsCount				: UINT;
+	_rAverage						: REAL;
+	_eDirection						: MC_Direction;
+	_iDirection						: INT;
+	_uiOverrideSpeed				: UINT;
+	_uiSpeedDivider					: UINT;
+	_diSelector2					: UINT;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*******************************************************************************************************************
+// Mapping inputs 
+//*******************************************************************************************************************
+_rRawPosition				:= DINT_TO_REAL(stMpgEncoder.diRowPositionFeedBack);
+_rActPosition 				:= (_rRawPosition * uiScalingFactorNumerator) / uiScalingFactorDenominator;
+_uiReadsCount 				:= (SIZEOF(_aReadings)/SIZEOF(REAL)) - (100 - uismoothingPercentage);
+_xButton1TriggerClk			:= stMpgEncoder.diButton1;
+_xButton2TriggerClk			:= stMpgEncoder.diButton2;
+_xButton3TriggerClk			:= stMpgEncoder.diButton3;
+_diSelector2				:= stMpgEncoder.diSelector2; 
+
+//The selectors 1 and 2 uses a Gray-code encoder selector
+stMpgEncoder.diSelector1.2 := stMpgEncoder.diSelector1Bit3;
+stMpgEncoder.diSelector1.1 := stMpgEncoder.diSelector1.2 XOR stMpgEncoder.diSelector1Bit2;
+stMpgEncoder.diSelector1.0 := stMpgEncoder.diSelector1.1 XOR stMpgEncoder.diSelector1Bit1;
+
+stMpgEncoder.diSelector2.1 := stMpgEncoder.diSelector2Bit2;
+stMpgEncoder.diSelector2.0 := stMpgEncoder.diSelector2Bit2 XOR stMpgEncoder.diSelector2Bit1;
+_xSafetySwitchTriggerClk    := stMpgEncoder.diSafetySwitch;
+
+//*******************************************************************************************************************
+// State machine
+//*******************************************************************************************************************
+CASE _uiState OF
+	0:
+		_rUpdateStartPosition 	:= _rActPosition;
+		_xUpdateTimerStart 		:= TRUE;
+		_uiState				:= 10;
+	
+	10:
+		IF _xUpdateTimerOut THEN
+			_xUpdateTimerStart 		:= FALSE;
+			_rUpdateEndPosition 	:= _rActPosition;
+			_rSpeedAct 				:= (_rUpdateEndPosition - _rUpdateStartPosition) / TIME_TO_REAL(fbUpdateTimer.ET);
+			_uiSum 					:= _uiSum - _aReadings[_uiIndex];
+			_aReadings[_uiIndex] 	:= _rSpeedAct;
+			_uiSum 					:= _uiSum + _aReadings[_uiIndex];
+			_uiIndex 				:= _uiIndex + 1;
+			
+			IF (_uiIndex >= _uiReadsCount) THEN
+				_uiIndex := 0;
+			END_IF
+			
+			_rAverage 				:= _uiSum / _uiReadsCount;
+			_uiState				:= 0;
+		END_IF
+END_CASE
+
+IF ABS(_rSpeedAct) > 0.1 THEN
+	_uiOverrideSpeed 	:= REAL_TO_UINT((ABS(_rAverage) * 100) / stMpgEncoder.uiMaxSpeed);
+	_iDirection 		:= REAL_TO_INT(_rAverage / ABS(_rAverage));
+ELSE
+	_uiOverrideSpeed := 0;
+	_iDirection := 0;
+END_IF
+
+CASE _iDirection OF
+	0:
+		_eDirection := MC_Direction.MC_Shortest_Way;
+	1:
+		_eDirection := MC_Direction.MC_Positive_Direction;
+	-1:
+		_eDirection := MC_Direction.MC_Negative_Direction;
+END_CASE
+
+_xForwardTriggerClk := _eDirection = MC_Direction.MC_Positive_Direction;
+_xBackwardTriggerClk := _eDirection = MC_Direction.MC_Negative_Direction;
+
+CASE _diSelector2 OF
+	1:
+		_uiSpeedDivider := 10;
+	2:
+		_uiSpeedDivider := 20;
+	3:
+		_uiSpeedDivider := 50;
+END_CASE
+
+//*******************************************************************************************************************
+// FB calls
+//*******************************************************************************************************************
+fbUpdateTimer(in := _xUpdateTimerStart, PT := tUpdateTimerPt, Q => _xUpdateTimerOut);
+fbButton1RTrigger(Q => _xButton1TriggerRising, CLK := _xButton1TriggerClk);
+fbButton2RTrigger(Q => _xButton2TriggerRising, CLK := _xButton2TriggerClk);
+fbButton3RTrigger(Q => _xButton3TriggerRising, CLK := _xButton3TriggerClk);
+fbFowardRTrigger(Q => _xForwardTriggerRising, CLK := _xForwardTriggerClk);
+fbBackwardRTrigger(Q => _xBackwardTriggerRising, CLK := _xBackwardTriggerClk);
+fbSafetySwitchRTrigger(Q => _xSafetySwtichTriggerRising, CLK := _xSafetySwitchTriggerClk);
+fbButton1FTrigger(Q => _xButton1TriggerFalling, CLK := _xButton1TriggerClk);
+fbButton2FTrigger(Q => _xButton2TriggerFalling, CLK := _xButton2TriggerClk);
+fbButton3FTrigger(Q => _xButton3TriggerFalling, CLK := _xButton3TriggerClk);
+fbFowardFTrigger(Q => _xForwardTriggerFalling, CLK := _xForwardTriggerClk);
+fbBackwardFTrigger(Q => _xBackwardTriggerFalling, CLK := _xBackwardTriggerClk);
+fbSafetySwitchFTrigger(Q => _xSafetySwtichTriggerFalling, CLK := _xSafetySwitchTriggerClk);
+
+
+
+//*******************************************************************************************************************
+// Mapping  outputs  
+//*******************************************************************************************************************
+stMpgEncoder.rActPos 			:= _rActPosition;
+stMpgEncoder.rActVelo			:= _rAverage;
+stMpgEncoder.eDirection 		:= _eDirection;
+stMpgEncoder.uiOverrideSpeed	:= _uiOverrideSpeed;
+stMpgEncoder.xButton1RTrigger	:= _xButton1TriggerRising;
+stMpgEncoder.xButton2RTrigger	:= _xButton2TriggerRising;
+stMpgEncoder.xButton3RTrigger	:= _xButton3TriggerRising;
+stMpgEncoder.xFowardRTrigger		:= _xForwardTriggerRising;
+stMpgEncoder.xBackwardRTrigger	:= _xBackwardTriggerRising;
+stMpgEncoder.uiSpeedDivider		:= _uiSpeedDivider;
+stMpgEncoder.xSafetySwitchRTrigger := _xSafetySwtichTriggerRising;
+stMpgEncoder.xButton1FTrigger	:= _xButton1TriggerFalling;
+stMpgEncoder.xButton2FTrigger	:= _xButton2TriggerFalling;
+stMpgEncoder.xButton3FTrigger	:= _xButton3TriggerFalling;
+stMpgEncoder.xFowardFTrigger		:= _xForwardTriggerFalling;
+stMpgEncoder.xBackwardFTrigger	:= _xBackwardTriggerFalling;
+stMpgEncoder.xSafetySwitchFTrigger := _xSafetySwtichTriggerFalling;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

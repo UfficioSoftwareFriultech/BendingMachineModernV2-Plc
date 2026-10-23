@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_MFuncOnError" Id="{f60d99ed-9c96-4dc3-9a6c-d2969d14a509}">
+    <Declaration><![CDATA[// Cosa succede se la valvola di una funzione M non conferma entro il timeout.
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_MFuncOnError :
+(
+	Abort		:= 0,	// allarme della funzione (Info = numero M) e abort del ciclo
+	Grant		:= 1,	// la funzione viene concessa lo stesso, senza allarme
+	Ignore		:= 2	// nessuna reazione: il canale resta in attesa (solo per valvole la cui conferma e' l'uscita stessa)
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

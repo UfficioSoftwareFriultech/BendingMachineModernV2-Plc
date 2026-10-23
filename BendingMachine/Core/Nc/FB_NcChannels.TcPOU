@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_NcChannels" Id="{dddcf299-0bb9-4c19-bf04-2d41c538ba41}" SpecialFunc="None">
+    <Declaration><![CDATA[// Arresto, ripartenza e reset di tutti i canali NC insieme. Va chiamato a ogni ciclo PLC con il comando
+// del ciclo; bDone e bError valgono gia' nella stessa chiamata (bBusy letto subito dopo l'esecuzione),
+// cosi' il passo che lo comanda aspetta davvero la fine dell'operazione su tutti i canali.
+// Con None i FB ricevono bExecute FALSE e tornano pronti per il comando successivo.
+FUNCTION_BLOCK FB_NcChannels
+VAR_INPUT
+	eCmd			: E_NcChannelCmd;
+	tTimeOut		: TIME := T#500MS;
+END_VAR
+VAR_IN_OUT
+	aNciToPlc		: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF NCTOPLC_NCICHANNEL_REF;
+END_VAR
+VAR_OUTPUT
+	bDone			: BOOL;		// comando finito su tutti i canali, senza errori
+	bError			: BOOL;		// almeno un canale in errore
+	nErrorId		: UDINT;	// ErrorID piu' alto tra i canali in errore
+END_VAR
+VAR
+	fbEStop			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ItpEStopEx;
+	fbStepOn		: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ItpStepOnAfterEStopEx;
+	fbReset			: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ItpResetEx2;
+	bAnyBusy		: BOOL;
+	ch				: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bAnyBusy := FALSE;
+bError := FALSE;
+nErrorId := 0;
+
+FOR ch := 0 TO Core_Param.MAX_CHANNEL - 1 DO
+	fbEStop[ch](bExecute := eCmd = E_NcChannelCmd.EStop, tTimeOut := tTimeOut, sNciToPlc := aNciToPlc[ch]);
+	fbStepOn[ch](bExecute := eCmd = E_NcChannelCmd.StepOn, tTimeOut := tTimeOut, sNciToPlc := aNciToPlc[ch]);
+	fbReset[ch](bExecute := eCmd = E_NcChannelCmd.Reset, tTimeOut := tTimeOut, sNciToPlc := aNciToPlc[ch]);
+
+	CASE eCmd OF
+		E_NcChannelCmd.EStop:
+			bAnyBusy := bAnyBusy OR fbEStop[ch].bBusy;
+			IF fbEStop[ch].bErr THEN
+				bError := TRUE;
+				nErrorId := MAX(nErrorId, fbEStop[ch].nErrId);
+			END_IF
+		E_NcChannelCmd.StepOn:
+			bAnyBusy := bAnyBusy OR fbStepOn[ch].bBusy;
+			IF fbStepOn[ch].bErr THEN
+				bError := TRUE;
+				nErrorId := MAX(nErrorId, fbStepOn[ch].nErrId);
+			END_IF
+		E_NcChannelCmd.Reset:
+			bAnyBusy := bAnyBusy OR fbReset[ch].bBusy;
+			IF fbReset[ch].bErr THEN
+				bError := TRUE;
+				nErrorId := MAX(nErrorId, fbReset[ch].nErrId);
+			END_IF
+	END_CASE
+END_FOR
+
+bDone := eCmd <> E_NcChannelCmd.None AND NOT bAnyBusy AND NOT bError;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

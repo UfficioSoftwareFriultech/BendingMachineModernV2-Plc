@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_MValve" Id="{d6011d2a-a367-4b8b-9a78-5c4847f142cc}" SpecialFunc="None">
+    <Declaration><![CDATA[// Funzione M che muove una valvola e aspetta la conferma; in caso di timeout allarme e abort.
+FUNCTION F_MValve : ST_MFuncDef
+VAR_INPUT
+	nChannel	: UINT;
+	nMFunc		: UINT;
+	nValve		: UINT;
+	eAction		: OUTPUT_ACTION_ENUM;
+	tTimeout	: TIME;
+	tPostDelay	: TIME;
+	nAlarmId	: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_MValve.nChannel := nChannel;
+F_MValve.nMFunc := nMFunc;
+F_MValve.eKind := E_MFuncKind.Valve;
+F_MValve.nValve := nValve;
+F_MValve.eAction := eAction;
+F_MValve.tTimeout := tTimeout;
+F_MValve.tPostDelay := tPostDelay;
+F_MValve.nAlarmId := nAlarmId;
+F_MValve.eOnError := E_MFuncOnError.Abort;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

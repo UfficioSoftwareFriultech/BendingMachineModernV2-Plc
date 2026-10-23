@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_MpgEncoder" Id="{cb82a44d-07b3-4f6e-b4e6-166088dc148f}">
+    <Declaration><![CDATA[TYPE ST_MpgEncoder :
+STRUCT
+	diButton1				 AT %I* : BOOL;
+	diButton2				 AT %I* : BOOL;
+	diButton3				 AT %I* : BOOL;
+	diSelector1Bit1			 AT %I* : BOOL;
+	diSelector1Bit2			 AT %I* : BOOL;
+	diSelector1Bit3			 AT %I* : BOOL;
+	diSelector2Bit1		     AT %I* : BOOL;
+	diSelector2Bit2		     AT %I* : BOOL;
+	diSafetySwitch		     AT %I* : BOOL;
+	diSelector1						: BYTE;
+	diSelector2						: BYTE;
+	diRowPositionFeedBack	 AT %I* : DINT;
+	rActPos							: REAL;
+	rActVelo						: REAL;
+	uiOverrideSpeed					: UINT;
+	eDirection						: MC_Direction;
+	tUpdateTime						: TIME;
+	uiScalingFactorNumerator		: UINT;
+	uiScalingFactorDenominator		: UINT;
+	uiSpeedDivider					: UINT;
+	uiMaxSpeed						: UINT := 5;
+	xButton1RTrigger				: BOOL;
+	xButton2RTrigger				: BOOL;
+	xButton3RTrigger				: BOOL;
+	xFowardRTrigger					: BOOL;
+	xBackwardRTrigger				: BOOL;
+	xSafetySwitchRTrigger			: BOOL;
+	xButton1FTrigger				: BOOL;
+	xButton2FTrigger				: BOOL;
+	xButton3FTrigger				: BOOL;
+	xFowardFTrigger					: BOOL;
+	xBackwardFTrigger				: BOOL;
+	xSafetySwitchFTrigger			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

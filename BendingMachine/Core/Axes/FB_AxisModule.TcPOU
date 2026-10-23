@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_AxisModule" Id="{80d9372c-411f-4955-9455-e88baaf541ee}" SpecialFunc="None">
+    <Declaration><![CDATA[// Un asse della macchina: potenza, reset SoE e MC, jog, calibrazione e limiti software.
+// Sostituisce le cinque copie per asse di MAIN (AxisFunctionBlocks, InitCyclic, calibrazioni in Manual,
+// ParameterWriteManager). Una chiamata per ciclo PLC, dopo la macchina a stati: i comandi arrivano come
+// ingressi in questo ciclo, gli esiti (Done/Error) si leggono nel ciclo dopo, come prima.
+// Calibrazione: MC_Home diretto alla quota, lettura dell'offset encoder, scrittura persistente,
+// handshake del datum di sicurezza, impulso bCalibrated di 500 ms.
+// Limiti: massimo poi minimo con MC_WriteParameterPersistent (lo stesso FB della calibrazione).
+// Gli allarmi non li memorizza: li chiede con eAlarm e nAlarmInfo, la macchina sceglie il numero.
+FUNCTION_BLOCK FB_AxisModule
+VAR_INPUT
+	// Potenza
+	bPowerEnable		: BOOL;					// consenso MC_Power (motori ON, emergenza ok); l'errore dell'asse lo toglie il modulo
+	fOverride			: LREAL := 100;
+	bUseSoEReset		: BOOL;					// azionamento SoE reale: FB_SoEReset con potenza o reset emergenza
+	bSoEResetRequest	: BOOL;					// pulsante di reset emergenza
+	tPoweredOffDelay	: TIME := T#100MS;		// bPowered resta TRUE per questo tempo dopo la disabilitazione
+	// Reset MC
+	bResetExecute		: BOOL;
+	// Jog
+	bJogForward			: BOOL;
+	bJogBackward		: BOOL;
+	fJogVelocity		: LREAL;
+	fJogAcceleration	: LREAL;
+	fJogDeceleration	: LREAL;				// 0 = valore di default di MC_Jog
+	fJogJerk			: LREAL;
+	// Calibrazione
+	bCalibrationStart	: BOOL;					// a livello: parte se il modulo e' fermo
+	bUseCalibrationPos	: BOOL;					// TRUE: quota fCalibrationPos, FALSE: fHomePosition
+	fCalibrationPos		: LREAL;
+	fHomePosition		: LREAL;
+	bDatumRequest		: BOOL;					// la sicurezza chiede il datum dopo la calibrazione
+	bDatumDone			: BOOL;
+	tDatumTimeOut		: TIME := T#10S;
+	tReadDelay			: TIME := T#200MS;		// attesa tra homing e lettura dell'offset
+	// Limiti software
+	bWriteLimits		: BOOL;					// fronte: scrive fUpperLimit e fLowerLimit
+	fUpperLimit			: LREAL;
+	fLowerLimit			: LREAL;
+END_VAR
+VAR_IN_OUT
+	stAxis				: AXIS_REF;
+END_VAR
+VAR_OUTPUT
+	bPowered			: BOOL;					// asse abilitato (con ritardo allo spegnimento)
+	bResetDone			: BOOL;
+	bResetError			: BOOL;
+	nResetErrorId		: UDINT;
+	nCalibrationStep	: UINT;					// 0 fermo, 10 homing, 12 attesa, 15 lettura offset, 20 scrittura, 22-25 datum, 30 fine
+	bCalibrated			: BOOL;					// impulso di 500 ms a calibrazione finita
+	bDatumExecute		: BOOL;
+	nLimitsStep			: UINT;					// 0 fermo, 10 massimo, 11 attesa, 12 minimo
+	bLimitsBusy			: BOOL;
+	bLimitsError		: BOOL;					// impulso: scrittura limiti fallita
+	eAlarm				: E_AxisAlarm;			// allarme chiesto in questo ciclo
+	nAlarmInfo			: UDINT;
+	fEncoderOffset		: LREAL;
+END_VAR
+VAR
+	fbPower				: MC_Power;
+	fbSoEReset			: FB_SoEReset;
+	fbReset				: MC_Reset;
+	fbJog				: MC_Jog;
+	fbHome				: MC_Home;
+	fbReadOffset		: MC_ReadParameter;
+	fbWrite				: MC_WriteParameterPersistent;
+	fbReadDelay			: TON;
+	fbDatumTimeOut		: TON;
+	fbCalibratedPulse	: TP;
+	fbPoweredOff		: TOF;
+	fbLimitsTrigger		: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Valori di riposo a ogni ciclo (prima in MAIN.InitCyclic): i passi qui sotto li riaccendono.
+fbHome.Execute := FALSE;
+fbHome.HomingMode := MC_HomingMode.MC_Direct;
+fbHome.Position := fHomePosition;
+fbReadOffset.Enable := FALSE;
+fbReadOffset.ReadMode := E_ReadMode.READMODE_ONCE;
+fbReadOffset.ParameterNumber := MC_AxisParameter.AxisEncoderOffset;
+fbWrite.Execute := FALSE;
+fbReadDelay.IN := FALSE;
+fbDatumTimeOut.IN := FALSE;
+fbCalibratedPulse.IN := FALSE;
+bDatumExecute := FALSE;
+bLimitsError := FALSE;
+eAlarm := E_AxisAlarm.None;
+nAlarmInfo := 0;
+
+//*******************************************************************************************************************
+// Limiti software (prima ParameterWriteManager): massimo, attesa che il FB torni libero, minimo
+//*******************************************************************************************************************
+fbLimitsTrigger(CLK := bWriteLimits);
+IF fbLimitsTrigger.Q THEN
+	nLimitsStep := 10;
+END_IF
+
+CASE nLimitsStep OF
+	10:
+		fbWrite.Execute := TRUE;
+		fbWrite.Value := fUpperLimit;
+		fbWrite.ParameterNumber := MC_AxisParameter.AxisMaxSoftPosLimit;
+		IF fbWrite.Done AND NOT fbWrite.Busy THEN
+			nLimitsStep := 11;
+		END_IF
+		IF fbWrite.Error THEN
+			nLimitsStep := 0;
+			bLimitsError := TRUE;
+			eAlarm := E_AxisAlarm.Limits;
+			nAlarmInfo := fbWrite.ErrorID;
+		END_IF
+	11:
+		IF NOT fbWrite.Done AND NOT fbWrite.Busy THEN
+			nLimitsStep := 12;
+		END_IF
+	12:
+		fbWrite.Execute := TRUE;
+		fbWrite.Value := fLowerLimit;
+		fbWrite.ParameterNumber := MC_AxisParameter.AxisMinSoftPosLimit;
+		IF fbWrite.Done AND NOT fbWrite.Busy THEN
+			nLimitsStep := 0;
+		END_IF
+		IF fbWrite.Error THEN
+			nLimitsStep := 0;
+			bLimitsError := TRUE;
+			eAlarm := E_AxisAlarm.Limits;
+			nAlarmInfo := fbWrite.ErrorID;
+		END_IF
+END_CASE
+bLimitsBusy := nLimitsStep <> 0;
+
+//*******************************************************************************************************************
+// Calibrazione (prima in MAIN.Manual, una copia per asse)
+//*******************************************************************************************************************
+CASE nCalibrationStep OF
+	0:
+		IF bCalibrationStart THEN
+			nCalibrationStep := 10;
+		END_IF
+	10:
+		IF bUseCalibrationPos THEN
+			fbHome.Position := fCalibrationPos;
+		END_IF
+		fbHome.Execute := TRUE;
+		IF fbHome.Done THEN
+			nCalibrationStep := 12;
+		END_IF
+		IF fbHome.Error THEN
+			nCalibrationStep := 0;
+			eAlarm := E_AxisAlarm.Calibration;
+			nAlarmInfo := fbHome.ErrorID;
+		END_IF
+	12:
+		fbReadDelay.IN := TRUE;
+		IF fbReadDelay.Q THEN
+			nCalibrationStep := 15;
+		END_IF
+	15:
+		fbReadOffset.Enable := TRUE;
+		IF fbReadOffset.Valid THEN
+			nCalibrationStep := 20;
+		END_IF
+		IF fbReadOffset.Error THEN
+			nCalibrationStep := 0;
+			eAlarm := E_AxisAlarm.Calibration;
+			nAlarmInfo := fbReadOffset.ErrorID;
+		END_IF
+	20:
+		fbWrite.Execute := TRUE;
+		fbWrite.Value := fEncoderOffset;
+		fbWrite.ParameterNumber := MC_AxisParameter.AxisEncoderOffset;
+		IF fbWrite.Done THEN
+			nCalibrationStep := 22;
+		END_IF
+		IF fbWrite.Error THEN
+			nCalibrationStep := 0;
+			eAlarm := E_AxisAlarm.Calibration;
+			nAlarmInfo := fbWrite.ErrorID;
+		END_IF
+	22:
+		IF bDatumRequest THEN
+			nCalibrationStep := 25;
+		ELSE
+			nCalibrationStep := 30;
+		END_IF
+	25:
+		bDatumExecute := TRUE;
+		fbDatumTimeOut.IN := TRUE;
+		IF bDatumDone THEN
+			nCalibrationStep := 30;
+		END_IF
+		IF fbDatumTimeOut.Q THEN
+			nCalibrationStep := 0;
+			eAlarm := E_AxisAlarm.Calibration;
+			nAlarmInfo := 0;
+		END_IF
+	30:
+		fbCalibratedPulse.IN := TRUE;
+		nCalibrationStep := 0;
+END_CASE
+
+//*******************************************************************************************************************
+// FB dell'asse, nell'ordine di prima (AxisFunctionBlocks): jog, reset, potenza, SoE, homing, scrittura, lettura
+//*******************************************************************************************************************
+fbJog(
+	Axis			:= stAxis,
+	JogForward		:= bJogForward,
+	JogBackwards	:= bJogBackward,
+	Mode			:= E_JogMode.MC_JOGMODE_CONTINOUS,
+	Velocity		:= fJogVelocity,
+	Acceleration	:= fJogAcceleration,
+	Deceleration	:= fJogDeceleration,
+	Jerk			:= fJogJerk);
+
+fbReset(Axis := stAxis, Execute := bResetExecute);
+bResetDone := fbReset.Done;
+bResetError := fbReset.Error;
+nResetErrorId := fbReset.ErrorID;
+
+fbPower(Axis := stAxis, Enable := bPowerEnable AND stAxis.NcToPlc.ErrorCode = 0, Enable_Positive := TRUE, Enable_Negative := TRUE, Override := fOverride);
+IF bUseSoEReset THEN
+	fbSoEReset(Axis := stAxis, Execute := fbPower.Enable OR bSoEResetRequest);
+END_IF
+fbPoweredOff(IN := NOT stAxis.Status.Disabled, PT := tPoweredOffDelay, Q => bPowered);
+
+fbHome(Axis := stAxis);
+fbWrite(Axis := stAxis);
+fbReadOffset(Axis := stAxis, Value => fEncoderOffset);
+fbReadDelay(PT := tReadDelay);
+fbDatumTimeOut(PT := tDatumTimeOut);
+fbCalibratedPulse(PT := T#500MS, Q => bCalibrated);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

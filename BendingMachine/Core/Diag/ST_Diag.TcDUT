@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Diag" Id="{d4403af1-a980-402e-80e7-91fc5b699698}">
+    <Declaration><![CDATA[// Diagnosi del ciclo letta dall'HMI in un solo blocco (GVL Diag.Data).
+TYPE ST_Diag :
+STRUCT
+	nState			: UINT;					// passo attuale (E_CycleState)
+	nPrevState		: UINT;					// passo precedente
+	tInState		: TIME;					// da quanto il ciclo e' nel passo attuale
+	nSeqIdx			: UINT;					// sequenza corrente (0 = prima)
+	nSeqCount		: UINT;					// sequenze attive nel programma caricato
+	nSubStep		: UINT;					// passo interno del FB al lavoro: centraggio (E_CenteringStep) o sequenza (E_SeqStep)
+	eCycleEndReason	: E_CycleEndReason;		// perche' il ciclo si e' fermato l'ultima volta
+	aChannel		: ARRAY[0..Core_Param.MAX_CHANNEL-1] OF ST_ChannelDiag;
+	nEventCount		: UDINT;				// eventi registrati dall'avvio; l'ultimo e' aEvent[(nEventCount-1) MOD DIAG_EVENTS]
+	aEvent			: ARRAY[0..Core_Param.DIAG_EVENTS-1] OF ST_DiagEvent;
+	stLastAbort		: ST_DiagEvent;			// l'ultimo ingresso in abort, conservato anche quando lo storico gira
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

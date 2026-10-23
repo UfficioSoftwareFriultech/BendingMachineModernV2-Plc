@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SetMacro" Id="{90e18c29-98d4-4a47-a59b-8a74665e8cc7}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+FUNCTION_BLOCK SetMacro
+VAR_INPUT
+	Start 							: BOOL;
+	OutputType 						: OUTPUT_ENUM;
+	ActionType						: OUTPUT_ACTION_ENUM;
+	TimeOutTime						: TIME;
+	PostDelay						: TIME;
+	FeedBack						: POINTER TO BOOL;
+	SetOutput 						: POINTER TO BOOL;
+	ResetOutput 					: POINTER TO BOOL;
+END_VAR
+
+VAR_OUTPUT
+	Busy 							: BOOL;
+	Done							: BOOL;
+	Error 							: BOOL;
+END_VAR
+VAR
+	state 							: UINT;
+	fbStartTrigger					: R_TRIG;
+	startTriggerOutput				: BOOL;
+	fbTimerOn 						: TON;
+	fbTimerOnStart					: BOOL;
+	fbTimerOnEnd 					: BOOL;
+	fbPostTimer						: TON;
+	fbPostTimerOnStart				: BOOL;
+	fbPostTimerOnEnd				: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbTimerOn(IN:=fbTimerOnStart, PT := TimeOutTime, Q => fbTimerOnEnd);
+fbPostTimer(IN:=fbPostTimerOnStart, PT := PostDelay, Q => fbPostTimerOnEnd);
+fbStartTrigger(CLK := Start, Q => startTriggerOutput);
+
+CASE state OF
+	(************************** state 0 - IDLE *************************)  
+	0:	
+		Busy := FALSE;
+		Done := FALSE;
+		Error := FALSE;
+		
+		IF startTriggerOutput THEN
+			Busy := TRUE;
+			Error := FALSE;
+			fbTimerOnStart := FALSE;
+			state := 10;
+		END_IF
+	10:
+		IF FeedBack^ THEN
+			IF PostDelay <> T#0MS THEN
+				fbPostTimerOnStart := TRUE;
+				state := 30;
+			ELSE
+				state := 100;
+			END_IF
+		ELSE
+			fbTimerOnStart := TRUE;
+			state := 20;
+		END_IF
+	
+	(************** state 20 - Set Output and wait for feedback *************)  
+	20:
+		CASE ActionType OF
+			OUTPUT_ACTION_ENUM.SET:
+				SetOutput^ := TRUE;
+				IF OutputType = OUTPUT_ENUM.BISTABLE THEN
+					ResetOutput^ := FALSE;
+				END_IF
+
+			OUTPUT_ACTION_ENUM.RESET:
+				SetOutput^ := FALSE;
+				IF OutputType = OUTPUT_ENUM.BISTABLE THEN
+					ResetOutput^ := TRUE;
+				END_IF
+		END_CASE
+		
+		IF fbTimerOnEnd THEN
+			fbTimerOnStart := FALSE;
+			SetOutput^ := FALSE;
+			ResetOutput^ := FALSE;
+			state := 200;
+		END_IF
+		
+		IF FeedBack^ THEN
+			fbTimerOnStart := FALSE;
+			//SetOutput^ := FALSE;
+			//ResetOutput^ := FALSE;
+			
+			IF PostDelay <> T#0MS THEN
+				fbPostTimerOnStart := TRUE;
+				state := 30;
+			ELSE
+				state := 100;
+			END_IF
+		END_IF
+		
+	(************** state 30 - Wait Post Time Delay *************)  
+	30:
+		IF fbPostTimerOnEnd THEN
+			fbPostTimerOnStart := FALSE;
+			state := 100;
+		END_IF
+	
+	(************** state 100 - End *************)  
+	100:
+		Done := TRUE;
+		state := 0;
+	
+	(************** state 100 - Error *************)  
+	200:
+		state := 0;
+		Error := TRUE;
+		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="SetMacro">
+      <LineId Id="30" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="35" Count="14" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="133" Count="1" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="117" Count="2" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
