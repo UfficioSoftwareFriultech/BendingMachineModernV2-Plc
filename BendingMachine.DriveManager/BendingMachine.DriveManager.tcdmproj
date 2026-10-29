@@ -34,6 +34,18 @@
       <SubType>Content</SubType>
       <IoItemPathName>TIID^ReteEK_Device1_con_sync_master^Drive 33 (AX5103-0000-0216)</IoItemPathName>
     </Content>
+    <Content Include="Drive 35 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 37 %28AX5206-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)</IoItemPathName>
+    </Content>
+    <Content Include="Drive 39 %28AX5103-0000-0216%29.tcdmdrv">
+      <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 39 (AX5103-0000-0216)</IoItemPathName>
+    </Content>
     <Content Include="ERL-USEL (AX5206-0000-0216).tcdmdrv">
       <SubType>Content</SubType>
       <IoItemPathName>TIID^Device 1 (EtherCAT)^ERL-USEL (AX5206-0000-0216)</IoItemPathName>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.24">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.25">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1817,15 +1817,6 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{BB83B267-3E6A-92C5-3EC5-90D423113190}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.NCTOPLC_NCICHANNEL_REF</Name>
-			<BitSize>3840</BitSize>
-			<BaseType GUID="{56354211-98EF-4057-9322-975DEAD0E29D}" Namespace="MC">NCTOPLC_NCICHANNEL_REF</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>3</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
 			<Name GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Name>
 			<BitSize>3072</BitSize>
 			<BaseType GUID="{48415C2A-E750-483B-A619-8655B2BEA4B8}" Namespace="MC">PLCTONC_NCICHANNEL_REF</BaseType>
@@ -1841,6 +1832,15 @@ External Setpoint Generation:
 			<ArrayInfo>
 				<LBound>0</LBound>
 				<Elements>4</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{BB83B267-3E6A-92C5-3EC5-90D423113190}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.NCTOPLC_NCICHANNEL_REF</Name>
+			<BitSize>3840</BitSize>
+			<BaseType GUID="{56354211-98EF-4057-9322-975DEAD0E29D}" Namespace="MC">NCTOPLC_NCICHANNEL_REF</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>3</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -2004,7 +2004,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<ImageDatas>
-		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c000ff00c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff</ImageData>
 		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
@@ -2014,10 +2014,10 @@ External Setpoint Generation:
 		<ImageData Id="1007">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff008066008099008066008099008066ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffff00000000ffff000000008099ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff008066ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff008099ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffff00000000ffff000000008066ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffffff000000ffffff0000008099ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff008066ff00ffff00ffff00ffff00ffff00ff66009999006666009999006666009999006600ffff00000000ffff000000008099ff00ffff00ffff00ffff00ffff00ff99006666009999006666009999006666009900ffff0000ff00ffff0000ff008066ff00ffff00ffff00ffff00ffff00ff66009999006666009999006666009999006600ffff00ffff00ffff00ffff008099ff00ffff00ffff00ffff00ffff00ff99006666009999006666009999006666009900ffff00000000ffff000000008066ff00ffff00ffff00ffff00ffff00ff66009999006666009999006666009999006600ffff00ffff00ffff00ffff008099ff00ffff00ffff00ffff00ffff00ff99006666009999006666009999006666009900ffff00800000ffff008000008066ff00ffff00ffff00ffff00ffff00ff66009999006666009999006666009999006600ffff00ffff00ffff00ffff008099ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1008">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ff00bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c080808000bfff00bfff00bfff00bfff00bfffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ff00bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1009">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c08080800000ff000000000000000000000000000000000000000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c08080800000ff0000000000000000000000000000000000000000000000ff0000ffff00ffc0c0c0c0c0c0c0c0c0c0c0c08080800000ff000000000000000000000000000000000000000000ff00ffff00ffff00ffff0000ff0000ff0000ff00008080800000ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffff00ffff0000c0c0c0c0c0c0c0c0c0808080000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0c0c0c0808080000000ff00ffff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffc0c0c0c0c0c0ff0000c0c0c0808080000000000000000000000000000000000000000000000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0ff00008080800000000000000000000000000000000000000000000000000000ff0000ffff00ffff0000c0c0c0c0c0c0ff0000808080000000000000000000000000000000000000000000000000ff00ffff00ffff00ffc0c0c0ff0000ff0000c0c0c0808080000000ff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080</ImageData>
-		<ImageData Id="1010">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff0000ff0000ff0000ff0000808080ff00ff000000000000000000000000000000000000000000ff00ffff00ffff00ffff0000c0c0c0c0c0c0c0c0c0808080ff00ff0000000000000000000000000000000000000000000000ff0000ffff00ffc0c0c0ff0000c0c0c0c0c0c0808080ff00ff000000000000000000000000000000000000000000ff00ffff00ffff00ffc0c0c0c0c0c0ff0000c0c0c0808080ff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0ff0000808080ff00ff000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff0000c0c0c0c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000ff0000c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ff</ImageData>
-		<ImageData Id="1011">424de6000000000000007600000028000000100000000e000000010004000000000070000000ea0e0000ea0e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00777f7f7f77f77f777fff7f7f7ff77f77777f878f77f77f777fff7f7ff7f7ff77777f7f7f77f77f77fffffffffffffffff8888888888888888877777777777777777887888888888777788786ccccc66778788786ccccc6677f78878666666687887ff7fffffffff7ff77777777777777</ImageData>
+		<ImageData Id="1010">424de6000000000000007600000028000000100000000e000000010004000000000070000000ea0e0000ea0e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00777f7f7f77f77f777fff7f7f7ff77f77777f878f77f77f777fff7f7ff7f7ff77777f7f7f77f77f77fffffffffffffffff8888888888888888877777777777777777887888888888777788786ccccc66778788786ccccc6677f78878666666687887ff7fffffffff7ff77777777777777</ImageData>
+		<ImageData Id="1011">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff0000ff0000ff0000ff0000808080ff00ff000000000000000000000000000000000000000000ff00ffff00ffff00ffff0000c0c0c0c0c0c0c0c0c0808080ff00ff0000000000000000000000000000000000000000000000ff0000ffff00ffc0c0c0ff0000c0c0c0c0c0c0808080ff00ff000000000000000000000000000000000000000000ff00ffff00ffff00ffc0c0c0c0c0c0ff0000c0c0c0808080ff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0ff0000808080ff00ff000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff0000c0c0c0c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000ff0000c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{4BC8D824-FB19-45CB-B71D-7BD44938F469}" TargetNetId="10.1.181.70.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{4BC8D824-FB19-45CB-B71D-7BD44938F469}" TargetNetId="192.168.1.106.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Settings MaxCpus="4">
 				<Cpu/>
@@ -3118,204 +3118,9 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{D5253316-83C2-43A0-A11D-229C65F968E1}" Name="BendingMachine" PrjFilePath="BendingMachine\BendingMachine.plcproj" TmcFilePath="BendingMachine\BendingMachine.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7708107D-88BA-B059-BC02-96C37A7C3B04}" TmcPath="BendingMachine\\BendingMachine.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7708107D-88BA-B059-BC02-96C37A7C3B04}" TmcPath="BendingMachine\\BendingMachine.tmc">
 					<Name>BendingMachine Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" AreaNo="1">
-						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>MAIN.stTwoHandControl.doStartLED</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.stTwoHandControl.doStopLED</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.USEL.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.ERL.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.USER.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.ERR.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.UR2.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.UR_SIM.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.AXIS_TMP.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.out_stPlcToNci</Name>
-							<Type GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Type>
-						</Var>
-						<Var>
-							<Name>Safety.Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ModuleFault</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USER_ERR_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USER_ERR_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USEL_ERL_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USEL_ERL_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.UR_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.UR_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ResetEmergenza</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ResetBarriere</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.SpiaPulsanteRipristinoSicurezze</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.SpiaPulsanteRipristinoBarriere</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.fuseReset</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.chillerEnabled</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretRed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretYellow</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretGreen</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretSiren</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.smc1</Name>
-							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
-						</Var>
-						<Var>
-							<Name>IO.smc2</Name>
-							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
-						</Var>
-						<Var>
-							<Name>IO.spiaPulsanteStart</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.spiaPulsanteStop</Name>
-							<Type>BOOL</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
@@ -3954,6 +3759,201 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.stTwoHandControl.doStartLED</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stTwoHandControl.doStopLED</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.USEL.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.ERL.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.USER.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.ERR.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.UR2.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.UR_SIM.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.AXIS_TMP.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.out_stPlcToNci</Name>
+							<Type GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Type>
+						</Var>
+						<Var>
+							<Name>Safety.Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ModuleFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USER_ERR_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USER_ERR_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USEL_ERL_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USEL_ERL_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.UR_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.UR_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ResetEmergenza</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ResetBarriere</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.SpiaPulsanteRipristinoSicurezze</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.SpiaPulsanteRipristinoBarriere</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.fuseReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.chillerEnabled</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretRed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretYellow</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretGreen</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretSiren</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.smc1</Name>
+							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
+						</Var>
+						<Var>
+							<Name>IO.smc2</Name>
+							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
+						</Var>
+						<Var>
+							<Name>IO.spiaPulsanteStart</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.spiaPulsanteStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -4105,47 +4105,29 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 			</Config>
 		</Analytics>
 		<Io>
-			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="10.1.181.70.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.106.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="4">
 				<Name>Device 1 (EtherCAT)</Name>
 				<AddressInfo>
-					<Ccat>
-						<Address>-1996488704</Address>
-						<Offset>131072</Offset>
-						<Size>8192</Size>
-						<BaseAddr>0</BaseAddr>
-						<BusNo>2</BusNo>
-						<SlotNo>0</SlotNo>
-						<VendorId>5612</VendorId>
-						<DeviceId>20480</DeviceId>
-						<Dma>
-							<Address>0</Address>
-							<Offset>4096</Offset>
-							<Size>256</Size>
-							<BaseAddr>2</BaseAddr>
-							<RxChn>0</RxChn>
-							<TxChn>1</TxChn>
-						</Dma>
-						<Identification>
-							<Value>-1775005300</Value>
-							<Version>1</Version>
-							<Size>512</Size>
-						</Identification>
-					</Ccat>
+					<Pnp>
+						<DeviceDesc>Ethernet (TwinCAT-Intel PCI Ethernet Adapter (Gigab</DeviceDesc>
+						<DeviceName>\DEVICE\{329C6642-B9B1-40FC-8CE3-4A6CE3F0BD3E}</DeviceName>
+						<DeviceData>000105b07b35</DeviceData>
+					</Pnp>
 				</AddressInfo>
 				<Image Id="1" AddrType="9" ImageType="3">
 					<Name>Image</Name>
 				</Image>
-				<Image Id="4" AddrType="10" ImageType="3">
+				<Image Id="2" AddrType="10" ImageType="3">
 					<Name>Image-2</Name>
 				</Image>
-				<Box Id="1" BoxType="9099">
-					<Name>Term 1 (EK1200)</Name>
+				<Box Id="21" BoxType="9099">
+					<Name>Term 21 (EK1100)</Name>
 					<ImageId>1000</ImageId>
-					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Power supply (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
-					<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 2 (EL6070-0033)</Name>
+					<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x044c2c52" RevisionNo="#x00120000" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1100 EtherCAT Coupler (2A E-Bus)" Desc="EK1100" PortABoxInfo="#x00ffffff"/>
+					<Box Id="22" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 22 (EL6070-0033)</Name>
 						<ImageId>1001</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000002" ProductCode="#x17b63052" RevisionNo="#x00130021" BIC="1P148236SBTN000bu9nc1KEL6070-0033                   Q1    2P14260506001930P000002837" InfoDataAddr="true" RepeatSupport="true" TimeoutMailbox2="3000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6070-0033 1Ch. Licence key terminal, individual licences" Desc="EL6070-0033" PortABoxInfo="#x01000001">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000002" ProductCode="#x17b63052" RevisionNo="#x00130021" BIC="1P148236SBTN000bus951KEL6070-0033                   Q1    2P29260506001930P000002837" InfoDataAddr="true" RepeatSupport="true" TimeoutMailbox2="3000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6070-0033 1Ch. Licence key terminal, individual licences" Desc="EL6070-0033" PortABoxInfo="#x01000015">
 							<SyncMan>001000012600010001000000300000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000300000010001001122010000</SyncMan>
 							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -4153,10 +4135,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<CoeProfile ProfileNo="43914121" DisplayName="Licensing"/>
 						</EtherCAT>
 					</Box>
-					<Box Id="3" BoxType="9099">
-						<Name>Term 3 (EL1409)</Name>
+					<Box Id="23" BoxType="9099">
+						<Name>Term 23 (EL1409)</Name>
 						<ImageId>1002</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05813052" RevisionNo="#x00100000" BIC="1P322594SBTN999lmlc51KEL1409                        Q1    2P112600000016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1409 16Ch. Dig. Input 24V, 3ms" Desc="EL1409" PortABoxInfo="#x01000002">
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05813052" RevisionNo="#x00100000" BIC="1P322594SBTN999lmlba1KEL1409                        Q1    2P112600000016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1409 16Ch. Dig. Input 24V, 3ms" Desc="EL1409" PortABoxInfo="#x01000016">
 							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
 							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 							<Pdo Name="DIP Inputs" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4211,10 +4193,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box Id="4" BoxType="9099">
-						<Name>Term 4 (EL1409)</Name>
+					<Box Id="24" BoxType="9099">
+						<Name>Term 24 (EL1409)</Name>
 						<ImageId>1002</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05813052" RevisionNo="#x00100000" BIC="1P322594SBTN999lmphm1KEL1409                        Q1    2P112600000016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1409 16Ch. Dig. Input 24V, 3ms" Desc="EL1409" PortABoxInfo="#x01000003">
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05813052" RevisionNo="#x00100000" BIC="1P322594SBTN999lml7x1KEL1409                        Q1    2P112600000016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1409 16Ch. Dig. Input 24V, 3ms" Desc="EL1409" PortABoxInfo="#x01000017">
 							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
 							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 							<Pdo Name="DIP Inputs" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4269,10 +4251,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box Id="5" BoxType="9099">
-						<Name>Term 5 (EL2409)</Name>
+					<Box Id="25" BoxType="9099">
+						<Name>Term 25 (EL2409)</Name>
 						<ImageId>1003</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x09693052" RevisionNo="#x00100000" BIC="1P322597SBTN99ajbcej1KEL2409                        Q1    2P122600010016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2409 16Ch. Dig. Output 24V, 0.5A" Desc="EL2409" PortABoxInfo="#x01000004">
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x09693052" RevisionNo="#x00100000" BIC="1P322597SBTN99ajbcel1KEL2409                        Q1    2P122600010016" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2409 16Ch. Dig. Output 24V, 0.5A" Desc="EL2409" PortABoxInfo="#x01000018">
 							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
 							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
 							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
@@ -4289,7 +4271,6 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
 								<Entry Name="Output" Index="#x7020" Sub="#x01">
 									<Type>BIT</Type>
-									<Comment><![CDATA[Yellow = Blue]]></Comment>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
@@ -4359,10 +4340,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box Id="6" BoxType="9099">
-						<Name>Term 6 (EK1322)</Name>
+					<Box Id="26" BoxType="9099">
+						<Name>Term 26 (EK1322)</Name>
 						<ImageId>1004</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0f04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x052a2c52" RevisionNo="#x00110000" BIC="1P147955SBTN99aj0lo11KEK1322                        Q1    2P112601040017" RepeatSupport="true" PortPhys="4883" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1322 2-port EtherCAT P junction with feed-in" Desc="EK1322" PortABoxInfo="#x01000005">
+						<EtherCAT SlaveType="1" PdiType="#x0f04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x052a2c52" RevisionNo="#x00110000" BIC="1P147955SBTN99akb1hd1KEK1322                        Q1    2P282601040017" RepeatSupport="true" PortPhys="4883" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1322 2-port EtherCAT P junction with feed-in" Desc="EK1322" PortABoxInfo="#x01000019">
 							<SyncMan>001001000000010004000000000000000000001000000000</SyncMan>
 							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 							<Pdo Name="Status Us" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4396,10 +4377,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								</PowerSupply>
 							</EtherCATp>
 						</EtherCAT>
-						<Box Id="7" BoxType="9099">
-							<Name>Box 7 (EPP1809-0022)</Name>
+						<Box Id="27" BoxType="9099">
+							<Name>Box 27 (EPP1809-0022)</Name>
 							<ImageId>1005</ImageId>
-							<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x64763719" RevisionNo="#x00100016" RepeatSupport="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EPP1809-0022 16 Ch. Dig. Input 24V, 3ms, M8" Desc="EPP1809-0022" PortABoxInfo="#x03000006">
+							<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x64763719" RevisionNo="#x00100016" RepeatSupport="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EPP1809-0022 16 Ch. Dig. Input 24V, 3ms, M8" Desc="EPP1809-0022" PortABoxInfo="#x0300001a">
 								<SyncMan>001002000000010004000000020002000200001000010000</SyncMan>
 								<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 								<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4500,10 +4481,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								</EtherCATp>
 							</EtherCAT>
 						</Box>
-						<Box Id="8" BoxType="9099">
-							<Name>Box 8 (EPP1809-0022)</Name>
+						<Box Id="28" BoxType="9099">
+							<Name>Box 28 (EPP1809-0022)</Name>
 							<ImageId>1005</ImageId>
-							<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x64763719" RevisionNo="#x00100016" RepeatSupport="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EPP1809-0022 16 Ch. Dig. Input 24V, 3ms, M8" Desc="EPP1809-0022" PortABoxInfo="#x01000006">
+							<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x64763719" RevisionNo="#x00100016" RepeatSupport="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EPP1809-0022 16 Ch. Dig. Input 24V, 3ms, M8" Desc="EPP1809-0022" PortABoxInfo="#x0100001a">
 								<SyncMan>001002000000010004000000020002000200001000010000</SyncMan>
 								<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 								<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4605,10 +4586,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</EtherCAT>
 						</Box>
 					</Box>
-					<Box Id="9" BoxType="9099">
-						<Name>Term 9 (EL9410)</Name>
+					<Box Id="29" BoxType="9099">
+						<Name>Term 29 (EL9410)</Name>
 						<ImageId>1006</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x24c23052" RevisionNo="#x00110000" BIC="1P064397SBTN999lpwe91KEL9410                        Q1    2P132600210017" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9410 E-Bus Power Supplier  (Diagnostics)" Desc="EL9410" PortABoxInfo="#x02000006">
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x24c23052" RevisionNo="#x00110000" BIC="1P064397SBTN99aiu7681KEL9410                        Q1    2P262600210017" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9410 E-Bus Power Supplier  (Diagnostics)" Desc="EL9410" PortABoxInfo="#x0200001a">
 							<SyncMan>001001000000010004000000000000000000001000000000</SyncMan>
 							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 							<Pdo Name="Status Us" Index="#x1a00" Flags="#x0011" SyncMan="0">
@@ -4623,10 +4604,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box Id="10" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 10 (EL6910)</Name>
+					<Box Id="30" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 30 (EL6910)</Name>
 						<ImageId>1007</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00150000" BIC="1P135389SBTNsee COE!1KEL6910                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x01000009">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00140000" BIC="1P135389SBTNsee COE!1KEL6910                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x0100001d">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001235002400010003000000000000000200001224010000</SyncMan>
@@ -4639,7 +4620,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Fmmu>0000000000000000000000020000000001000000060000000400010000000000</Fmmu>
 							<Fmmu>0000000000000000000000010000000002000000060000000500010000000000</Fmmu>
 							<BootStrapData>0010f400f410f400</BootStrapData>
-							<MBoxUserCmdData>004003000a0000001f000000030010000000000000000000000000000000000020f31005020000000100456e61626c6520446961674d65737361676520617320656d657267656e637900</MBoxUserCmdData>
+							<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
 							<Pdo Name="ConnectionInputs" Index="#x1a00" Flags="#x2011" SyncMan="3">
 								<Entry Name="Message_195 TxPDO" Index="#x7000" Sub="#x01">
 									<Type GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety">FSOE_6</Type>
@@ -4985,10 +4966,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<CoeProfile ProfileNo="5001"/>
 						</EtherCAT>
 					</Box>
-					<Box Id="11" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 11 (EL1918)</Name>
+					<Box Id="31" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 31 (EL1918)</Name>
 						<ImageId>1007</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x077e3052" RevisionNo="#x00110000" BIC="1P184494SBTNsee COE!1KEL1918                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="2" Type="EL1918, 8Ch. Safety Input 24V, TwinSAFE" Desc="EL1918" PortABoxInfo="#x0100000a">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x077e3052" RevisionNo="#x00110000" BIC="1P184494SBTNsee COE!1KEL1918                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="2" Type="EL1918, 8Ch. Safety Input 24V, TwinSAFE" Desc="EL1918" PortABoxInfo="#x0100001e">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001208002400010003000000000000000800001224010000</SyncMan>
@@ -5125,7 +5106,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="FSOE-Slot">
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>17827710</ModuleIdent>
-								<Module Id="#x03090001" Type="FSOE" Class="1918">
+								<Module Id="#x0309000d" Type="FSOE" Class="1918">
 									<Name>Module 1 (FSOE)</Name>
 									<ImageId>554</ImageId>
 									<ModuleData>020000007e07100100002c000000000000000000000000000000000000000000</ModuleData>
@@ -5137,7 +5118,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="FSLOGIC">
 								<SlotData>0000010001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>691</ModuleIdent>
-								<Module Id="#x03090002" Type="FSLOGIC" Class="FSLOGIC">
+								<Module Id="#x0309000e" Type="FSLOGIC" Class="FSLOGIC">
 									<Name>Module 2 (FSLOGIC)</Name>
 									<ImageId>554</ImageId>
 									<ModuleData>02000000b3020000000004000000000000000000000000000000000000000000</ModuleData>
@@ -5147,10 +5128,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Slot>
 						</EtherCAT>
 					</Box>
-					<Box Id="12" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 12 (EL1918)</Name>
+					<Box Id="32" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 32 (EL1918)</Name>
 						<ImageId>1007</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x077e3052" RevisionNo="#x00110000" BIC="1P184494SBTNsee COE!1KEL1918                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="2" Type="EL1918, 8Ch. Safety Input 24V, TwinSAFE" Desc="EL1918" PortABoxInfo="#x0100000b">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x077e3052" RevisionNo="#x00110000" BIC="1P184494SBTNsee COE!1KEL1918                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="2" Type="EL1918, 8Ch. Safety Input 24V, TwinSAFE" Desc="EL1918" PortABoxInfo="#x0100001f">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001208002400010003000000000000000800001224010000</SyncMan>
@@ -5287,7 +5268,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="FSOE-Slot">
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>17827710</ModuleIdent>
-								<Module Id="#x03090003" Type="FSOE" Class="1918">
+								<Module Id="#x0309000f" Type="FSOE" Class="1918">
 									<Name>Module 1 (FSOE)</Name>
 									<ImageId>554</ImageId>
 									<ModuleData>020000007e07100100002c000000000000000000000000000000000000000000</ModuleData>
@@ -5299,7 +5280,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="FSLOGIC">
 								<SlotData>0000010001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>691</ModuleIdent>
-								<Module Id="#x03090004" Type="FSLOGIC" Class="FSLOGIC">
+								<Module Id="#x03090010" Type="FSLOGIC" Class="FSLOGIC">
 									<Name>Module 2 (FSLOGIC)</Name>
 									<ImageId>554</ImageId>
 									<ModuleData>02000000b3020000000004000000000000000000000000000000000000000000</ModuleData>
@@ -5309,10 +5290,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Slot>
 						</EtherCAT>
 					</Box>
-					<Box Id="13" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 13 (EL2904)</Name>
+					<Box Id="33" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 33 (EL2904)</Name>
 						<ImageId>118</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0b583052" RevisionNo="#x00130000" BIC="1P070933SBTNsee COE!1KEL2904                        Q1    " InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE" Desc="EL2904" PortABoxInfo="#x0100000c">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0b583052" RevisionNo="#x00130000" BIC="1P070933SBTNsee COE!1KEL2904                        Q1    " InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE" Desc="EL2904" PortABoxInfo="#x01000020">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000400000010001001122010000</SyncMan>
 							<SyncMan>001208002400010003000000000000000800001224010000</SyncMan>
@@ -5383,7 +5364,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="">
 								<SlotData>0000010001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>290</ModuleIdent>
-								<Module Id="#x03090005" Type="FSOES" Class="290">
+								<Module Id="#x03090011" Type="FSOES" Class="290">
 									<Name>Module 1 (FSOES)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000002201000000000c000000000000000000000000000000000000000000</ModuleData>
@@ -5395,7 +5376,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Slot Name="">
 								<SlotData>0000010001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>200</ModuleIdent>
-								<Module Id="#x03090006" Type="DO" Class="200">
+								<Module Id="#x03090012" Type="DO" Class="200">
 									<Name>Module 2 (DO)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>02000000c8000000000004000000000000000000000000000000000000000000</ModuleData>
@@ -5404,14 +5385,14 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Slot>
 						</EtherCAT>
 					</Box>
-					<Box Id="14" BoxType="9099">
-						<Name>Term 14 (EK1110)</Name>
+					<Box Id="34" BoxType="9099">
+						<Name>Term 34 (EK1110)</Name>
 						<ImageId>1008</ImageId>
-						<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04562c52" RevisionNo="#x00110000" PortPhys="19" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1110 EtherCAT extension" Desc="EK1110" PortABoxInfo="#x0100000d"/>
+						<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04562c52" RevisionNo="#x00110000" PortPhys="19" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1110 EtherCAT extension" Desc="EK1110" PortABoxInfo="#x01000021"/>
 					</Box>
 				</Box>
-				<Box Id="15" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Drive 15 (AX5206-0000-0216)</Name>
+				<Box Id="35" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Drive 35 (AX5206-0000-0216)</Name>
 					<ImageId>1009</ImageId>
 					<Xml>
 						<AX5XXXDriveTool>
@@ -6144,12 +6125,12 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<DriveModuleType>31</DriveModuleType>
 							<TcLink ProtocalType="1">
 								<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)</IoItemPathName>
-								<ItemId>15</ItemId>
-								<ObjectId>#x0302000f</ObjectId>
+								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)</IoItemPathName>
+								<ItemId>35</ItemId>
+								<ObjectId>#x03020023</ObjectId>
 							</TcLink>
 							<OrderCode>AX5206-0000-02xx</OrderCode>
-							<Name>Drive 15 (AX5206-0000-0216)</Name>
+							<Name>Drive 35 (AX5206-0000-0216)</Name>
 							<ProductRevision>AX5206-0000-0216</ProductRevision>
 							<FirmwareVersion>Firmware: v2.16 (Build 0001) / Bootloader: v2.02 (Build 0002)</FirmwareVersion>
 							<BootloaderVersion>2.02</BootloaderVersion>
@@ -6246,7 +6227,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<Channel ChnId="0">
 									<TcLink>
 										<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)</IoItemPathName>
+										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)</IoItemPathName>
 										<NcItemPathName AxisType="1">TINC^NC-Task 1 SAF^Axes^ERL</NcItemPathName>
 									</TcLink>
 									<SelectedModifyOptPDOsMode>0</SelectedModifyOptPDOsMode>
@@ -7203,7 +7184,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<Channel ChnId="1">
 									<TcLink>
 										<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)</IoItemPathName>
+										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)</IoItemPathName>
 										<NcItemPathName AxisType="1">TINC^NC-Task 1 SAF^Axes^USEL</NcItemPathName>
 									</TcLink>
 									<SelectedModifyOptPDOsMode>0</SelectedModifyOptPDOsMode>
@@ -8108,7 +8089,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Inverter>
 						</TcDMDrive>
 					</Xml>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d80000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0216 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0216" PortABoxInfo="#x0100000e">
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d80000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0216 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0216" PortABoxInfo="#x01000022">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
@@ -8270,10 +8251,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Entry>
 						</Pdo>
 					</EtherCAT>
-					<Box Id="16" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 16 (AX5805)</Name>
+					<Box Id="36" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 36 (AX5805)</Name>
 						<ImageId>118</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x0300000f">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x03000023">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000400000010001001122010000</SyncMan>
 							<SyncMan>00121b002400010003000000000000001b00001224010000</SyncMan>
@@ -8392,7 +8373,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030e46e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ea6e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ec6e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
-							<MBoxUserCmdData>004003000c00000000000000000000000800090300000000000000000000000020102f00040000001703020000</MBoxUserCmdData>
+							<MBoxUserCmdData>004003000c00000000000000000000001400090300000000000000000000000020102f00040000001703020000</MBoxUserCmdData>
 							<Pdo Name="Inputs (Statusword)" Index="#x1a00" Flags="#x00c1" SyncMan="3">
 								<Entry Name="FSOE__FSOE Command" BitLen="8" Index="#xe600" Sub="#x01">
 									<Type>USINT</Type>
@@ -8650,7 +8631,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66327</ModuleIdent>
 								<ModuleIdent>131863</ModuleIdent>
-								<Module Id="#x03090007" Type="Safety Process Data, 2 axis" Class="">
+								<Module Id="#x03090013" Type="Safety Process Data, 2 axis" Class="">
 									<Name>Module 1 (Safety Process Data, 2 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001703020000000c000000000000000000000000000000000000000000</ModuleData>
@@ -8663,7 +8644,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66331</ModuleIdent>
 								<ModuleIdent>131867</ModuleIdent>
-								<Module Id="#x03090008" Type="Standard Process Data, 2 axis" Class="">
+								<Module Id="#x03090014" Type="Standard Process Data, 2 axis" Class="">
 									<Name>Module 2 (Standard Process Data, 2 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001b030200000004000000000000000000000000000000000000000000</ModuleData>
@@ -8676,8 +8657,8 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						</EtherCAT>
 					</Box>
 				</Box>
-				<Box Id="17" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Drive 17 (AX5206-0000-0216)</Name>
+				<Box Id="37" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Drive 37 (AX5206-0000-0216)</Name>
 					<ImageId>1009</ImageId>
 					<Xml>
 						<AX5XXXDriveTool>
@@ -9296,12 +9277,12 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<DriveModuleType>31</DriveModuleType>
 							<TcLink ProtocalType="1">
 								<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)</IoItemPathName>
-								<ItemId>17</ItemId>
-								<ObjectId>#x03020011</ObjectId>
+								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)</IoItemPathName>
+								<ItemId>37</ItemId>
+								<ObjectId>#x03020025</ObjectId>
 							</TcLink>
 							<OrderCode>AX5206-0000-02xx</OrderCode>
-							<Name>Drive 17 (AX5206-0000-0216)</Name>
+							<Name>Drive 37 (AX5206-0000-0216)</Name>
 							<ProductRevision>AX5206-0000-0216</ProductRevision>
 							<FirmwareVersion>Firmware: v2.16 (Build 0001) / Bootloader: v2.02 (Build 0002)</FirmwareVersion>
 							<BootloaderVersion>2.02</BootloaderVersion>
@@ -9398,7 +9379,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<Channel ChnId="0">
 									<TcLink>
 										<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)</IoItemPathName>
+										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)</IoItemPathName>
 										<NcItemPathName AxisType="1">TINC^NC-Task 1 SAF^Axes^ERR</NcItemPathName>
 									</TcLink>
 									<SelectedModifyOptPDOsMode>0</SelectedModifyOptPDOsMode>
@@ -10238,7 +10219,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<Channel ChnId="1">
 									<TcLink>
 										<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)</IoItemPathName>
+										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)</IoItemPathName>
 										<NcItemPathName AxisType="1">TINC^NC-Task 1 SAF^Axes^USER</NcItemPathName>
 									</TcLink>
 									<SelectedModifyOptPDOsMode>0</SelectedModifyOptPDOsMode>
@@ -11143,7 +11124,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Inverter>
 						</TcDMDrive>
 					</Xml>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d80000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0216 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0216" PortABoxInfo="#x0100000f">
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d80000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0216 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0216" PortABoxInfo="#x01000023">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
@@ -11290,10 +11271,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Entry>
 						</Pdo>
 					</EtherCAT>
-					<Box Id="18" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 18 (AX5805)</Name>
+					<Box Id="38" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 38 (AX5805)</Name>
 						<ImageId>118</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x03000011">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x03000025">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000400000010001001122010000</SyncMan>
 							<SyncMan>00121b002400010003000000000000001b00001224010000</SyncMan>
@@ -11412,7 +11393,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030e46e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ea6e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ec6e002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
-							<MBoxUserCmdData>004003000c00000000000000000000000a00090300000000000000000000000020102f00040000001703020000</MBoxUserCmdData>
+							<MBoxUserCmdData>004003000c00000000000000000000001600090300000000000000000000000020102f00040000001703020000</MBoxUserCmdData>
 							<Pdo Name="Inputs (Statusword)" Index="#x1a00" Flags="#x00c1" SyncMan="3">
 								<Entry Name="FSOE__FSOE Command" BitLen="8" Index="#xe600" Sub="#x01">
 									<Type>USINT</Type>
@@ -11670,7 +11651,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66327</ModuleIdent>
 								<ModuleIdent>131863</ModuleIdent>
-								<Module Id="#x03090009" Type="Safety Process Data, 2 axis" Class="">
+								<Module Id="#x03090015" Type="Safety Process Data, 2 axis" Class="">
 									<Name>Module 1 (Safety Process Data, 2 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001703020000000c000000000000000000000000000000000000000000</ModuleData>
@@ -11683,7 +11664,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66331</ModuleIdent>
 								<ModuleIdent>131867</ModuleIdent>
-								<Module Id="#x0309000a" Type="Standard Process Data, 2 axis" Class="">
+								<Module Id="#x03090016" Type="Standard Process Data, 2 axis" Class="">
 									<Name>Module 2 (Standard Process Data, 2 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001b030200000004000000000000000000000000000000000000000000</ModuleData>
@@ -11696,9 +11677,71 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						</EtherCAT>
 					</Box>
 				</Box>
-				<Box Id="19" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Drive 19 (AX5103-0000-0216)</Name>
+				<Box Id="41" BoxType="9099">
+					<Name>Box 41 (EX260-SEC1)</Name>
 					<ImageId>1010</ImageId>
+					<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000114" ProductCode="#x01000001" RevisionNo="#x00010002" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EX260-SEC1 EtherCAT SI Unit (32DO_PNP) Rev1.2" Desc="EX260-SEC1" PortABoxInfo="#x02000015">
+						<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
+						<SyncMan>010f01004400010003000000000000000000010f44090000</SyncMan>
+						<SyncMan>020f01004400010003000000000000000000020f44090000</SyncMan>
+						<SyncMan>030f01004400010003000000000000000000030f44090000</SyncMan>
+						<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+						<Pdo Name="Byte 0" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+							<Entry Name="Output" Index="#x3101" Sub="#x01">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 1" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="1">
+							<Entry Name="Output" Index="#x3101" Sub="#x02">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 2" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="2">
+							<Entry Name="Output" Index="#x3101" Sub="#x03">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 3" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="3">
+							<Entry Name="Output" Index="#x3101" Sub="#x04">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+					</EtherCAT>
+				</Box>
+				<Box Id="42" BoxType="9099">
+					<Name>Box 42 (EX260-SEC1)</Name>
+					<ImageId>1010</ImageId>
+					<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000114" ProductCode="#x01000001" RevisionNo="#x00010002" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EX260-SEC1 EtherCAT SI Unit (32DO_PNP) Rev1.2" Desc="EX260-SEC1" PortABoxInfo="#x01000029">
+						<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
+						<SyncMan>010f01004400010003000000000000000000010f44090000</SyncMan>
+						<SyncMan>020f01004400010003000000000000000000020f44090000</SyncMan>
+						<SyncMan>030f01004400010003000000000000000000030f44090000</SyncMan>
+						<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+						<Pdo Name="Byte 0" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+							<Entry Name="Output" Index="#x3101" Sub="#x01">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 1" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="1">
+							<Entry Name="Output" Index="#x3101" Sub="#x02">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 2" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="2">
+							<Entry Name="Output" Index="#x3101" Sub="#x03">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Byte 3" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="3">
+							<Entry Name="Output" Index="#x3101" Sub="#x04">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+					</EtherCAT>
+				</Box>
+				<Box Id="39" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Drive 39 (AX5103-0000-0216)</Name>
+					<ImageId>1011</ImageId>
 					<Xml>
 						<AX5XXXDriveTool>
 							<InitCmds>
@@ -11835,12 +11878,12 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<DriveModuleType>31</DriveModuleType>
 							<TcLink ProtocalType="1">
 								<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 19 (AX5103-0000-0216)</IoItemPathName>
-								<ItemId>19</ItemId>
-								<ObjectId>#x03020013</ObjectId>
+								<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 39 (AX5103-0000-0216)</IoItemPathName>
+								<ItemId>39</ItemId>
+								<ObjectId>#x03020027</ObjectId>
 							</TcLink>
 							<OrderCode>AX5103-0000-02xx</OrderCode>
-							<Name>Drive 19 (AX5103-0000-0216)</Name>
+							<Name>Drive 39 (AX5103-0000-0216)</Name>
 							<ProductRevision>AX5103-0000-0216</ProductRevision>
 							<FirmwareVersion>Firmware: v2.16 (Build 0001) / Bootloader: v2.02 (Build 0002)</FirmwareVersion>
 							<BootloaderVersion>2.02</BootloaderVersion>
@@ -11937,7 +11980,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<Channel ChnId="0">
 									<TcLink>
 										<TcPrjPath>..\BendingMachine.tsproj</TcPrjPath>
-										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 19 (AX5103-0000-0216)</IoItemPathName>
+										<IoItemPathName>TIID^Device 1 (EtherCAT)^Drive 39 (AX5103-0000-0216)</IoItemPathName>
 										<NcItemPathName AxisType="1">TINC^NC-Task 1 SAF^Axes^UR</NcItemPathName>
 									</TcLink>
 									<SelectedModifyOptPDOsMode>0</SelectedModifyOptPDOsMode>
@@ -12930,10 +12973,10 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							</Entry>
 						</Pdo>
 					</EtherCAT>
-					<Box Id="20" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Term 20 (AX5805)</Name>
+					<Box Id="40" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 40 (AX5805)</Name>
 						<ImageId>118</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x03000013">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="43" FoeType="1" VendorId="#x00000002" ProductCode="#x16ad6012" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="AX5805 (Safety Drive Option)" Desc="AX5805" PortABoxInfo="#x03000027">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000400000010001001122010000</SyncMan>
 							<SyncMan>00120f002400010003000000000000001b00001224010000</SyncMan>
@@ -12999,7 +13042,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030e466002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ea66002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
 							<MBoxUserCmdData>020003002a00000017000000000040000000000000000000000000000000000030ec66002200000008000000000000000000000000000000000000000000000000000000000000000000646f776e6c6f6164205361666520506172616d6574657200</MBoxUserCmdData>
-							<MBoxUserCmdData>004003000c00000000000000000000000c00090300000000000000000000000020102f00040000001703010000</MBoxUserCmdData>
+							<MBoxUserCmdData>004003000c00000000000000000000001800090300000000000000000000000020102f00040000001703010000</MBoxUserCmdData>
 							<Pdo Name="Inputs (Statusword)" Index="#x1a00" Flags="#x00c1" SyncMan="3">
 								<Entry Name="FSOE__FSOE Command" BitLen="8" Index="#xe600" Sub="#x01">
 									<Type>USINT</Type>
@@ -13139,7 +13182,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66327</ModuleIdent>
 								<ModuleIdent>131863</ModuleIdent>
-								<Module Id="#x0309000b" Type="Safety Process Data, 1 axis" Class="">
+								<Module Id="#x03090017" Type="Safety Process Data, 1 axis" Class="">
 									<Name>Module 1 (Safety Process Data, 1 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001703010000000c000000000000000000000000000000000000000000</ModuleData>
@@ -13152,7 +13195,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								<SlotData>0000000001000400000000000000000000000000000000000000000000000000</SlotData>
 								<ModuleIdent>66331</ModuleIdent>
 								<ModuleIdent>131867</ModuleIdent>
-								<Module Id="#x0309000c" Type="Standard Process Data, 1 axis" Class="">
+								<Module Id="#x03090018" Type="Standard Process Data, 1 axis" Class="">
 									<Name>Module 2 (Standard Process Data, 1 axis)</Name>
 									<ImageId>118</ImageId>
 									<ModuleData>020000001b030100000004000000000000000000000000000000000000000000</ModuleData>
@@ -13163,212 +13206,206 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						</EtherCAT>
 					</Box>
 				</Box>
-				<EtherCAT DcSyncMode="3">
+				<EtherCAT PromiscuousModeNoCopy="true" DcSyncMode="3">
 					<SyncUnit Name="[UR_Drive]" HcName="UR_Drive"/>
 				</EtherCAT>
-			</Device>
-			<Device Id="2" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="10.1.181.70.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="6">
-				<Name>Device 2 (EtherCAT)</Name>
-				<AddressInfo>
-					<Pnp>
-						<DeviceDesc>X001 (TwinCAT-Intel PCI Ethernet Adapter (Gigabit) </DeviceDesc>
-						<DeviceName>\DEVICE\{DADCACF4-C639-46C6-8588-18E417952014}</DeviceName>
-						<DeviceData>000105abd45f</DeviceData>
-					</Pnp>
-				</AddressInfo>
-				<Image Id="5" AddrType="9" ImageType="3">
-					<Name>Image</Name>
-				</Image>
-				<Box Id="21" BoxType="9099">
-					<Name>Box 21 (EX260-SEC1)</Name>
-					<ImageId>1011</ImageId>
-					<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000114" ProductCode="#x01000001" RevisionNo="#x00010002" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EX260-SEC1 EtherCAT SI Unit (32DO_PNP) Rev1.2" Desc="EX260-SEC1" PortABoxInfo="#x00ffffff">
-						<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
-						<SyncMan>010f01004400010003000000000000000000010f44090000</SyncMan>
-						<SyncMan>020f01004400010003000000000000000000020f44090000</SyncMan>
-						<SyncMan>030f01004400010003000000000000000000030f44090000</SyncMan>
-						<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
-						<Pdo Name="Byte 0" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
-							<Entry Name="Output" Index="#x3101" Sub="#x01">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 1" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="1">
-							<Entry Name="Output" Index="#x3101" Sub="#x02">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 2" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="2">
-							<Entry Name="Output" Index="#x3101" Sub="#x03">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 3" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="3">
-							<Entry Name="Output" Index="#x3101" Sub="#x04">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-					</EtherCAT>
-				</Box>
-				<Box Id="22" BoxType="9099">
-					<Name>Box 22 (EX260-SEC1)</Name>
-					<ImageId>1011</ImageId>
-					<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000114" ProductCode="#x01000001" RevisionNo="#x00010002" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EX260-SEC1 EtherCAT SI Unit (32DO_PNP) Rev1.2" Desc="EX260-SEC1" PortABoxInfo="#x01000015">
-						<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
-						<SyncMan>010f01004400010003000000000000000000010f44090000</SyncMan>
-						<SyncMan>020f01004400010003000000000000000000020f44090000</SyncMan>
-						<SyncMan>030f01004400010003000000000000000000030f44090000</SyncMan>
-						<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
-						<Pdo Name="Byte 0" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
-							<Entry Name="Output" Index="#x3101" Sub="#x01">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 1" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="1">
-							<Entry Name="Output" Index="#x3101" Sub="#x02">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 2" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="2">
-							<Entry Name="Output" Index="#x3101" Sub="#x03">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-						<Pdo Name="Byte 3" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="3">
-							<Entry Name="Output" Index="#x3101" Sub="#x04">
-								<Type>USINT</Type>
-							</Entry>
-						</Pdo>
-					</EtherCAT>
-				</Box>
-				<EtherCAT/>
 			</Device>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500841000403}" Id="#x02030050"/>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500850000403}" Id="#x02030060"/>
 		<MappingInfo Identifier="{00000000-0010-0304-3000-040310000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{00000000-0020-0304-3000-040322000403}" Id="#x02030040"/>
-		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030070" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{03040040-0040-0304-4000-040340000403}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{00000000-0020-0304-2100-040321000403}" Id="#x02030030"/>
+		<MappingInfo Identifier="{00000000-0040-0304-3000-040342000403}" Id="#x02030020"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)^Term 16 (AX5805)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_184 TxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Outputs (Controlword)^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_184 RxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Inputs (Statusword)^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)^Term 36 (AX5805)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_184 TxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Outputs (Controlword)^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_184 RxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Inputs (Statusword)^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)^Term 18 (AX5805)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_183 TxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Outputs (Controlword)^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_183 RxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Inputs (Statusword)^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)^Term 38 (AX5805)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_183 TxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Outputs (Controlword)^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_183 RxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Inputs (Statusword)^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 19 (AX5103-0000-0216)^Term 20 (AX5805)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_191 TxPDO" VarB="Module 1 (Safety Process Data, 1 axis)^Outputs (Controlword)^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_191 RxPDO" VarB="Module 1 (Safety Process Data, 1 axis)^Inputs (Statusword)^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 39 (AX5103-0000-0216)^Term 40 (AX5805)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_191 TxPDO" VarB="Module 1 (Safety Process Data, 1 axis)^Outputs (Controlword)^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_191 RxPDO" VarB="Module 1 (Safety Process Data, 1 axis)^Inputs (Statusword)^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 11 (EL1918)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_195 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_195 RxPDO" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 31 (EL1918)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_195 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_195 RxPDO" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 12 (EL1918)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_196 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_196 RxPDO" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 32 (EL1918)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_196 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_196 RxPDO" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 13 (EL2904)">
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionInputs^Message_197 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 10 (EL6910)^ConnectionOutputs^Message_197 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 33 (EL2904)">
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_197 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
+				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionOutputs^Message_197 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^ERL">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 1^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 1^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 1^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 1^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 1^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^ERR">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 1^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 1^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 1^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 1^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 1^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^UR">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 19 (AX5103-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 39 (AX5103-0000-0216)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^USEL">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 2^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 2^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 2^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 2^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 2^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^USER">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 17 (AX5206-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 37 (AX5206-0000-0216)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 2^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 2^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 2^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 2^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 2^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^BendingMachine^BendingMachine Instance">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 15 (AX5206-0000-0216)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Box 41 (EX260-SEC1)">
+				<Link VarA="PlcTask Outputs^IO.smc1[0]" VarB="Byte 0^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc1[1]" VarB="Byte 1^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc1[2]" VarB="Byte 2^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc1[3]" VarB="Byte 3^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Box 42 (EX260-SEC1)">
+				<Link VarA="PlcTask Outputs^IO.smc2[0]" VarB="Byte 0^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc2[1]" VarB="Byte 1^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc2[2]" VarB="Byte 2^Output"/>
+				<Link VarA="PlcTask Outputs^IO.smc2[3]" VarB="Byte 3^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)">
 				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diRowPositionFeedBack" VarB="AT 1^Position feedback 2 value (external feedback)"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 10 (EL6910)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 23 (EL1409)">
+				<Link VarA="PlcTask Inputs^IO.clampIn" VarB="DIP Inputs^Input Channel 14"/>
+				<Link VarA="PlcTask Inputs^IO.clampOpen" VarB="DIP Inputs^Input Channel 13"/>
+				<Link VarA="PlcTask Inputs^IO.fixedClampEncode" VarB="DIP Inputs^Input Channel 15"/>
+				<Link VarA="PlcTask Inputs^IO.mobileClampEncode" VarB="DIP Inputs^Input Channel 16"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton1" VarB="DIP Inputs^Input Channel 1"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton2" VarB="DIP Inputs^Input Channel 2"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton3" VarB="DIP Inputs^Input Channel 3"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit1" VarB="DIP Inputs^Input Channel 4"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit2" VarB="DIP Inputs^Input Channel 5"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit3" VarB="DIP Inputs^Input Channel 6"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector2Bit1" VarB="DIP Inputs^Input Channel 7"/>
+				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector2Bit2" VarB="DIP Inputs^Input Channel 8"/>
+				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diStartButton" VarB="DIP Inputs^Input Channel 9"/>
+				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diStopButton" VarB="DIP Inputs^Input Channel 10"/>
+				<Link VarA="PlcTask Inputs^Safety.PulsanteResetBarriere" VarB="DIP Inputs^Input Channel 12"/>
+				<Link VarA="PlcTask Inputs^Safety.PulsanteResetEmergenza" VarB="DIP Inputs^Input Channel 11"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 24 (EL1409)">
+				<Link VarA="PlcTask Inputs^IO.cabinetThermostat" VarB="DIP Inputs^Input Channel 10"/>
+				<Link VarA="PlcTask Inputs^IO.chillerAlarm" VarB="DIP Inputs^Input Channel 5"/>
+				<Link VarA="PlcTask Inputs^IO.chillerMagnetTrip" VarB="DIP Inputs^Input Channel 6"/>
+				<Link VarA="PlcTask Inputs^IO.doorLeftClosed" VarB="DIP Inputs^Input Channel 7"/>
+				<Link VarA="PlcTask Inputs^IO.doorRightClosed" VarB="DIP Inputs^Input Channel 8"/>
+				<Link VarA="PlcTask Inputs^IO.fuseAlarm" VarB="DIP Inputs^Input Channel 1"/>
+				<Link VarA="PlcTask Inputs^IO.leftAxisMagnetTrip" VarB="DIP Inputs^Input Channel 2"/>
+				<Link VarA="PlcTask Inputs^IO.pressureSwMinPressure" VarB="DIP Inputs^Input Channel 9"/>
+				<Link VarA="PlcTask Inputs^IO.rightAxisMagnetTrip" VarB="DIP Inputs^Input Channel 3"/>
+				<Link VarA="PlcTask Inputs^IO.ur2MagnetTrip" VarB="DIP Inputs^Input Channel 4"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 25 (EL2409)">
+				<Link VarA="PlcTask Outputs^IO.chillerEnabled" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^IO.fuseReset" VarB="Channel 9^Output"/>
+				<Link VarA="PlcTask Outputs^IO.spiaPulsanteStart" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^IO.spiaPulsanteStop" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^IO.turretGreen" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^IO.turretRed" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^IO.turretSiren" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^IO.turretYellow" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^Safety.SpiaPulsanteRipristinoBarriere" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^Safety.SpiaPulsanteRipristinoSicurezze" VarB="Channel 5^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 26 (EK1322)^Box 27 (EPP1809-0022)">
+				<Link VarA="PlcTask Inputs^IO.centering1LeftIn" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^IO.centering2LeftIn" VarB="Channel 9^Input"/>
+				<Link VarA="PlcTask Inputs^IO.centering3LeftIn" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^IO.centering4LeftIn" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^IO.epLeftBendUp" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^IO.epLeftIn" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^IO.erLeftIn" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^IO.erLeftOut" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^IO.useLeftDown" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^IO.useLeftUp" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 26 (EK1322)^Box 28 (EPP1809-0022)">
+				<Link VarA="PlcTask Inputs^IO.epRightBendUp" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^IO.epRightIn" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^IO.erRightIn" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^IO.erRightOut" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^IO.useRightDown" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^IO.useRighttUp" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 21 (EK1100)^Term 30 (EL6910)">
 				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSafetySwitch" VarB="StandardInputs^Standard Out Var 64"/>
 				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diSafetySwitch" VarB="StandardInputs^Standard Out Var 60"/>
 				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diTwoHand" VarB="StandardInputs^Standard Out Var 65"/>
@@ -13462,80 +13499,6 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="PlcTask Outputs^Safety.USEL_ERL_Run" VarB="StandardOutputs^Standard In Var 77"/>
 				<Link VarA="PlcTask Outputs^Safety.USER_ERR_Ack" VarB="StandardOutputs^Standard In Var 79"/>
 				<Link VarA="PlcTask Outputs^Safety.USER_ERR_Run" VarB="StandardOutputs^Standard In Var 80"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1409)">
-				<Link VarA="PlcTask Inputs^IO.clampIn" VarB="DIP Inputs^Input Channel 14"/>
-				<Link VarA="PlcTask Inputs^IO.clampOpen" VarB="DIP Inputs^Input Channel 13"/>
-				<Link VarA="PlcTask Inputs^IO.fixedClampEncode" VarB="DIP Inputs^Input Channel 15"/>
-				<Link VarA="PlcTask Inputs^IO.mobileClampEncode" VarB="DIP Inputs^Input Channel 16"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton1" VarB="DIP Inputs^Input Channel 1"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton2" VarB="DIP Inputs^Input Channel 2"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diButton3" VarB="DIP Inputs^Input Channel 3"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit1" VarB="DIP Inputs^Input Channel 4"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit2" VarB="DIP Inputs^Input Channel 5"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector1Bit3" VarB="DIP Inputs^Input Channel 6"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector2Bit1" VarB="DIP Inputs^Input Channel 7"/>
-				<Link VarA="PlcTask Inputs^MAIN.stMpgEncoder.diSelector2Bit2" VarB="DIP Inputs^Input Channel 8"/>
-				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diStartButton" VarB="DIP Inputs^Input Channel 9"/>
-				<Link VarA="PlcTask Inputs^MAIN.stTwoHandControl.diStopButton" VarB="DIP Inputs^Input Channel 10"/>
-				<Link VarA="PlcTask Inputs^Safety.PulsanteResetBarriere" VarB="DIP Inputs^Input Channel 12"/>
-				<Link VarA="PlcTask Inputs^Safety.PulsanteResetEmergenza" VarB="DIP Inputs^Input Channel 11"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL1409)">
-				<Link VarA="PlcTask Inputs^IO.cabinetThermostat" VarB="DIP Inputs^Input Channel 10"/>
-				<Link VarA="PlcTask Inputs^IO.chillerAlarm" VarB="DIP Inputs^Input Channel 5"/>
-				<Link VarA="PlcTask Inputs^IO.chillerMagnetTrip" VarB="DIP Inputs^Input Channel 6"/>
-				<Link VarA="PlcTask Inputs^IO.doorLeftClosed" VarB="DIP Inputs^Input Channel 7"/>
-				<Link VarA="PlcTask Inputs^IO.doorRightClosed" VarB="DIP Inputs^Input Channel 8"/>
-				<Link VarA="PlcTask Inputs^IO.fuseAlarm" VarB="DIP Inputs^Input Channel 1"/>
-				<Link VarA="PlcTask Inputs^IO.leftAxisMagnetTrip" VarB="DIP Inputs^Input Channel 2"/>
-				<Link VarA="PlcTask Inputs^IO.pressureSwMinPressure" VarB="DIP Inputs^Input Channel 9"/>
-				<Link VarA="PlcTask Inputs^IO.rightAxisMagnetTrip" VarB="DIP Inputs^Input Channel 3"/>
-				<Link VarA="PlcTask Inputs^IO.ur2MagnetTrip" VarB="DIP Inputs^Input Channel 4"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL2409)">
-				<Link VarA="PlcTask Outputs^IO.chillerEnabled" VarB="Channel 10^Output"/>
-				<Link VarA="PlcTask Outputs^IO.fuseReset" VarB="Channel 9^Output"/>
-				<Link VarA="PlcTask Outputs^IO.spiaPulsanteStart" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^IO.spiaPulsanteStop" VarB="Channel 8^Output"/>
-				<Link VarA="PlcTask Outputs^IO.turretGreen" VarB="Channel 2^Output"/>
-				<Link VarA="PlcTask Outputs^IO.turretRed" VarB="Channel 1^Output"/>
-				<Link VarA="PlcTask Outputs^IO.turretSiren" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^IO.turretYellow" VarB="Channel 3^Output"/>
-				<Link VarA="PlcTask Outputs^Safety.SpiaPulsanteRipristinoBarriere" VarB="Channel 6^Output"/>
-				<Link VarA="PlcTask Outputs^Safety.SpiaPulsanteRipristinoSicurezze" VarB="Channel 5^Output"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EK1322)^Box 7 (EPP1809-0022)">
-				<Link VarA="PlcTask Inputs^IO.centering1LeftIn" VarB="Channel 9^Input"/>
-				<Link VarA="PlcTask Inputs^IO.centering2LeftIn" VarB="Channel 11^Input"/>
-				<Link VarA="PlcTask Inputs^IO.centering3LeftIn" VarB="Channel 13^Input"/>
-				<Link VarA="PlcTask Inputs^IO.centering4LeftIn" VarB="Channel 15^Input"/>
-				<Link VarA="PlcTask Inputs^IO.epLeftIn" VarB="Channel 5^Input"/>
-				<Link VarA="PlcTask Inputs^IO.epLeftOut" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^IO.erLeftIn" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^IO.erLeftOut" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^IO.useLeftDown" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^IO.useLeftUp" VarB="Channel 1^Input"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EK1322)^Box 8 (EPP1809-0022)">
-				<Link VarA="PlcTask Inputs^IO.epRightIn" VarB="Channel 5^Input"/>
-				<Link VarA="PlcTask Inputs^IO.epRightOut" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^IO.erRightIn" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^IO.erRightOut" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^IO.useRightDown" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^IO.useRighttUp" VarB="Channel 1^Input"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 2 (EtherCAT)^Box 21 (EX260-SEC1)">
-				<Link VarA="PlcTask Outputs^IO.smc1[0]" VarB="Byte 0^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc1[1]" VarB="Byte 1^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc1[2]" VarB="Byte 2^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc1[3]" VarB="Byte 3^Output"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 2 (EtherCAT)^Box 22 (EX260-SEC1)">
-				<Link VarA="PlcTask Outputs^IO.smc2[0]" VarB="Byte 0^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc2[1]" VarB="Byte 1^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc2[2]" VarB="Byte 2^Output"/>
-				<Link VarA="PlcTask Outputs^IO.smc2[3]" VarB="Byte 3^Output"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^ERL">
 				<Link VarA="PlcTask Inputs^MAIN.ERL.NcToPlc" VarB="Outputs^ToPlc"/>
