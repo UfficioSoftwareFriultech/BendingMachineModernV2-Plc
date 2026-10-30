@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MachineConfig" Id="{bcecab8f-08da-4402-9f8c-424c2c939ba7}" SpecialFunc="None">
     <Declaration><![CDATA[// Configurazione di Aut260045 per il Core: valvole (uscite e conferme) e tabella delle funzioni M.
 // E' il solo punto da toccare per una valvola o una funzione M nuova. Si chiama a ogni ciclo, prima
@@ -70,7 +70,7 @@ Valve(E_Valve.CenteringAir3,	'Esclusione aria 3',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO
 Valve(E_Valve.CenteringAir4,	'Esclusione aria 4',	OUTPUT_ENUM.MONOSTABLE,	ADR(IO.centeringLeft4Set),	0,							ADR(IO.centeringLeft4Set),	ADR(IO.centeringLeft4Set));
 
 //*******************************************************************************************************************
-// Ingressi mostrati all'HMI (sensori), nell'ordine storico dell'interfaccia v1
+// Ingressi mostrati all'HMI (sensori)
 //*******************************************************************************************************************
 Input(1,	'ER SX dentro',			ADR(IO.erLeftIn));
 Input(2,	'ER SX fuori',			ADR(IO.erLeftOut));
@@ -99,64 +99,64 @@ Input(20,	'EP DX trazione su',	ADR(IO.epRightBendUp));
 Mach.nMFuncCount := 0;
 
 // --- Canale 0, unita' SX ---
-Add(F_MSync(0, 62, 0, 0, Mach.SYNC_ACK_L, 0, 0, 0, 0));													// USE SX in posizione
-Add(F_MSync(0, 61, Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncLeftWaitRight));			// aspetta la USE DX
-Add(F_MSync(0, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_L, E_Alarm.SyncLeftWaitUr2));		// aspetta l'UR2
-Add(F_MSync(0, 112, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_L, Mach.SYNC_UR2_ACK_L, 0, E_Alarm.SyncLeftWaitUr2Ack));	// conferma all'UR2
-Add(F_MSync(0, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_DONE_L, 0, 0, 0));							// reset sincronismi
-Add(F_MValve(0, 40, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#500MS,	E_Alarm.ErLeftUp));
-Add(F_MValve(0, 41, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#500MS,	E_Alarm.ErLeftDown));
-Add(F_MValve(0, 44, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.SET,		T#3000MS, T#500MS,	E_Alarm.UseLeftUp));
-Add(F_MValve(0, 45, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#230MS,	E_Alarm.UseLeftDown));
-Add(F_MValveDirect(0, 54, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.SET));
-Add(F_MValveDirect(0, 55, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.RESET));
-Add(F_MValve(0, 50, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.SupportLeftOut));
-Add(F_MValve(0, 51, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.SupportLeftIn));
-Add(F_MValve(0, 70, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftBend));
-Add(F_MValve(0, 72, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftOut));
-Add(F_MValve(0, 73, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpLeftIn));
-Add(F_MValve(0, 74, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpLeftBendReturn));
-Add(F_MSimple(0, 95, E_MFuncKind.WaitStart));
-Add(F_MSimple(0, 130, E_MFuncKind.WaitH));
-Add(F_MSimple(0, 135, E_MFuncKind.LineNo));
-Add(F_MSimple(0, 140, E_MFuncKind.Nop));
+AddMFunc(F_MSync(0, 62, 0, 0, Mach.SYNC_ACK_L, 0, 0, 0, 0));													// USE SX in posizione
+AddMFunc(F_MSync(0, 61, Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncLeftWaitRight));			// aspetta la USE DX
+AddMFunc(F_MSync(0, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_L, E_Alarm.SyncLeftWaitUr2));		// aspetta l'UR2
+AddMFunc(F_MSync(0, 112, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_L, Mach.SYNC_UR2_ACK_L, 0, E_Alarm.SyncLeftWaitUr2Ack));	// conferma all'UR2
+AddMFunc(F_MSync(0, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_DONE_L, 0, 0, 0));							// reset sincronismi
+AddMFunc(F_MValve(0, 40, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#500MS,	E_Alarm.ErLeftUp));
+AddMFunc(F_MValve(0, 41, E_Valve.ErLeft,		OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#500MS,	E_Alarm.ErLeftDown));
+AddMFunc(F_MValve(0, 44, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.SET,		T#3000MS, T#500MS,	E_Alarm.UseLeftUp));
+AddMFunc(F_MValve(0, 45, E_Valve.UseLeftUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#230MS,	E_Alarm.UseLeftDown));
+AddMFunc(F_MValveDirect(0, 54, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.SET));
+AddMFunc(F_MValveDirect(0, 55, E_Valve.UseLeftUp, OUTPUT_ACTION_ENUM.RESET));
+AddMFunc(F_MValve(0, 50, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.SupportLeftOut));
+AddMFunc(F_MValve(0, 51, E_Valve.SupportLeft,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.SupportLeftIn));
+AddMFunc(F_MValve(0, 70, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftBend));
+AddMFunc(F_MValve(0, 72, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpLeftOut));
+AddMFunc(F_MValve(0, 73, E_Valve.EpLeftOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpLeftIn));
+AddMFunc(F_MValve(0, 74, E_Valve.EpLeftBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpLeftBendReturn));
+AddMFunc(F_MSimple(0, 95, E_MFuncKind.WaitStart));
+AddMFunc(F_MSimple(0, 130, E_MFuncKind.WaitH));
+AddMFunc(F_MSimple(0, 135, E_MFuncKind.LineNo));
+AddMFunc(F_MSimple(0, 140, E_MFuncKind.Nop));
 
 // --- Canale 1, unita' DX ---
-Add(F_MSync(1, 63, 0, 0, Mach.SYNC_ACK_R, 0, 0, 0, 0));													// USE DX in posizione
-Add(F_MSync(1, 60, Mach.SYNC_ACK_L, 0, 0, Mach.SYNC_ACK_L, 0, 0, E_Alarm.SyncRightWaitLeft));			// aspetta la USE SX
-Add(F_MSync(1, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_R, E_Alarm.SyncRightWaitUr2));		// aspetta l'UR2
-Add(F_MSync(1, 113, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_R, Mach.SYNC_UR2_ACK_R, 0, E_Alarm.SyncRightWaitUr2Ack));	// conferma all'UR2
-Add(F_MSync(1, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_R OR Mach.SYNC_DONE_R, 0, 0, 0));							// reset sincronismi
-Add(F_MValve(1, 42, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#300MS,	E_Alarm.ErRightUp));
-Add(F_MValve(1, 43, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.RESET,	T#1000MS, T#100MS,	E_Alarm.ErRightDown));
-Add(F_MValve(1, 46, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.UseRightUp));
-Add(F_MValve(1, 47, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.UseRightDown));
-Add(F_MValveDirect(1, 56, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.SET));
-Add(F_MValveDirect(1, 57, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.RESET));
-Add(F_MValve(1, 48, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#200MS,	E_Alarm.SupportRightOut));
-Add(F_MValve(1, 49, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.SupportRightIn));
-Add(F_MValve(1, 70, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightBend));
-Add(F_MValve(1, 72, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightOut));
-Add(F_MValve(1, 73, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpRightIn));
-Add(F_MValve(1, 74, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpRightBendReturn));
-Add(F_MSimple(1, 96, E_MFuncKind.WaitStart));
-Add(F_MSimple(1, 130, E_MFuncKind.WaitH));
-Add(F_MSimple(1, 135, E_MFuncKind.LineNo));
-Add(F_MSimple(1, 140, E_MFuncKind.Nop));
+AddMFunc(F_MSync(1, 63, 0, 0, Mach.SYNC_ACK_R, 0, 0, 0, 0));													// USE DX in posizione
+AddMFunc(F_MSync(1, 60, Mach.SYNC_ACK_L, 0, 0, Mach.SYNC_ACK_L, 0, 0, E_Alarm.SyncRightWaitLeft));			// aspetta la USE SX
+AddMFunc(F_MSync(1, 80, Mach.SYNC_UR2_DONE, 0, 0, 0, 0, Mach.SYNC_UR2_ACK_R, E_Alarm.SyncRightWaitUr2));		// aspetta l'UR2
+AddMFunc(F_MSync(1, 113, 0, Mach.SYNC_UR2_DONE, 0, Mach.SYNC_UR2_ACK_R, Mach.SYNC_UR2_ACK_R, 0, E_Alarm.SyncRightWaitUr2Ack));	// conferma all'UR2
+AddMFunc(F_MSync(1, 150, 0, 0, 0, Mach.SYNC_UR2_ACK_R OR Mach.SYNC_DONE_R, 0, 0, 0));							// reset sincronismi
+AddMFunc(F_MValve(1, 42, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#300MS,	E_Alarm.ErRightUp));
+AddMFunc(F_MValve(1, 43, E_Valve.ErRight,		OUTPUT_ACTION_ENUM.RESET,	T#1000MS, T#100MS,	E_Alarm.ErRightDown));
+AddMFunc(F_MValve(1, 46, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#400MS,	E_Alarm.UseRightUp));
+AddMFunc(F_MValve(1, 47, E_Valve.UseRightUp,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#400MS,	E_Alarm.UseRightDown));
+AddMFunc(F_MValveDirect(1, 56, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.SET));
+AddMFunc(F_MValveDirect(1, 57, E_Valve.UseRightUp, OUTPUT_ACTION_ENUM.RESET));
+AddMFunc(F_MValve(1, 48, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#200MS,	E_Alarm.SupportRightOut));
+AddMFunc(F_MValve(1, 49, E_Valve.SupportRight,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.SupportRightIn));
+AddMFunc(F_MValve(1, 70, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightBend));
+AddMFunc(F_MValve(1, 72, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.SET,		T#2000MS, T#100MS,	E_Alarm.EpRightOut));
+AddMFunc(F_MValve(1, 73, E_Valve.EpRightOut,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#100MS,	E_Alarm.EpRightIn));
+AddMFunc(F_MValve(1, 74, E_Valve.EpRightBend,	OUTPUT_ACTION_ENUM.RESET,	T#2000MS, T#1000MS,	E_Alarm.EpRightBendReturn));
+AddMFunc(F_MSimple(1, 96, E_MFuncKind.WaitStart));
+AddMFunc(F_MSimple(1, 130, E_MFuncKind.WaitH));
+AddMFunc(F_MSimple(1, 135, E_MFuncKind.LineNo));
+AddMFunc(F_MSimple(1, 140, E_MFuncKind.Nop));
 
 // --- Canale 2, UR2 ---
-Add(F_MSync(2, 78, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, 0, 0));													// UR2 in posizione
-Add(F_MSync(2, 110, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_UR2_ACK_R, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, E_Alarm.SyncUr2WaitUseAck));	// aspetta la conferma delle USE
-Add(F_MSync(2, 116, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncUr2WaitUse));	// aspetta le due USE
-Add(F_MSync(2, 150, 0, 0, 0, Mach.SYNC_ACK_UR2 OR Mach.SYNC_UR2_DONE OR Mach.SYNC_UR2_REQ_L OR Mach.SYNC_UR2_REQ_R, 0, 0, 0));	// reset sincronismi
+AddMFunc(F_MSync(2, 78, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, 0, 0));													// UR2 in posizione
+AddMFunc(F_MSync(2, 110, Mach.SYNC_UR2_ACK_L OR Mach.SYNC_UR2_ACK_R, 0, 0, Mach.SYNC_UR2_DONE, 0, 0, E_Alarm.SyncUr2WaitUseAck));	// aspetta la conferma delle USE
+AddMFunc(F_MSync(2, 116, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, Mach.SYNC_ACK_L OR Mach.SYNC_ACK_R, 0, 0, E_Alarm.SyncUr2WaitUse));	// aspetta le due USE
+AddMFunc(F_MSync(2, 150, 0, 0, 0, Mach.SYNC_ACK_UR2 OR Mach.SYNC_UR2_DONE OR Mach.SYNC_UR2_REQ_L OR Mach.SYNC_UR2_REQ_R, 0, 0, 0));	// reset sincronismi
 
 // Morsa: la conferma e' l'uscita stessa, il timeout non puo' scattare (Ignore come prima).
 stDef := F_MValve(2, 100, E_Valve.Clamp,	OUTPUT_ACTION_ENUM.SET,		T#1000MS, T#300MS,	0);
 stDef.eOnError := E_MFuncOnError.Ignore;
-Add(stDef);
+AddMFunc(stDef);
 stDef := F_MValve(2, 101, E_Valve.Clamp,	OUTPUT_ACTION_ENUM.RESET,	T#500MS, T#500MS,	0);
 stDef.eOnError := E_MFuncOnError.Ignore;
-Add(stDef);
+AddMFunc(stDef);
 
 // Espulsione: parte solo con l'UR2 a zero (altrimenti attesa con time-out, allarme 128);
 // se l'espulsore non conferma la funzione viene concessa lo stesso, senza allarme (come prima).
@@ -164,22 +164,22 @@ stDef := F_MValve(2, 102, E_Valve.Eject,	OUTPUT_ACTION_ENUM.SET,		T#500MS, T#500
 stDef.eOnError := E_MFuncOnError.Grant;
 stDef.nInterlock := Mach.IL_UR2_AT_ZERO;
 stDef.nWaitAlarmId := E_Alarm.EjectUr2NotAtZero;
-Add(stDef);
+AddMFunc(stDef);
 
 // Ritorno espulsore: il post-delay e' il parametro H della riga (DeltaT di espulsione).
 stDef := F_MValve(2, 103, E_Valve.Eject,	OUTPUT_ACTION_ENUM.RESET,	T#1000MS, T#0MS,	0);
 stDef.bPostDelayFromH := TRUE;
 stDef.eOnError := E_MFuncOnError.Ignore;
-Add(stDef);
+AddMFunc(stDef);
 
-Add(F_MSimple(2, 97, E_MFuncKind.WaitStart));
-Add(F_MSimple(2, 130, E_MFuncKind.WaitH));
-Add(F_MSimple(2, 135, E_MFuncKind.LineNo));
-Add(F_MSimple(2, 140, E_MFuncKind.Nop));]]></ST>
+AddMFunc(F_MSimple(2, 97, E_MFuncKind.WaitStart));
+AddMFunc(F_MSimple(2, 130, E_MFuncKind.WaitH));
+AddMFunc(F_MSimple(2, 135, E_MFuncKind.LineNo));
+AddMFunc(F_MSimple(2, 140, E_MFuncKind.Nop));]]></ST>
     </Implementation>
-    <Method Name="Add" Id="{8905d13b-84aa-49ca-9189-210b45d23100}">
+    <Method Name="AddMFunc" Id="{8905d13b-84aa-49ca-9189-210b45d23100}">
       <Declaration><![CDATA[// Aggiunge una riga alla tabella delle funzioni M (oltre MAX_MFUNC la riga si perde: aumentare Mach.MAX_MFUNC).
-METHOD PRIVATE Add
+METHOD PRIVATE AddMFunc
 VAR_INPUT
 	stNew		: ST_MFuncDef;
 END_VAR

@@ -7,7 +7,8 @@
 // ingressi in questo ciclo, gli esiti (Done/Error) si leggono nel ciclo dopo, come prima.
 // Calibrazione: MC_Home diretto alla quota, lettura dell'offset encoder, scrittura persistente,
 // handshake del datum di sicurezza, impulso bCalibrated di 500 ms.
-// Limiti: massimo poi minimo con MC_WriteParameterPersistent (lo stesso FB della calibrazione).
+// Limiti: massimo poi minimo con MC_WriteParameter, non persistente: l'HMI li riscrive a ogni avvio e al cambio
+// morsa. Con MC_WriteParameterPersistent la scrittura tornava 0x0701 su alcuni assi.
 // Gli allarmi non li memorizza: li chiede con eAlarm e nAlarmInfo, la macchina sceglie il numero.
 FUNCTION_BLOCK FB_AxisModule
 VAR_INPUT
@@ -39,6 +40,8 @@ VAR_INPUT
 	bWriteLimits		: BOOL;					// fronte: scrive fUpperLimit e fLowerLimit
 	fUpperLimit			: LREAL;
 	fLowerLimit			: LREAL;
+	nLimitsMaxTry		: UINT := 3;			// tentativi per ogni limite prima dell'allarme
+	tLimitsRetryDelay	: TIME := T#500MS;		// attesa tra un tentativo fallito e il successivo
 END_VAR
 VAR_IN_OUT
 	stAxis				: AXIS_REF;
@@ -51,7 +54,7 @@ VAR_OUTPUT
 	nCalibrationStep	: UINT;					// 0 fermo, 10 homing, 12 attesa, 15 lettura offset, 20 scrittura, 22-25 datum, 30 fine
 	bCalibrated			: BOOL;					// impulso di 500 ms a calibrazione finita
 	bDatumExecute		: BOOL;
-	nLimitsStep			: UINT;					// 0 fermo, 10 massimo, 11 attesa, 12 minimo
+	nLimitsStep			: UINT;					// 0 fermo, 10 massimo, 11 attesa, 12 minimo, 15/17 attesa nuovo tentativo
 	bLimitsBusy			: BOOL;
 	bLimitsError		: BOOL;					// impulso: scrittura limiti fallita
 	eAlarm				: E_AxisAlarm;			// allarme chiesto in questo ciclo
@@ -65,12 +68,17 @@ VAR
 	fbJog				: MC_Jog;
 	fbHome				: MC_Home;
 	fbReadOffset		: MC_ReadParameter;
-	fbWrite				: MC_WriteParameterPersistent;
+	fbWrite				: MC_WriteParameterPersistent;	// offset encoder della calibrazione
+	fbWriteLimits		: MC_WriteParameter;			// limiti software
 	fbReadDelay			: TON;
 	fbDatumTimeOut		: TON;
 	fbCalibratedPulse	: TP;
 	fbPoweredOff		: TOF;
 	fbLimitsTrigger		: R_TRIG;
+	fbLimitsRetry		: TON;
+	nLimitsTry			: UINT;	// tentativi falliti sul limite in scrittura
+	bLimitsPending		: BOOL;	// richiesta memorizzata mentre la calibrazione e' in corso
+	bCalibrationCanStart : BOOL;	// ammissione prima di acquisire eventuali nuovi limiti
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -82,6 +90,8 @@ fbReadOffset.Enable := FALSE;
 fbReadOffset.ReadMode := E_ReadMode.READMODE_ONCE;
 fbReadOffset.ParameterNumber := MC_AxisParameter.AxisEncoderOffset;
 fbWrite.Execute := FALSE;
+fbWriteLimits.Execute := FALSE;
+fbLimitsRetry.IN := FALSE;
 fbReadDelay.IN := FALSE;
 fbDatumTimeOut.IN := FALSE;
 fbCalibratedPulse.IN := FALSE;
@@ -93,51 +103,85 @@ nAlarmInfo := 0;
 //*******************************************************************************************************************
 // Limiti software (prima ParameterWriteManager): massimo, attesa che il FB torni libero, minimo
 //*******************************************************************************************************************
+// Limiti e calibrazione non si sovrappongono: una richiesta limiti durante la calibrazione resta in attesa.
+// Una calibrazione gia' ammessa in questo ciclo ha precedenza su una nuova richiesta limiti.
+bCalibrationCanStart := bCalibrationStart AND nCalibrationStep = 0 AND nLimitsStep = 0
+	AND NOT bLimitsPending AND NOT fbWrite.Busy AND NOT fbWrite.Done AND NOT fbWrite.Error
+	AND NOT fbWriteLimits.Busy AND NOT fbWriteLimits.Done AND NOT fbWriteLimits.Error;
 fbLimitsTrigger(CLK := bWriteLimits);
 IF fbLimitsTrigger.Q THEN
+	bLimitsPending := TRUE;
+END_IF
+IF bLimitsPending AND nLimitsStep = 0 AND nCalibrationStep = 0 AND NOT bCalibrationCanStart
+	AND NOT fbWrite.Busy AND NOT fbWrite.Done AND NOT fbWrite.Error
+	AND NOT fbWriteLimits.Busy AND NOT fbWriteLimits.Done AND NOT fbWriteLimits.Error THEN
+	bLimitsPending := FALSE;
+	nLimitsTry := 0;
 	nLimitsStep := 10;
 END_IF
 
+// Un errore (es. 0x0701 subito dopo l'avvio) si ritenta dopo tLimitsRetryDelay; l'allarme solo all'ultimo
+// tentativo, con l'ErrorID di quello.
 CASE nLimitsStep OF
 	10:
-		fbWrite.Execute := TRUE;
-		fbWrite.Value := fUpperLimit;
-		fbWrite.ParameterNumber := MC_AxisParameter.AxisMaxSoftPosLimit;
-		IF fbWrite.Done AND NOT fbWrite.Busy THEN
+		fbWriteLimits.Execute := TRUE;
+		fbWriteLimits.Value := fUpperLimit;
+		fbWriteLimits.ParameterNumber := MC_AxisParameter.AxisMaxSoftPosLimit;
+		IF fbWriteLimits.Done AND NOT fbWriteLimits.Busy THEN
+			nLimitsTry := 0;
 			nLimitsStep := 11;
 		END_IF
-		IF fbWrite.Error THEN
-			nLimitsStep := 0;
-			bLimitsError := TRUE;
-			eAlarm := E_AxisAlarm.Limits;
-			nAlarmInfo := fbWrite.ErrorID;
+		IF fbWriteLimits.Error THEN
+			nLimitsTry := nLimitsTry + 1;
+			IF nLimitsTry < nLimitsMaxTry THEN
+				nLimitsStep := 15;
+			ELSE
+				nLimitsStep := 0;
+				bLimitsError := TRUE;
+				eAlarm := E_AxisAlarm.Limits;
+				nAlarmInfo := fbWriteLimits.ErrorID;
+			END_IF
 		END_IF
 	11:
-		IF NOT fbWrite.Done AND NOT fbWrite.Busy THEN
+		IF NOT fbWriteLimits.Done AND NOT fbWriteLimits.Busy THEN
 			nLimitsStep := 12;
 		END_IF
 	12:
-		fbWrite.Execute := TRUE;
-		fbWrite.Value := fLowerLimit;
-		fbWrite.ParameterNumber := MC_AxisParameter.AxisMinSoftPosLimit;
-		IF fbWrite.Done AND NOT fbWrite.Busy THEN
+		fbWriteLimits.Execute := TRUE;
+		fbWriteLimits.Value := fLowerLimit;
+		fbWriteLimits.ParameterNumber := MC_AxisParameter.AxisMinSoftPosLimit;
+		IF fbWriteLimits.Done AND NOT fbWriteLimits.Busy THEN
 			nLimitsStep := 0;
 		END_IF
-		IF fbWrite.Error THEN
-			nLimitsStep := 0;
-			bLimitsError := TRUE;
-			eAlarm := E_AxisAlarm.Limits;
-			nAlarmInfo := fbWrite.ErrorID;
+		IF fbWriteLimits.Error THEN
+			nLimitsTry := nLimitsTry + 1;
+			IF nLimitsTry < nLimitsMaxTry THEN
+				nLimitsStep := 17;
+			ELSE
+				nLimitsStep := 0;
+				bLimitsError := TRUE;
+				eAlarm := E_AxisAlarm.Limits;
+				nAlarmInfo := fbWriteLimits.ErrorID;
+			END_IF
+		END_IF
+	15, 17:
+		// Execute resta FALSE: l'errore si azzera, poi si ripete lo stesso limite (15 -> 10, 17 -> 12).
+		fbLimitsRetry.IN := TRUE;
+		IF fbLimitsRetry.Q AND NOT fbWriteLimits.Error AND NOT fbWriteLimits.Busy THEN
+			nLimitsStep := nLimitsStep - 5;
 		END_IF
 END_CASE
-bLimitsBusy := nLimitsStep <> 0;
+// Attendere anche il rilascio di Done/Error prima di ammettere un'altra scrittura.
+bLimitsBusy := bLimitsPending OR nLimitsStep <> 0
+	OR fbWriteLimits.Busy OR fbWriteLimits.Done OR fbWriteLimits.Error
+	OR (nCalibrationStep = 0 AND (fbWrite.Busy OR fbWrite.Done OR fbWrite.Error));
 
 //*******************************************************************************************************************
 // Calibrazione (prima in MAIN.Manual, una copia per asse)
 //*******************************************************************************************************************
 CASE nCalibrationStep OF
 	0:
-		IF bCalibrationStart THEN
+		IF bCalibrationCanStart THEN
 			nCalibrationStep := 10;
 		END_IF
 	10:
@@ -228,6 +272,8 @@ fbPoweredOff(IN := NOT stAxis.Status.Disabled, PT := tPoweredOffDelay, Q => bPow
 
 fbHome(Axis := stAxis);
 fbWrite(Axis := stAxis);
+fbWriteLimits(Axis := stAxis);
+fbLimitsRetry(PT := tLimitsRetryDelay);
 fbReadOffset(Axis := stAxis, Value => fEncoderOffset);
 fbReadDelay(PT := tReadDelay);
 fbDatumTimeOut(PT := tDatumTimeOut);

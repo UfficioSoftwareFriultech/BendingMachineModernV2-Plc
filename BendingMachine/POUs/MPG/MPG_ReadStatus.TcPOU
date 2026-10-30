@@ -81,12 +81,16 @@ _xButton3TriggerClk			:= stMpgEncoder.diButton3;
 _diSelector2				:= stMpgEncoder.diSelector2; 
 
 //The selectors 1 and 2 uses a Gray-code encoder selector
+//stMpgEncoder.diSelector1.2 := stMpgEncoder.diSelector1Bit3;
+//stMpgEncoder.diSelector1.1 := stMpgEncoder.diSelector1.2 XOR stMpgEncoder.diSelector1Bit2;
+//stMpgEncoder.diSelector1.1 := stMpgEncoder.diSelector1.1 XOR stMpgEncoder.diSelector1Bit1;
+// Selettore 1 con codifica binaria
 stMpgEncoder.diSelector1.2 := stMpgEncoder.diSelector1Bit3;
-stMpgEncoder.diSelector1.1 := stMpgEncoder.diSelector1.2 XOR stMpgEncoder.diSelector1Bit2;
-stMpgEncoder.diSelector1.0 := stMpgEncoder.diSelector1.1 XOR stMpgEncoder.diSelector1Bit1;
+stMpgEncoder.diSelector1.1 := stMpgEncoder.diSelector1Bit2;
+stMpgEncoder.diSelector1.0 := stMpgEncoder.diSelector1Bit1;
 
 stMpgEncoder.diSelector2.1 := stMpgEncoder.diSelector2Bit2;
-stMpgEncoder.diSelector2.0 := stMpgEncoder.diSelector2Bit2 XOR stMpgEncoder.diSelector2Bit1;
+stMpgEncoder.diSelector2.0 := stMpgEncoder.diSelector2Bit1;
 _xSafetySwitchTriggerClk    := stMpgEncoder.diSafetySwitch;
 
 //*******************************************************************************************************************

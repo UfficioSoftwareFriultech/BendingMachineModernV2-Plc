@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TargetSystemConfig Crc="1125444256" Version="1.5">
+<TargetSystemConfig Crc="1401158431" Version="1.5">
   <TargetSystemType>HSafetyPLC</TargetSystemType>
   <TargetSystemSubType>EL6910</TargetSystemSubType>
   <IsExternalDevice>false</IsExternalDevice>
   <TargetSystemObjectId>50462750</TargetSystemObjectId>
   <TargetSystemObjectName>Term 30 (EL6910)</TargetSystemObjectName>
-  <SoftwareVersion />
-  <SerialNumber />
-  <ProjectCRC>8891</ProjectCRC>
+  <SoftwareVersion>04 (V01.11)     </SoftwareVersion>
+  <SerialNumber>3188232</SerialNumber>
+  <ProjectCRC>16046</ProjectCRC>
   <MapProjectCRC>false</MapProjectCRC>
   <MapSerialNumber>false</MapSerialNumber>
   <VersionNumber>1</VersionNumber>
-  <FSOEAddress>1</FSOEAddress>
-  <DipSwitch />
+  <FSOEAddress>1022</FSOEAddress>
+  <DipSwitch>1022</DipSwitch>
   <AmsNetID>192.168.1.106.2.1</AmsNetID>
   <AmsPort>1010</AmsPort>
   <ConnectionInfoDataConfigOld>false</ConnectionInfoDataConfigOld>

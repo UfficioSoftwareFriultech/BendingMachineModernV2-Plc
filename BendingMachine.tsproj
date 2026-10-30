@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.25">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.27">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1817,6 +1817,15 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
+			<Name GUID="{BB83B267-3E6A-92C5-3EC5-90D423113190}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.NCTOPLC_NCICHANNEL_REF</Name>
+			<BitSize>3840</BitSize>
+			<BaseType GUID="{56354211-98EF-4057-9322-975DEAD0E29D}" Namespace="MC">NCTOPLC_NCICHANNEL_REF</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>3</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Name>
 			<BitSize>3072</BitSize>
 			<BaseType GUID="{48415C2A-E750-483B-A619-8655B2BEA4B8}" Namespace="MC">PLCTONC_NCICHANNEL_REF</BaseType>
@@ -1832,15 +1841,6 @@ External Setpoint Generation:
 			<ArrayInfo>
 				<LBound>0</LBound>
 				<Elements>4</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
-			<Name GUID="{BB83B267-3E6A-92C5-3EC5-90D423113190}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF MC.NCTOPLC_NCICHANNEL_REF</Name>
-			<BitSize>3840</BitSize>
-			<BaseType GUID="{56354211-98EF-4057-9322-975DEAD0E29D}" Namespace="MC">NCTOPLC_NCICHANNEL_REF</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>3</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -1958,6 +1958,22 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{A9312DF7-40E7-78F3-A6A6-E67363DA6738}" AutoDeleteType="true">INFODATA_2345656684</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
@@ -2031,7 +2047,7 @@ External Setpoint Generation:
 					<TargetSelect TargetId="2">{DEA72F0A-9EA0-48F4-ABB5-766516202B8E}</TargetSelect>
 					<TargetSelect TargetId="2">{520DE751-9DB6-47CB-8240-BD5C466E7E64}</TargetSelect>
 					<TargetSelect TargetId="2">{66689887-CCBD-452C-AC9A-039D997C6E66}</TargetSelect>
-					<LicenseDevice DongleHardwareId="2" DongleDevice="#x03020002" DongleLevel="50" DongleSystemId="{1A9419BA-E2B8-6217-DFAE-69142302234C}" DongleSerialNumber="000bu9nc" DongleCacheLicense="true"/>
+					<LicenseDevice DongleHardwareId="2" DongleDevice="#x03020016" DongleLevel="50" DongleSystemId="{9DE16F85-4662-9BEA-9DD3-FA0528774A68}" DongleSerialNumber="000bus95" DongleCacheLicense="true"/>
 				</Target>
 			</Licenses>
 			<Tasks>
@@ -2061,8 +2077,8 @@ External Setpoint Generation:
 					<Name>ERL</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic Acceleration="1780.71" Deceleration="1780.71" Jerk="5342.14"/>
-						<Velo RefSearch="11.87142" RefSync="11.87142" SlowManual="59.3571" FastManual="356.1426" Fast="1187.142" Maximum="1187.14"/>
+						<Dynamic Acceleration="1780.713" Deceleration="1780.713" Jerk="5342.139"/>
+						<Velo RefSearch="11.87142" RefSync="11.87142" SlowManual="59.3571" FastManual="356.1426" Fast="1187.142" Maximum="1187.142"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
@@ -2351,8 +2367,8 @@ External Setpoint Generation:
 					<Name>ERR</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic Acceleration="1780.71" Deceleration="1780.71" Jerk="5342.14"/>
-						<Velo RefSearch="11.87142" RefSync="11.87142" SlowManual="59.3571" FastManual="356.1426" Fast="1187.142" Maximum="1187.14"/>
+						<Dynamic Acceleration="1780.713" Deceleration="1780.713" Jerk="5342.139"/>
+						<Velo RefSearch="11.87142" RefSync="11.87142" SlowManual="59.3571" FastManual="356.1426" Fast="1187.142" Maximum="1187.142"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
@@ -3118,9 +3134,200 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{D5253316-83C2-43A0-A11D-229C65F968E1}" Name="BendingMachine" PrjFilePath="BendingMachine\BendingMachine.plcproj" TmcFilePath="BendingMachine\BendingMachine.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7708107D-88BA-B059-BC02-96C37A7C3B04}" TmcPath="BendingMachine\\BendingMachine.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{02B5DFCC-BC97-9D83-5BBF-197721BBBFBE}" TmcPath="BendingMachine\BendingMachine.tmc">
 					<Name>BendingMachine Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.stTwoHandControl.doStartLED</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stTwoHandControl.doStopLED</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.USEL.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.ERL.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.USER.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.ERR.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.UR2.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.UR_SIM.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.out_stPlcToNci</Name>
+							<Type GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Type>
+						</Var>
+						<Var>
+							<Name>Safety.Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ModuleFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USER_ERR_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USER_ERR_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USEL_ERL_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USEL_ERL_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.UR_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.UR_Ack</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERLCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USELCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.URCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ERRCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERSafetyReset</Name>
+							<Type>SINT</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERDatumExecute</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.USERCommErrorAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ResetEmergenza</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.ResetBarriere</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.SpiaPulsanteRipristinoSicurezze</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Safety.SpiaPulsanteRipristinoBarriere</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.fuseReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.chillerEnabled</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretRed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretYellow</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretGreen</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.turretSiren</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.smc1</Name>
+							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
+						</Var>
+						<Var>
+							<Name>IO.smc2</Name>
+							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
+						</Var>
+						<Var>
+							<Name>IO.spiaPulsanteStart</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.spiaPulsanteStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
@@ -3213,10 +3420,6 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>MAIN.UR_SIM.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.AXIS_TMP.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
@@ -3759,201 +3962,6 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
-					<Vars VarGrpType="2" AreaNo="1">
-						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>MAIN.stTwoHandControl.doStartLED</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.stTwoHandControl.doStopLED</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.USEL.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.ERL.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.USER.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.ERR.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.UR2.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.UR_SIM.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.AXIS_TMP.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.out_stPlcToNci</Name>
-							<Type GUID="{43E449A4-80AB-10CD-84CE-FCB9135A5652}">ARRAY [0..2] OF MC.PLCTONC_NCICHANNEL_REF</Type>
-						</Var>
-						<Var>
-							<Name>Safety.Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ModuleFault</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USER_ERR_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USER_ERR_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USEL_ERL_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USEL_ERL_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.UR_Run</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.UR_Ack</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERLCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USELCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.URCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ERRCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERSafetyReset</Name>
-							<Type>SINT</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERDatumExecute</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.USERCommErrorAck</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ResetEmergenza</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.ResetBarriere</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.SpiaPulsanteRipristinoSicurezze</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>Safety.SpiaPulsanteRipristinoBarriere</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.fuseReset</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.chillerEnabled</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretRed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretYellow</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretGreen</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.turretSiren</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.smc1</Name>
-							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
-						</Var>
-						<Var>
-							<Name>IO.smc2</Name>
-							<Type GUID="{A282EA6E-F6F5-5011-0934-F80BC436F30E}">ARRAY [0..3] OF USINT</Type>
-						</Var>
-						<Var>
-							<Name>IO.spiaPulsanteStart</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>IO.spiaPulsanteStop</Name>
-							<Type>BOOL</Type>
-						</Var>
-					</Vars>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -3965,7 +3973,6 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<CycleTime>1000000</CycleTime>
 						</Context>
 					</Contexts>
-					<JsonDynPous><![CDATA[null]]></JsonDynPous>
 					<TaskPouOids>
 						<TaskPouOid Prio="20" OTCID="#x08502001"/>
 					</TaskPouOids>
@@ -4611,7 +4618,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001235002400010003000000000000000200001224010000</SyncMan>
-							<SyncMan>001d3c002000010004000000000000000200001d20010000</SyncMan>
+							<SyncMan>001d42002000010004000000000000000200001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000060000000200000000000000</Fmmu>
@@ -4948,6 +4955,17 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 								</Entry>
 								<Entry>
 									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Connection Info Data" Index="#x1bf9" Flags="#x2011" SyncMan="3">
+								<Entry Name="Message_195 Info Data" Index="#x7000" Sub="#x01">
+									<Type GUID="{A9312DF7-40E7-78F3-A6A6-E67363DA6738}">INFODATA_2345656684</Type>
+								</Entry>
+								<Entry Name="Message_196 Info Data" Index="#x7000" Sub="#x02">
+									<Type GUID="{A9312DF7-40E7-78F3-A6A6-E67363DA6738}">INFODATA_2345656684</Type>
+								</Entry>
+								<Entry Name="Message_197 Info Data" Index="#x7000" Sub="#x03">
+									<Type GUID="{A9312DF7-40E7-78F3-A6A6-E67363DA6738}">INFODATA_2345656684</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="FSLOGIC Inputs" Index="#x1bff" Flags="#x0011" SyncMan="3">
@@ -6278,7 +6296,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 												<Parameter>
 													<Name>SerialNr</Name>
-													<Data type="visibleString">aa408z7h</Data>
+													<Data type="visibleString">aa40a9x9</Data>
 												</Parameter>
 												<Parameter>
 													<Name>OrderCode</Name>
@@ -6882,7 +6900,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 											</DatabaseParameters>
 											<FeedbackUse>Commutation</FeedbackUse>
-											<SerialNo>833 324 471 381</SerialNo>
+											<SerialNo>851 007 670 357</SerialNo>
 											<Calc>
 												<SoE>
 													<InitCmd>
@@ -7180,6 +7198,75 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 									<Block Id="7">
 										<Controller/>
 									</Block>
+									<WatchLog ChnId="0" UpdateIntervalInMs="500">
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32821"/>
+											<Alias>Motor type</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<DependOn>
+												<WatchLogItem>
+													<WatchLogParaSoE Index="32866" SubItemPath="eNamePlateType"/>
+												</WatchLogItem>
+												<Condition Value="1">
+													<WatchLogItem>
+														<WatchLogParaSoE Index="32866" SubItemPath="uData.eNamePlateType.stMotorPara.lSerialNumber"/>
+													</WatchLogItem>
+												</Condition>
+												<Condition Value="2">
+													<WatchLogItem>
+														<WatchLogParaSoE Index="32866" SubItemPath="uData.stElecDataSheet.stMotorDataElecDataSheet.strSerialNumber"/>
+													</WatchLogItem>
+												</Condition>
+											</DependOn>
+											<Alias>Motor SN</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32919" SubItemPath="stParaCh.llSerialNumber"/>
+											<Alias>Feedback SN</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="135"/>
+											<Alias>Axis state</Alias>
+											<ValueMask>57352</ValueMask>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="135" SubItemPath="ActualOperationMode"/>
+											<Alias>Actual operation mode</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32831"/>
+											<Alias>Motor I²T</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="383"/>
+											<Alias>Motor temperature</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32833"/>
+											<Alias>Thermistor resistor</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="384"/>
+											<Alias>Amplifier temperature</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="33229"/>
+											<Alias>Motor current</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="36"/>
+											<Alias>Velocity command</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="40"/>
+											<Alias>Actual velocity</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="51"/>
+											<Alias>Motor ratation angle</Alias>
+										</WatchLogItem>
+									</WatchLog>
 								</Channel>
 								<Channel ChnId="1">
 									<TcLink>
@@ -7216,7 +7303,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 										<Motor IsManualInput="false" IsManualMFiInput="false" DataSource="2">
 											<DatabaseType>
 												<DataVersion>1.26</DataVersion>
-												<OrderCode>AM8042-0FH0-0000</OrderCode>
+												<OrderCode>AM8042-1FH0-0000</OrderCode>
 												<ElectricMotorType>AM8042-xFx0</ElectricMotorType>
 												<MotorfeedbackType>EDM35-2KF0A0S03</MotorfeedbackType>
 												<VendorName>Beckhoff</VendorName>
@@ -7235,11 +7322,11 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 												<Parameter>
 													<Name>SerialNr</Name>
-													<Data type="visibleString">aa407hv1</Data>
+													<Data type="visibleString">aa409lq4</Data>
 												</Parameter>
 												<Parameter>
 													<Name>OrderCode</Name>
-													<Data type="visibleString">AM8042-0FH0-0000</Data>
+													<Data type="visibleString">AM8042-1FH0-0000</Data>
 												</Parameter>
 												<Parameter>
 													<Name>ConstrType</Name>
@@ -7718,7 +7805,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 											</DatabaseParameters>
 											<FeedbackUse>Commutation</FeedbackUse>
-											<SerialNo>786 633 720 149</SerialNo>
+											<SerialNo>842 199 602 261</SerialNo>
 											<Calc>
 												<SoE>
 													<InitCmd>
@@ -7797,7 +7884,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 											</Parameter>
 											<Parameter>
 												<PropertyName>MaxApplicationSpeed</PropertyName>
-												<Value>785.39816</Value>
+												<Value>895.35391</Value>
 											</Parameter>
 										</Load>
 										<Controller>
@@ -8152,7 +8239,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000034032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500300000001600000000000000000000000000000000000000000000000340598000000000240024002683000000000000401f00000000000000000000000000000000000000000000000000004d6f746f72206461746120636f6e73747261696e747300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001c000000150000000000000000000000000000000000000000000000034036800000000010001e004158353230362d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000003405d8000000000401f0000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000003405d8000000000581b0000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003405c8000000000c8320000436f6e66696775726564206368616e6e656c207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002000000000000000000000000000000000000000000000000340348000000000000054696d65206c696d69746174696f6e20666f72207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e6773203200</MBoxUserCmdData>
@@ -8183,12 +8270,12 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						<MBoxUserCmdData>020005003400000027000000000000000000000000000000000000000000000023404c80000000002800280070fe65ff5a004f01440239032e042305180612076701b80116028202fa0280031304b404610518064d6f746f722074656d70657261747572652073656e736f7220636861726163746572697374696300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000023403980000000007869456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001d000000000000000000000000000000000000000000000023404680000000009a0100004d6f746f7220636f6e74696e756f7573207374616c6c20746f7271756500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000002340710000000000701700004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000023405b0000000000000000084269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000002340710000000000282300004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000023405b000000000052b81e094269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000234032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500300000001600000000000000000000000000000000000000000000002340598000000000240024002683000000000000401f00000000000000000000000000000000000000000000000000004d6f746f72206461746120636f6e73747261696e747300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001c000000150000000000000000000000000000000000000000000000234036800000000010001e004158353230362d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000023405d8000000000a00f0000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000023405d800000000004100000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000023405c800000000008200000436f6e66696775726564206368616e6e656c207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002000000000000000000000000000000000000000000000002340348000000000000054696d65206c696d69746174696f6e20666f72207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000002340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e6773203200</MBoxUserCmdData>
@@ -9288,7 +9375,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 							<BootloaderVersion>2.02</BootloaderVersion>
 							<CatalogNo>AX5206-0000-0216</CatalogNo>
 							<HardwareVersion>c:0180  p:0103  d:0102  f:0101  o:----  s:----</HardwareVersion>
-							<SerialNr>Serial#: 000777155</SerialNr>
+							<SerialNr>Serial#: 000793719</SerialNr>
 							<HasDualUseInfo>true</HasDualUseInfo>
 							<OperatingFrequencyLimitation>true</OperatingFrequencyLimitation>
 							<WatchLog UpdateIntervalInMs="500">
@@ -9430,7 +9517,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 												<Parameter>
 													<Name>SerialNr</Name>
-													<Data type="visibleString">aa408z7i</Data>
+													<Data type="visibleString">aa40a9x8</Data>
 												</Parameter>
 												<Parameter>
 													<Name>OrderCode</Name>
@@ -9917,7 +10004,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 											</DatabaseParameters>
 											<FeedbackUse>Commutation</FeedbackUse>
-											<SerialNo>833 324 467 541</SerialNo>
+											<SerialNo>851 007 669 333</SerialNo>
 											<Calc>
 												<SoE>
 													<InitCmd>
@@ -10215,6 +10302,75 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 									<Block Id="7">
 										<Controller/>
 									</Block>
+									<WatchLog ChnId="0" UpdateIntervalInMs="500">
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32821"/>
+											<Alias>Motor type</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<DependOn>
+												<WatchLogItem>
+													<WatchLogParaSoE Index="32866" SubItemPath="eNamePlateType"/>
+												</WatchLogItem>
+												<Condition Value="1">
+													<WatchLogItem>
+														<WatchLogParaSoE Index="32866" SubItemPath="uData.eNamePlateType.stMotorPara.lSerialNumber"/>
+													</WatchLogItem>
+												</Condition>
+												<Condition Value="2">
+													<WatchLogItem>
+														<WatchLogParaSoE Index="32866" SubItemPath="uData.stElecDataSheet.stMotorDataElecDataSheet.strSerialNumber"/>
+													</WatchLogItem>
+												</Condition>
+											</DependOn>
+											<Alias>Motor SN</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32919" SubItemPath="stParaCh.llSerialNumber"/>
+											<Alias>Feedback SN</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="135"/>
+											<Alias>Axis state</Alias>
+											<ValueMask>57352</ValueMask>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="135" SubItemPath="ActualOperationMode"/>
+											<Alias>Actual operation mode</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32831"/>
+											<Alias>Motor I²T</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="383"/>
+											<Alias>Motor temperature</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="32833"/>
+											<Alias>Thermistor resistor</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="384"/>
+											<Alias>Amplifier temperature</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="33229"/>
+											<Alias>Motor current</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="36"/>
+											<Alias>Velocity command</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="40"/>
+											<Alias>Actual velocity</Alias>
+										</WatchLogItem>
+										<WatchLogItem>
+											<WatchLogParaSoE Index="51"/>
+											<Alias>Motor ratation angle</Alias>
+										</WatchLogItem>
+									</WatchLog>
 								</Channel>
 								<Channel ChnId="1">
 									<TcLink>
@@ -10251,7 +10407,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 										<Motor IsManualInput="false" IsManualMFiInput="false" DataSource="2">
 											<DatabaseType>
 												<DataVersion>1.26</DataVersion>
-												<OrderCode>AM8042-0FH0-0000</OrderCode>
+												<OrderCode>AM8042-1FH0-0000</OrderCode>
 												<ElectricMotorType>AM8042-xFx0</ElectricMotorType>
 												<MotorfeedbackType>EDM35-2KF0A0S03</MotorfeedbackType>
 												<VendorName>Beckhoff</VendorName>
@@ -10270,11 +10426,11 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 												<Parameter>
 													<Name>SerialNr</Name>
-													<Data type="visibleString">aa407huj</Data>
+													<Data type="visibleString">aa409lq1</Data>
 												</Parameter>
 												<Parameter>
 													<Name>OrderCode</Name>
-													<Data type="visibleString">AM8042-0FH0-0000</Data>
+													<Data type="visibleString">AM8042-1FH0-0000</Data>
 												</Parameter>
 												<Parameter>
 													<Name>ConstrType</Name>
@@ -10753,7 +10909,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 											</DatabaseParameters>
 											<FeedbackUse>Commutation</FeedbackUse>
-											<SerialNo>786 633 352 277</SerialNo>
+											<SerialNo>842 199 603 541</SerialNo>
 											<Calc>
 												<SoE>
 													<InitCmd>
@@ -10832,7 +10988,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 											</Parameter>
 											<Parameter>
 												<PropertyName>MaxApplicationSpeed</PropertyName>
-												<Value>785.39816</Value>
+												<Value>895.35391</Value>
 											</Parameter>
 										</Load>
 										<Controller>
@@ -11178,7 +11334,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000034032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500300000001600000000000000000000000000000000000000000000000340598000000000240024002683000000000000401f00000000000000000000000000000000000000000000000000004d6f746f72206461746120636f6e73747261696e747300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001c000000150000000000000000000000000000000000000000000000034036800000000010001e004158353230362d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000003405d800000000070170000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000003405d8000000000581b0000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003405c8000000000c8320000436f6e66696775726564206368616e6e656c207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002000000000000000000000000000000000000000000000000340348000000000000054696d65206c696d69746174696f6e20666f72207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e6773203200</MBoxUserCmdData>
@@ -11209,8 +11365,8 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 						<MBoxUserCmdData>020005003400000027000000000000000000000000000000000000000000000023404c80000000002800280070fe65ff5a004f01440239032e042305180612076701b80116028202fa0280031304b404610518064d6f746f722074656d70657261747572652073656e736f7220636861726163746572697374696300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000023403980000000007869456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001d000000000000000000000000000000000000000000000023404680000000009a0100004d6f746f7220636f6e74696e756f7573207374616c6c20746f7271756500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000002340710000000000701700004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000023405b0000000000000000084269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000002340710000000000282300004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000023405b000000000052b81e094269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000234032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500300000001600000000000000000000000000000000000000000000002340598000000000240024002683000000000000401f00000000000000000000000000000000000000000000000000004d6f746f72206461746120636f6e73747261696e747300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001c000000150000000000000000000000000000000000000000000000234036800000000010001e004158353230362d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
@@ -12031,7 +12187,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 												<Parameter>
 													<Name>SerialNr</Name>
-													<Data type="visibleString">aa409bxw</Data>
+													<Data type="visibleString">aa40aad1</Data>
 												</Parameter>
 												<Parameter>
 													<Name>OrderCode</Name>
@@ -12514,7 +12670,7 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 												</Parameter>
 											</DatabaseParameters>
 											<FeedbackUse>Commutation</FeedbackUse>
-											<SerialNo>833 375 909 205</SerialNo>
+											<SerialNo>855 387 445 333</SerialNo>
 											<Calc>
 												<SoE>
 													<InitCmd>
@@ -13213,9 +13369,12 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 		</Io>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500821000403}" Id="#x02030050"/>
 		<MappingInfo Identifier="{00000000-0010-0304-3000-040310000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{00000000-0020-0304-2100-040321000403}" Id="#x02030030"/>
 		<MappingInfo Identifier="{00000000-0040-0304-3000-040342000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030060" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{03040020-0020-0304-2000-040320000403}" Id="#x02030040" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 35 (AX5206-0000-0216)^Term 36 (AX5805)">
 				<Link VarA="Term 21 (EK1100)^Term 30 (EL6910)^ConnectionInputs^Message_184 TxPDO" VarB="Module 1 (Safety Process Data, 2 axis)^Outputs (Controlword)^FSOE"/>
@@ -13247,15 +13406,15 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 1^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 1^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 1^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 1^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 1^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
@@ -13264,15 +13423,15 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 1^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 1^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 1^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 1^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 1^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 1^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
@@ -13281,15 +13440,15 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
@@ -13298,15 +13457,15 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 2^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 2^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 2^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 2^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 2^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
@@ -13315,15 +13474,15 @@ selectorSwitchMan		AT %I* : BOOL;]]></Comment>
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 2^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDataIn3[0]" VarB="AT 2^Torque/force feedback value"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 2^Drive status word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="AT 2^Drive status word"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT 2^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT 2^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT 2^Position feedback 1 value"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
-				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>

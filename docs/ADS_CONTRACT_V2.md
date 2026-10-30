@@ -41,8 +41,10 @@ Al riavvio il PLC non esegue il comando già presente: si allinea a `nSeq` e bas
 | `MotorsOn` (4) / `MotorsOff` (5) | — | motori accesi o spenti (in manuale li comanda il consenso del volantino) | `Rx.MotorsOnBtn` (commutazione) |
 | `ProgramLoaded` (6) | — | nuovo programma: azzera il ciclo (passo 850) e il contapezzi a macchina ferma | `Rx.ProgramLoaded` (fronte) |
 | `WriteParameters` (7) | — | copia `Hmi.Param` nei parametri macchina persistenti (`Machine.parametersRx`) e scrive i limiti software degli assi; la fine è in `Sts.bWriteParametersDone` | `Rx.WriteParameters` (fronte) + scrittura di `Machine.parametersRx` |
-| `Calibrate` (8) | `nAxis`; `bFlag` = usa la quota `fValue` | calibrazione dell'asse. `InvalidArgument` se l'asse non ha calibrazione; `Rejected` se ce n'è già una in corso | `Rx.Start<asse>Calibration` + `Rx.<asse>CalibrationPosition` + `Rx.CalibrationPositionEnable` |
+| `Calibrate` (8) | `nAxis`; `bFlag` = usa la quota `fValue` | calibrazione dell'asse, solo in manuale con ciclo in `Idle`. `InvalidArgument` se l'asse non ha calibrazione; `Rejected` fuori da queste condizioni, con una calibrazione già in corso sullo stesso asse o con scritture limiti richieste/in corso | `Rx.Start<asse>Calibration` + `Rx.<asse>CalibrationPosition` + `Rx.CalibrationPositionEnable` |
 | `SetCount` (9) | `nValue` 0-65535 | contapezzi | scrittura diretta di `MAIN.count` |
+
+Durante una calibrazione lo Start ciclo non viene eseguito. Una richiesta di scrittura limiti arrivata durante la calibrazione resta pendente: `bLimitsBusy` rimane TRUE fino al completamento e al rilascio del blocco di scrittura. Calibrazione e limiti non usano contemporaneamente la stessa istanza di scrittura persistente.
 
 ## Valori continui (`Hmi.Live`)
 
@@ -52,7 +54,7 @@ Al riavvio il PLC non esegue il comando già presente: si allinea a `nSeq` e bas
 | `fOverride` | override 0-100 % | `Rx.IpOvveride` |
 | `bLoopMode` | ciclo continuo | `Rx.SignleAutoMode` |
 | `nNcMode` | 1 = passo-passo | `Rx.NCInterpreterMode` |
-| `nJogAxis`, `nJogDirection` | Jog dell'asse (indice di `Cfg.aAxis`), +1 o -1. Valgono solo in manuale e a ciclo fermo. | `Rx.*Fw/Bw`, che in v1 **non erano collegati** |
+| `nJogAxis`, `nJogDirection` | Jog dell'asse (indice di `Cfg.aAxis`), +1 o -1. Valgono solo in manuale e a ciclo fermo; sono inibiti sull'asse con calibrazione richiesta o in corso. | `Rx.*Fw/Bw`, che in v1 **non erano collegati** |
 | `bForceOutputs`, `aValveForce[v]` | Test uscite: la valvola `v` va a "set" (TRUE) o "reset" (FALSE). Vale solo in manuale. | `Rx.ForceValueEnable` + i 25 campi `Rx.*Set` / `Clamp*Close` / `Centering*AirDisable` |
 
 ## Configurazione (`Hmi.Cfg`)

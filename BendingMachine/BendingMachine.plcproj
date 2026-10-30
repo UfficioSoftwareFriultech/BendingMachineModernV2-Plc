@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>BendingMachine</Name>
-    <ProgramVersion>3.1.4026.24</ProgramVersion>
+    <ProgramVersion>3.1.4026.27</ProgramVersion>
     <Application>{3bd924ea-b5d5-4393-a139-22c0da25cecc}</Application>
     <TypeSystem>{8783ae82-7798-48dd-8f57-2c580307c969}</TypeSystem>
     <Implicit_Task_Info>{68d01554-b001-42b6-944f-f396d731b8b3}</Implicit_Task_Info>
@@ -337,8 +337,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -364,7 +364,10 @@
               <d n="Values" t="Hashtable" />
             </o>
           </d>
-          <d n="Values" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="Boolean">
+            <v>PerformStaticAnalyse</v>
+            <v>False</v>
+          </d>
         </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
         <o>
@@ -390,6 +393,12 @@
             <v>410,5410</v>
           </d>
         </o>
+        <v>{eeeeeeee-3909-4298-8022-501ac3238667}</v>
+        <o>
+          <v n="Name">"{eeeeeeee-3909-4298-8022-501ac3238667}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
         <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
         <o>
           <v n="Name">"{F66C7017-BDD8-4114-926C-81D6D687E35F}"</v>
@@ -402,14 +411,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

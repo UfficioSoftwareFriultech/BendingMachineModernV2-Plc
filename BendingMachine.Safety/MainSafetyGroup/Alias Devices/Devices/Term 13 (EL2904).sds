@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SafetyDeviceDesc Crc="1727313938" FileFormatVersion="1.9">
+<SafetyDeviceDesc Crc="1841002654" FileFormatVersion="1.9">
   <AliasDeviceType>
     <Type>4</Type>
     <SubType>290</SubType>
@@ -12,12 +12,12 @@
     <ConnectionId>197</ConnectionId>
     <ConnectionMode>master</ConnectionMode>
     <ConnectionType>FSoE</ConnectionType>
-    <MapDiag>false</MapDiag>
+    <MapDiag>true</MapDiag>
     <MapInputs>false</MapInputs>
     <MapOutputs>false</MapOutputs>
-    <MapState>false</MapState>
+    <MapState>true</MapState>
     <ModuleFaultIsComErr>false</ModuleFaultIsComErr>
-    <SafeAddress>4</SafeAddress>
+    <SafeAddress>7</SafeAddress>
     <Watchdog>100</Watchdog>
     <ComErrAck Type="Unset" />
     <Params>

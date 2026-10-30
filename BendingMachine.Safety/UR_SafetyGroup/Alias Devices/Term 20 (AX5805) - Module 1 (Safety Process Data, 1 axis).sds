@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SafetyDeviceDesc Crc="3479103758" FileFormatVersion="1.9">
+<SafetyDeviceDesc Crc="3871937905" FileFormatVersion="1.9">
   <AliasDeviceType>
     <Type>4</Type>
     <SubType>66327</SubType>
@@ -17,7 +17,7 @@
     <MapOutputs>false</MapOutputs>
     <MapState>false</MapState>
     <ModuleFaultIsComErr>false</ModuleFaultIsComErr>
-    <SafeAddress>7</SafeAddress>
+    <SafeAddress>5</SafeAddress>
     <Watchdog>100</Watchdog>
     <ComErrAck Type="AliasDevice">
       <Value1>31</Value1>

@@ -78,14 +78,13 @@ CASE state OF
 				END_IF
 		END_CASE
 		
+		// Il timeout prevale anche se il feedback arriva nella stessa scansione.
 		IF fbTimerOnEnd THEN
 			fbTimerOnStart := FALSE;
 			SetOutput^ := FALSE;
 			ResetOutput^ := FALSE;
 			state := 200;
-		END_IF
-		
-		IF FeedBack^ THEN
+		ELSIF FeedBack^ THEN
 			fbTimerOnStart := FALSE;
 			//SetOutput^ := FALSE;
 			//ResetOutput^ := FALSE;

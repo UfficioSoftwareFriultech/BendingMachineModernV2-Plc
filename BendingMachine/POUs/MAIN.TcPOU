@@ -141,6 +141,9 @@ VAR
 	limitsWriting				: BOOL;		//limits writing in progress: the cycle does not start
 	limitsBusy					: BOOL;
 	limitsFailed				: BOOL;
+	limitsAxis					: UINT;		//last axis whose limits writing was started (0 = none yet)
+	limitsKickAxis				: UINT;		//axis that starts its limits writing in the next scan (0 = none)
+	calibrationBusy				: BOOL;		// calibrazione richiesta o in corso: impedisce l'avvio ciclo
 	mpgSelector					: UINT;		//handwheel selector position
 	mpgAxisSelected				: BOOL;
 	mpgValve					: UINT;
@@ -234,71 +237,98 @@ AxisFunctionBlocks();
 OutputMapping();
 HmiOutputs();]]></ST>
     </Implementation>
-    <Action Name="InputMapping" Id="{4ed82516-b0d4-4acf-94d6-404848c80446}">
+    <Action Name="AlarmManager" Id="{78c673f5-8519-496d-ad95-5618c1f7293e}">
       <Implementation>
-        <ST><![CDATA[//*******************************************************************************************************************
-// Override, eventi dei comandi HMI, morsa in uso
-//*******************************************************************************************************************
-axisOverride 		:= hmiOverride;
+        <ST><![CDATA[// Allarmi a livello (ricalcolati a ogni ciclo) e conteggi per torretta, spia start e interblocco.
+// Gli allarmi memorizzati si attivano con RaiseAlarm() e si azzerano col Reset (stato 800).
 
-IF ((USEL.NcToPlc.ActPos <= uselSafeOvPosition) AND USEL.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
-	IF hmiOverride > channel1SafeOverride THEN
-		channel1Override := channel1SafeOverride;
-	END_IF;
-ELSE
-	channel1Override := hmiOverride;
-END_IF		
+// Sicurezza
+Alarms.Active[E_Alarm.EmergencyStop]			:= NOT Safety.EmergenzaResettata;
+Alarms.Active[E_Alarm.DoorLeftOpen]				:= NOT IO.doorLeftClosed;
+Alarms.Active[E_Alarm.DoorRightOpen]			:= NOT IO.doorRightClosed;
+Alarms.Active[E_Alarm.LightCurtainNotReset]		:= NOT Safety.BarriereResettate;
+Alarms.Active[E_Alarm.SafetyMainGroupError]		:= Safety.FBErr OR Safety.ComErr OR Safety.OtherErr;
+Alarms.Active[E_Alarm.SafetyGroupLeftError]		:= Safety.USEL_ERL_FBErr OR Safety.USEL_ERL_ComErr OR Safety.USEL_ERL_OtherErr;
+Alarms.Active[E_Alarm.SafetyGroupRightError]	:= Safety.USER_ERR_FBErr OR Safety.USER_ERR_ComErr OR Safety.USER_ERR_OtherErr;
+Alarms.Active[E_Alarm.SafetyGroupUrError]		:= Safety.UR_FBErr OR Safety.UR_ComErr OR Safety.UR_OtherErr;
 
-IF ((USER.NcToPlc.ActPos <= userSafeOvPosition) AND USER.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
-	IF hmiOverride > channel2SafeOverride THEN
-		channel2Override := channel2SafeOverride;
+// Azionamenti: Info = codice errore NC dell'asse
+Alarms.Active[E_Alarm.DriveErl]		:= ERL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERLPresent;
+Alarms.Active[E_Alarm.DriveUsel]	:= USEL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USELPresent;
+Alarms.Active[E_Alarm.DriveUr2]		:= UR2.NcToPlc.ErrorCode <> 0 AND ur2InUse;
+Alarms.Active[E_Alarm.DriveErr]		:= ERR.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERRPresent;
+Alarms.Active[E_Alarm.DriveUser]	:= USER.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USERPresent;
+Alarms.Info[E_Alarm.DriveErl]		:= SEL(Alarms.Active[E_Alarm.DriveErl], 0, ERL.NcToPlc.ErrorCode);
+Alarms.Info[E_Alarm.DriveUsel]		:= SEL(Alarms.Active[E_Alarm.DriveUsel], 0, USEL.NcToPlc.ErrorCode);
+Alarms.Info[E_Alarm.DriveUr2]		:= SEL(Alarms.Active[E_Alarm.DriveUr2], 0, UR2.NcToPlc.ErrorCode);
+Alarms.Info[E_Alarm.DriveErr]		:= SEL(Alarms.Active[E_Alarm.DriveErr], 0, ERR.NcToPlc.ErrorCode);
+Alarms.Info[E_Alarm.DriveUser]		:= SEL(Alarms.Active[E_Alarm.DriveUser], 0, USER.NcToPlc.ErrorCode);
+
+// Quadro elettrico: ingressi TRUE = guasto (da verificare sullo schema alla messa in servizio)
+Alarms.Active[E_Alarm.FuseTripped]		:= NOT IO.fuseAlarm;
+Alarms.Active[E_Alarm.BreakerLeftAxis]	:= NOT IO.leftAxisMagnetTrip;
+Alarms.Active[E_Alarm.BreakerRightAxis]	:= NOT IO.rightAxisMagnetTrip;
+Alarms.Active[E_Alarm.BreakerUr2]		:= NOT IO.ur2MagnetTrip;
+Alarms.Active[E_Alarm.BreakerChiller]	:= NOT IO.chillerMagnetTrip;
+Alarms.Active[E_Alarm.AirPressureLow]	:= NOT IO.pressureSwMinPressure;
+
+// Avvisi
+Alarms.Active[E_Alarm.ChillerAlarm]				:= IO.chillerAlarm;
+Alarms.Active[E_Alarm.CabinetOverTemperature]	:= IO.cabinetThermostat;
+
+// Conteggi. Gli avvisi (start rifiutato 63-66, avvisi 90-99) non contano come bloccanti.
+Alarms.Count := 0;
+Alarms.CountBlocking := 0;
+FOR alarmIdx := 1 TO Size.MAX_ALARM DO
+	IF Alarms.Active[alarmIdx] THEN
+		Alarms.Count := Alarms.Count + 1;
+		IF NOT ((alarmIdx >= E_Alarm.StartDriveError AND alarmIdx <= E_Alarm.StartCabinetAlarm) OR (alarmIdx >= 90 AND alarmIdx <= 99)) THEN
+			Alarms.CountBlocking := Alarms.CountBlocking + 1;
+		END_IF
 	END_IF
-ELSE
-	channel2Override := hmiOverride;
-END_IF		
+END_FOR
 
-IF (USER.NcToPlc.ActPos <= userSafeOvPosition AND USER.Status.NegativeDirection) OR (USEL.NcToPlc.ActPos <= uselSafeOvPosition AND USEL.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
-	IF hmiOverride > channel2SafeOverride	THEN
-		channel3Override := channel2SafeOverride;
-	END_IF
-ELSE
-	channel3Override := hmiOverride;
-END_IF	
+Alarms.StartBlockedByCabinet := Alarms.Active[E_Alarm.FuseTripped] OR Alarms.Active[E_Alarm.BreakerLeftAxis]
+	OR Alarms.Active[E_Alarm.BreakerRightAxis] OR Alarms.Active[E_Alarm.BreakerUr2]
+	OR Alarms.Active[E_Alarm.BreakerChiller] OR Alarms.Active[E_Alarm.AirPressureLow];
+
+// Allarmi "non calibrato" per asse: disabilitati (lo erano anche con la vecchia lista messaggi).]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="AxisFunctionBlocks" Id="{5de9ac5e-9757-4abd-a6cb-e37792873356}">
+      <Implementation>
+        <ST><![CDATA[// Esegue FB assi, NCI, macro, timer e letture parametri.
 
 
-safeOverride := (USEL.NcToPlc.ActPos <= userSafeOvPosition AND USEL.Status.NegativeDirection) OR (USER.NcToPlc.ActPos <= userSafeOvPosition AND USER.Status.NegativeDirection);
+// Assi: potenza, jog, reset, calibrazione, limiti nei moduli FB_AxisModule.
+AxisModules();
 
-IF hmiConnected THEN
-	parametersRx := Machine.parametersRx;
-END_IF
+ItpSetOverridePercent(fOverridePercent:=channel1Override, sPlcToNci:=out_stPlcToNci[0]);
+ItpSetOverridePercent(fOverridePercent:=channel2Override, sPlcToNci:=out_stPlcToNci[1]);
+ItpSetOverridePercent(fOverridePercent:=channel3Override, sPlcToNci:=out_stPlcToNci[2]);
 
-fbSelectorOnTrigger(CLK := Safety.ModoManuale, Q=> manualModeTrigger);
-fbBimanualOpenClampTrigger(CLK := IO.bimanualOpenClamp, Q => bimanualOpenClampTriggerOut);
+// SetMacro/WaitMacro delle funzioni M: dentro fbMFunc (MacroManager).
+// Gruppi e tabelle NC delle sequenze: dentro fbSeq (StateMachine).
 
-// Comandi dell'HMI (Hmi.Cmd): valgono un ciclo, come i fronti di prima.
-startTriggerOut := hmiStartCmd;
-writeParametersEvent := hmiWriteParamsCmd;
 
-//*******************************************************************************************************************
-// Nuovo programma dall'HMI (comando ProgramLoaded)
-//*******************************************************************************************************************
-newProgramTrigger := hmiProgramLoadedCmd;
 
-//*******************************************************************************************************************
-// Morsa per programma (ProgramDB.parameters.normalClamp)
-//*******************************************************************************************************************
-// Con la morsa normale il motore UR2 e' staccato: il programma usa l'asse simulato UR_SIM e
-// non si controllano azionamento, allarme ed encoder dell'UR2. Il finecorsa minimo delle USE
-// cambia (urUSE*MinPosition / ur2USE*MinPosition): quando la morsa cambia si riscrivono i limiti
-// assi; la partenza ciclo aspetta la fine della scrittura (stato 0).
-// UR2Present arriva solo con i parametri dell'HMI, quindi i limiti da riscrivere sono validi.
-ur2InUse := Machine.parametersRx.UR2Present AND NOT ProgramDB.parameters.normalClamp;
-IF writeParametersEvent THEN
-	ur2InUsePrev := ur2InUse;
-ELSIF ur2InUse <> ur2InUsePrev AND NOT limitsWriting THEN
-	ur2InUsePrev := ur2InUse;
-	limitsRequest := TRUE;
-END_IF]]></ST>
+
+
+
+
+
+
+
+
+udiItpState[0] := ItpGetStateInterpreter(in_stNciToPlc[0]);
+udiItpState[1] := ItpGetStateInterpreter(in_stNciToPlc[1]);
+udiItpState[2] := ItpGetStateInterpreter(in_stNciToPlc[2]);
+
+
+fbCloseClampAfterCentering();
+ssrActivationDelay();
+ssr2ActivationDelay();
+waitForMove();]]></ST>
       </Implementation>
     </Action>
     <Action Name="AxisModules" Id="{e0667f2a-5d95-4e4c-bbe1-4342f33d8138}">
@@ -330,10 +360,12 @@ FOR i := 1 TO Mach.MAX_AXIS_CFG DO
 		aAxisMod[i].bResetExecute		:= resetAxesCmd AND axisInUse[i];
 		// Jog dal volantino: solo in manuale e con il ciclo fermo, l'asse scelto dal selettore.
 		jogSelected := manualMode AND state = E_CycleState.Idle AND axisInUse[i]
+			AND NOT calibStart[i] AND aAxisMod[i].nCalibrationStep = 0
 			AND Mach.aAxisCfg[i].nMpgSelector <> 0 AND Mach.aAxisCfg[i].nMpgSelector = mpgSelector
 			AND stMpgEncoder.diSafetySwitch;
 		// Jog dall'HMI (stesse condizioni; i motori in manuale li tiene accesi il consenso del volantino).
-		jogHmi := hmiConnected AND manualMode AND state = E_CycleState.Idle AND axisInUse[i] AND Hmi.Live.nJogAxis = i;
+		jogHmi := hmiConnected AND manualMode AND state = E_CycleState.Idle AND axisInUse[i] AND Hmi.Live.nJogAxis = i
+			AND NOT calibStart[i] AND aAxisMod[i].nCalibrationStep = 0;
 		aAxisMod[i].bJogForward			:= (jogSelected AND stMpgEncoder.eDirection = MC_Direction.MC_Positive_Direction)
 			OR (jogHmi AND Hmi.Live.nJogDirection > 0);
 		aAxisMod[i].bJogBackward		:= (jogSelected AND stMpgEncoder.eDirection = MC_Direction.MC_Negative_Direction)
@@ -345,7 +377,7 @@ FOR i := 1 TO Mach.MAX_AXIS_CFG DO
 		aAxisMod[i].bCalibrationStart	:= calibStart[i];
 		aAxisMod[i].bUseCalibrationPos	:= calibUsePos[i];
 		aAxisMod[i].fCalibrationPos		:= calibPos[i];
-		aAxisMod[i].bWriteLimits		:= limitsStart;
+		aAxisMod[i].bWriteLimits		:= (i = limitsKickAxis);	// un asse alla volta (vedi fine AxisModules)
 		// Limiti di un asse aggiunto dai parametri HMI; per gli assi storici li sovrascrive il blocco sotto.
 		aAxisMod[i].fUpperLimit			:= Hmi.Param.aAxis[i].fUpperLimit;
 		aAxisMod[i].fLowerLimit			:= Hmi.Param.aAxis[i].fLowerLimit;
@@ -385,7 +417,6 @@ aAxisMod[Mach.AX_ERR].fUpperLimit	:= parametersRx.ErRUpperLimit;
 aAxisMod[Mach.AX_ERR].fLowerLimit	:= parametersRx.ErRLowerLimit;
 aAxisMod[Mach.AX_USER].fUpperLimit	:= parametersRx.UseRUpperLimit;
 aAxisMod[Mach.AX_USER].fLowerLimit	:= MAX(parametersRx.UseRLowerLimit, SEL(ur2InUse, urUSERMinPosition, ur2USERMinPosition));
-aAxisMod[Mach.AX_UR_SIM].bWriteLimits	:= FALSE;		// asse simulato: nessun limite da scrivere
 
 // Chiamate (un asse NC per modulo)
 aAxisMod[Mach.AX_USEL](stAxis := USEL);
@@ -430,10 +461,97 @@ FOR i := 1 TO Mach.MAX_AXIS_CFG DO
 	END_IF
 END_FOR
 
-// Fine della scrittura dei limiti: l'HMI aspetta Hmi.Sts.bWriteParametersDone FALSE -> TRUE (resta FALSE se un asse fallisce).
-IF limitsWriting AND NOT limitsStart AND NOT limitsBusy THEN
-	limitsWriting := FALSE;
-	writeParametersDone := NOT limitsFailed;
+// Scrittura dei limiti un asse alla volta, come il vecchio ParameterWriteManager (MC_WriteParameter, non
+// persistente: vedi FB_AxisModule). Un asse che fallisce non ferma i successivi.
+// Fine: l'HMI aspetta Hmi.Sts.bWriteParametersDone FALSE -> TRUE (resta FALSE se un asse fallisce).
+limitsKickAxis := 0;
+IF limitsWriting AND NOT limitsBusy THEN
+	FOR i := limitsAxis + 1 TO Mach.MAX_AXIS_CFG DO
+		// asse simulato: nessun limite da scrivere
+		IF limitsKickAxis = 0 AND Mach.aAxisCfg[i].bDefined AND i <> Mach.AX_UR_SIM THEN
+			limitsKickAxis := i;
+		END_IF
+	END_FOR
+	IF limitsKickAxis <> 0 THEN
+		limitsAxis := limitsKickAxis;
+	ELSE
+		limitsWriting := FALSE;
+		writeParametersDone := NOT limitsFailed;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="DiagUpdate" Id="{ceb0c45a-ee5f-4039-a4c6-45a6e949ec07}">
+      <Implementation>
+        <ST><![CDATA[// Stato dei canali e storico dei cambi di passo nella GVL Diag (letta dall'HMI in un blocco).
+FOR i := 0 TO 2 DO
+	IF state = E_CycleState.HomingRun OR state = E_CycleState.HomingPrepare THEN
+		Diag.Data.aChannel[i].bUsed := ProgramDB.homing.task[i].active;
+	ELSE
+		Diag.Data.aChannel[i].bUsed := ProgramDB.sequence[seqIdx].task[i].active;
+	END_IF
+	Diag.Data.aChannel[i].bDone := channelDone[i];
+	Diag.Data.aChannel[i].bMWaiting := in_stNciToPlc[i].HskMFuncReq = 1 AND out_stPlcToNci[i].MFuncGranted = 0;
+	IF in_stNciToPlc[i].HskMFuncReq = 1 THEN
+		Diag.Data.aChannel[i].nMFunc := in_stNciToPlc[i].HskMFuncNo;
+	ELSE
+		Diag.Data.aChannel[i].nMFunc := 0;
+	END_IF
+	fbMFuncWait[i](IN := Diag.Data.aChannel[i].bMWaiting, PT := T#24H);
+	Diag.Data.aChannel[i].tMWait := fbMFuncWait[i].ET;
+	Diag.Data.aChannel[i].nItpState := udiItpState[i];
+END_FOR
+Diag.Data.aChannel[0].nLineNo := lineNo1;
+Diag.Data.aChannel[1].nLineNo := lineNo2;
+Diag.Data.aChannel[2].nLineNo := lineNo3;
+
+// Sequenze attive: si ricontano solo quando arriva un programma nuovo (e al primo giro).
+IF newProgramTrigger OR NOT diagSeqCounted THEN
+	diagSeqCounted := TRUE;
+	diagSeqIdx := 0;
+	WHILE diagSeqIdx < Size.MAX_SEQUENCE AND_THEN ProgramDB.sequence[diagSeqIdx].active DO
+		diagSeqIdx := diagSeqIdx + 1;
+	END_WHILE
+	Diag.Data.nSeqCount := diagSeqIdx;
+END_IF
+
+Diag.Data.eCycleEndReason := cycleEndReason;
+IF state = E_CycleState.Centering THEN
+	Diag.Data.nSubStep := fbCentering.nStep;
+ELSE
+	Diag.Data.nSubStep := fbSeq.eStep;
+END_IF
+
+fbDiagLog(
+	nState		:= state,
+	nSeqIdx		:= seqIdx,
+	nAbortState	:= E_CycleState.Abort,
+	nAlarmCount	:= Alarms.RaisedCount,
+	nAlarmId	:= Alarms.LastRaisedId,
+	nAlarmInfo	:= Alarms.LastRaisedInfo,
+	stDiag		:= Diag.Data);]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="DriveStatusManager" Id="{30c9ab80-e855-4aaf-a022-ed677fd9b8db}">
+      <Implementation>
+        <ST><![CDATA[// Calcola stato drive e consenso motori per HMI.
+allDrivesEnabled := (bMotorsOnStatus[0] OR NOT Machine.parametersRx.USELPresent) AND 
+					(bMotorsOnStatus[1] OR NOT Machine.parametersRx.ERLPresent) AND 
+					(bMotorsOnStatus[2] OR NOT ur2InUse) AND 
+					(bMotorsOnStatus[3] OR NOT Machine.parametersRx.USERPresent) AND
+					(bMotorsOnStatus[4] OR NOT Machine.parametersRx.ERRPresent);
+					
+drivesError := (USEL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USELPresent) OR
+			   (ERL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERLPresent) OR
+			   (USER.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USERPresent) OR
+			   (ERR.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERRPresent) OR
+			   (UR2.NcToPlc.ErrorCode <> 0 AND ur2InUse);
+
+//fbMotorsOffTrigger(CLK := allDrivesEnabled, Q => motorsOffTrigger);
+fbSelectorOffTrigger(CLK := Safety.ModoAuto1Op, Q=> autoModeTrigger);
+
+IF drivesError OR  motorsOffTrigger THEN
+	motorsOn := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -513,6 +631,9 @@ IF fbHmiCmd.bNew THEN
 				fbHmiCmd.Ack(E_HmiResult.InvalidArgument);
 			ELSIF NOT Mach.aAxisCfg[Hmi.Cmd.nAxis].bDefined OR Mach.aAxisCfg[Hmi.Cmd.nAxis].nCalibrationAlarmId = 0 THEN
 				fbHmiCmd.Ack(E_HmiResult.InvalidArgument);		// asse senza calibrazione (es. UR_SIM)
+			ELSIF NOT manualMode OR NOT Safety.ModoManuale OR state <> E_CycleState.Idle
+				OR limitsWriting OR limitsRequest OR limitsStart OR aAxisMod[Hmi.Cmd.nAxis].bLimitsBusy THEN
+				fbHmiCmd.Ack(E_HmiResult.Rejected);		// solo da fermo in manuale, senza scritture limiti
 			ELSIF aAxisMod[Hmi.Cmd.nAxis].nCalibrationStep <> 0 THEN
 				fbHmiCmd.Ack(E_HmiResult.Rejected);				// calibrazione gia' in corso
 			ELSE
@@ -641,116 +762,6 @@ Hmi.Sts.aAlarmActive		:= Alarms.Active;
 Hmi.Sts.aAlarmInfo			:= Alarms.Info;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="AxisFunctionBlocks" Id="{5de9ac5e-9757-4abd-a6cb-e37792873356}">
-      <Implementation>
-        <ST><![CDATA[// Esegue FB assi, NCI, macro, timer e letture parametri.
-
-
-// Assi: potenza, jog, reset, calibrazione, limiti nei moduli FB_AxisModule.
-AxisModules();
-
-ItpSetOverridePercent(fOverridePercent:=channel1Override, sPlcToNci:=out_stPlcToNci[0]);
-ItpSetOverridePercent(fOverridePercent:=channel2Override, sPlcToNci:=out_stPlcToNci[1]);
-ItpSetOverridePercent(fOverridePercent:=channel3Override, sPlcToNci:=out_stPlcToNci[2]);
-
-// SetMacro/WaitMacro delle funzioni M: dentro fbMFunc (MacroManager).
-// Gruppi e tabelle NC delle sequenze: dentro fbSeq (StateMachine).
-
-
-
-
-
-
-
-
-
-
-
-udiItpState[0] := ItpGetStateInterpreter(in_stNciToPlc[0]);
-udiItpState[1] := ItpGetStateInterpreter(in_stNciToPlc[1]);
-udiItpState[2] := ItpGetStateInterpreter(in_stNciToPlc[2]);
-
-
-fbCloseClampAfterCentering();
-ssrActivationDelay();
-ssr2ActivationDelay();
-waitForMove();]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="DiagUpdate" Id="{ceb0c45a-ee5f-4039-a4c6-45a6e949ec07}">
-      <Implementation>
-        <ST><![CDATA[// Stato dei canali e storico dei cambi di passo nella GVL Diag (letta dall'HMI in un blocco).
-FOR i := 0 TO 2 DO
-	IF state = E_CycleState.HomingRun OR state = E_CycleState.HomingPrepare THEN
-		Diag.Data.aChannel[i].bUsed := ProgramDB.homing.task[i].active;
-	ELSE
-		Diag.Data.aChannel[i].bUsed := ProgramDB.sequence[seqIdx].task[i].active;
-	END_IF
-	Diag.Data.aChannel[i].bDone := channelDone[i];
-	Diag.Data.aChannel[i].bMWaiting := in_stNciToPlc[i].HskMFuncReq = 1 AND out_stPlcToNci[i].MFuncGranted = 0;
-	IF in_stNciToPlc[i].HskMFuncReq = 1 THEN
-		Diag.Data.aChannel[i].nMFunc := in_stNciToPlc[i].HskMFuncNo;
-	ELSE
-		Diag.Data.aChannel[i].nMFunc := 0;
-	END_IF
-	fbMFuncWait[i](IN := Diag.Data.aChannel[i].bMWaiting, PT := T#24H);
-	Diag.Data.aChannel[i].tMWait := fbMFuncWait[i].ET;
-	Diag.Data.aChannel[i].nItpState := udiItpState[i];
-END_FOR
-Diag.Data.aChannel[0].nLineNo := lineNo1;
-Diag.Data.aChannel[1].nLineNo := lineNo2;
-Diag.Data.aChannel[2].nLineNo := lineNo3;
-
-// Sequenze attive: si ricontano solo quando arriva un programma nuovo (e al primo giro).
-IF newProgramTrigger OR NOT diagSeqCounted THEN
-	diagSeqCounted := TRUE;
-	diagSeqIdx := 0;
-	WHILE diagSeqIdx < Size.MAX_SEQUENCE AND_THEN ProgramDB.sequence[diagSeqIdx].active DO
-		diagSeqIdx := diagSeqIdx + 1;
-	END_WHILE
-	Diag.Data.nSeqCount := diagSeqIdx;
-END_IF
-
-Diag.Data.eCycleEndReason := cycleEndReason;
-IF state = E_CycleState.Centering THEN
-	Diag.Data.nSubStep := fbCentering.nStep;
-ELSE
-	Diag.Data.nSubStep := fbSeq.eStep;
-END_IF
-
-fbDiagLog(
-	nState		:= state,
-	nSeqIdx		:= seqIdx,
-	nAbortState	:= E_CycleState.Abort,
-	nAlarmCount	:= Alarms.RaisedCount,
-	nAlarmId	:= Alarms.LastRaisedId,
-	nAlarmInfo	:= Alarms.LastRaisedInfo,
-	stDiag		:= Diag.Data);]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="DriveStatusManager" Id="{30c9ab80-e855-4aaf-a022-ed677fd9b8db}">
-      <Implementation>
-        <ST><![CDATA[// Calcola stato drive e consenso motori per HMI.
-allDrivesEnabled := (bMotorsOnStatus[0] OR NOT Machine.parametersRx.USELPresent) AND 
-					(bMotorsOnStatus[1] OR NOT Machine.parametersRx.ERLPresent) AND 
-					(bMotorsOnStatus[2] OR NOT ur2InUse) AND 
-					(bMotorsOnStatus[3] OR NOT Machine.parametersRx.USERPresent) AND
-					(bMotorsOnStatus[4] OR NOT Machine.parametersRx.ERRPresent);
-					
-drivesError := (USEL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USELPresent) OR
-			   (ERL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERLPresent) OR
-			   (USER.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USERPresent) OR
-			   (ERR.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERRPresent) OR
-			   (UR2.NcToPlc.ErrorCode <> 0 AND ur2InUse);
-
-//fbMotorsOffTrigger(CLK := allDrivesEnabled, Q => motorsOffTrigger);
-fbSelectorOffTrigger(CLK := Safety.ModoAuto1Op, Q=> autoModeTrigger);
-
-IF drivesError OR  motorsOffTrigger THEN
-	motorsOn := FALSE;
-END_IF]]></ST>
-      </Implementation>
-    </Action>
     <Action Name="InitCyclic" Id="{e57555b8-783c-4398-b762-c1120c0e41c6}">
       <Implementation>
         <ST><![CDATA[(*initialize data cyclic (every scan)*)
@@ -819,6 +830,73 @@ safeOverride								:= FALSE;]]></ST>
     <Action Name="InitOnce" Id="{56578e09-a35b-4c34-a591-316b77a6f081}">
       <Implementation>
         <ST><![CDATA[firstScan := FALSE;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="InputMapping" Id="{4ed82516-b0d4-4acf-94d6-404848c80446}">
+      <Implementation>
+        <ST><![CDATA[//*******************************************************************************************************************
+// Override, eventi dei comandi HMI, morsa in uso
+//*******************************************************************************************************************
+axisOverride 		:= hmiOverride;
+
+IF ((USEL.NcToPlc.ActPos <= uselSafeOvPosition) AND USEL.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
+	IF hmiOverride > channel1SafeOverride THEN
+		channel1Override := channel1SafeOverride;
+	END_IF;
+ELSE
+	channel1Override := hmiOverride;
+END_IF		
+
+IF ((USER.NcToPlc.ActPos <= userSafeOvPosition) AND USER.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
+	IF hmiOverride > channel2SafeOverride THEN
+		channel2Override := channel2SafeOverride;
+	END_IF
+ELSE
+	channel2Override := hmiOverride;
+END_IF		
+
+IF (USER.NcToPlc.ActPos <= userSafeOvPosition AND USER.Status.NegativeDirection) OR (USEL.NcToPlc.ActPos <= uselSafeOvPosition AND USEL.Status.NegativeDirection) OR safety.ModoSemiAuto OR Safety.ModoManuale THEN
+	IF hmiOverride > channel2SafeOverride	THEN
+		channel3Override := channel2SafeOverride;
+	END_IF
+ELSE
+	channel3Override := hmiOverride;
+END_IF	
+
+
+safeOverride := (USEL.NcToPlc.ActPos <= userSafeOvPosition AND USEL.Status.NegativeDirection) OR (USER.NcToPlc.ActPos <= userSafeOvPosition AND USER.Status.NegativeDirection);
+
+IF hmiConnected THEN
+	parametersRx := Machine.parametersRx;
+END_IF
+
+fbSelectorOnTrigger(CLK := Safety.ModoManuale, Q=> manualModeTrigger);
+fbBimanualOpenClampTrigger(CLK := IO.bimanualOpenClamp, Q => bimanualOpenClampTriggerOut);
+
+// Comandi dell'HMI (Hmi.Cmd): valgono un ciclo, come i fronti di prima.
+startTriggerOut := hmiStartCmd;
+writeParametersEvent := hmiWriteParamsCmd;
+
+//*******************************************************************************************************************
+// Nuovo programma dall'HMI (comando ProgramLoaded)
+//*******************************************************************************************************************
+newProgramTrigger := hmiProgramLoadedCmd;
+
+//*******************************************************************************************************************
+// Morsa per programma (ProgramDB.parameters.normalClamp)
+//*******************************************************************************************************************
+// Con la morsa normale il motore UR2 e' staccato: il programma usa l'asse simulato UR_SIM e
+// non si controllano azionamento, allarme ed encoder dell'UR2. Il finecorsa minimo delle USE
+// cambia (urUSE*MinPosition / ur2USE*MinPosition): quando la morsa cambia si riscrivono i limiti
+// assi; la partenza ciclo aspetta la fine della scrittura (stato 0).
+// UR2Present arriva solo con i parametri dell'HMI, quindi i limiti da riscrivere sono validi.
+ur2InUse := Machine.parametersRx.UR2Present AND NOT ProgramDB.parameters.normalClamp;
+IF writeParametersEvent THEN
+	ur2InUsePrev := ur2InUse;
+ELSIF ur2InUse <> ur2InUsePrev AND NOT limitsWriting THEN
+	ur2InUsePrev := ur2InUse;
+	limitsRequest := TRUE;
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="MacroManager" Id="{de134e27-c6f4-4da5-8142-d18bcd029679}">
@@ -984,13 +1062,23 @@ IF state = E_CycleState.Idle THEN
 	END_IF
 ELSE
 	IF state = E_CycleState.SeqRun THEN
-		channel1Override	:= LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel1SafeOverride);
-		channel2Override	:= LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel2SafeOverride);
-		channel3Override	:= LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel3SafeOverride);
+		IF stMpgEncoder.uiSpeedDivider > 0 THEN
+			channel1Override := LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel1SafeOverride);
+			channel2Override := LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel2SafeOverride);
+			channel3Override := LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel3SafeOverride);
+		ELSE
+			channel1Override := 0;
+			channel2Override := 0;
+			channel3Override := 0;
+		END_IF
 	END_IF
 	
 	IF state = E_CycleState.Centering THEN
-		axisOverride := LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel1SafeOverride);
+		IF stMpgEncoder.uiSpeedDivider > 0 THEN
+			axisOverride := LIMIT(0,stMpgEncoder.uiOverrideSpeed/stMpgEncoder.uiSpeedDivider,channel1SafeOverride);
+		ELSE
+			axisOverride := 0;
+		END_IF
 	END_IF
 END_IF
 
@@ -998,64 +1086,6 @@ END_IF
 
 // Calibrazioni degli assi: in FB_AxisModule (action AxisModules).
 ]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="AlarmManager" Id="{78c673f5-8519-496d-ad95-5618c1f7293e}">
-      <Implementation>
-        <ST><![CDATA[// Allarmi a livello (ricalcolati a ogni ciclo) e conteggi per torretta, spia start e interblocco.
-// Gli allarmi memorizzati si attivano con RaiseAlarm() e si azzerano col Reset (stato 800).
-
-// Sicurezza
-Alarms.Active[E_Alarm.EmergencyStop]			:= NOT Safety.EmergenzaResettata;
-Alarms.Active[E_Alarm.DoorLeftOpen]				:= NOT IO.doorLeftClosed;
-Alarms.Active[E_Alarm.DoorRightOpen]			:= NOT IO.doorRightClosed;
-Alarms.Active[E_Alarm.LightCurtainNotReset]		:= NOT Safety.BarriereResettate;
-Alarms.Active[E_Alarm.SafetyMainGroupError]		:= Safety.FBErr OR Safety.ComErr OR Safety.OtherErr;
-Alarms.Active[E_Alarm.SafetyGroupLeftError]		:= Safety.USEL_ERL_FBErr OR Safety.USEL_ERL_ComErr OR Safety.USEL_ERL_OtherErr;
-Alarms.Active[E_Alarm.SafetyGroupRightError]	:= Safety.USER_ERR_FBErr OR Safety.USER_ERR_ComErr OR Safety.USER_ERR_OtherErr;
-Alarms.Active[E_Alarm.SafetyGroupUrError]		:= Safety.UR_FBErr OR Safety.UR_ComErr OR Safety.UR_OtherErr;
-
-// Azionamenti: Info = codice errore NC dell'asse
-Alarms.Active[E_Alarm.DriveErl]		:= ERL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERLPresent;
-Alarms.Active[E_Alarm.DriveUsel]	:= USEL.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USELPresent;
-Alarms.Active[E_Alarm.DriveUr2]		:= UR2.NcToPlc.ErrorCode <> 0 AND ur2InUse;
-Alarms.Active[E_Alarm.DriveErr]		:= ERR.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.ERRPresent;
-Alarms.Active[E_Alarm.DriveUser]	:= USER.NcToPlc.ErrorCode <> 0 AND Machine.parametersRx.USERPresent;
-Alarms.Info[E_Alarm.DriveErl]		:= SEL(Alarms.Active[E_Alarm.DriveErl], 0, ERL.NcToPlc.ErrorCode);
-Alarms.Info[E_Alarm.DriveUsel]		:= SEL(Alarms.Active[E_Alarm.DriveUsel], 0, USEL.NcToPlc.ErrorCode);
-Alarms.Info[E_Alarm.DriveUr2]		:= SEL(Alarms.Active[E_Alarm.DriveUr2], 0, UR2.NcToPlc.ErrorCode);
-Alarms.Info[E_Alarm.DriveErr]		:= SEL(Alarms.Active[E_Alarm.DriveErr], 0, ERR.NcToPlc.ErrorCode);
-Alarms.Info[E_Alarm.DriveUser]		:= SEL(Alarms.Active[E_Alarm.DriveUser], 0, USER.NcToPlc.ErrorCode);
-
-// Quadro elettrico: ingressi TRUE = guasto (da verificare sullo schema alla messa in servizio)
-Alarms.Active[E_Alarm.FuseTripped]		:= IO.fuseAlarm;
-Alarms.Active[E_Alarm.BreakerLeftAxis]	:= IO.leftAxisMagnetTrip;
-Alarms.Active[E_Alarm.BreakerRightAxis]	:= IO.rightAxisMagnetTrip;
-Alarms.Active[E_Alarm.BreakerUr2]		:= IO.ur2MagnetTrip;
-Alarms.Active[E_Alarm.BreakerChiller]	:= IO.chillerMagnetTrip;
-Alarms.Active[E_Alarm.AirPressureLow]	:= IO.pressureSwMinPressure;
-
-// Avvisi
-Alarms.Active[E_Alarm.ChillerAlarm]				:= IO.chillerAlarm;
-Alarms.Active[E_Alarm.CabinetOverTemperature]	:= IO.cabinetThermostat;
-
-// Conteggi. Gli avvisi (start rifiutato 63-66, avvisi 90-99) non contano come bloccanti.
-Alarms.Count := 0;
-Alarms.CountBlocking := 0;
-FOR alarmIdx := 1 TO Size.MAX_ALARM DO
-	IF Alarms.Active[alarmIdx] THEN
-		Alarms.Count := Alarms.Count + 1;
-		IF NOT ((alarmIdx >= E_Alarm.StartDriveError AND alarmIdx <= E_Alarm.StartCabinetAlarm) OR (alarmIdx >= 90 AND alarmIdx <= 99)) THEN
-			Alarms.CountBlocking := Alarms.CountBlocking + 1;
-		END_IF
-	END_IF
-END_FOR
-
-Alarms.StartBlockedByCabinet := Alarms.Active[E_Alarm.FuseTripped] OR Alarms.Active[E_Alarm.BreakerLeftAxis]
-	OR Alarms.Active[E_Alarm.BreakerRightAxis] OR Alarms.Active[E_Alarm.BreakerUr2]
-	OR Alarms.Active[E_Alarm.BreakerChiller] OR Alarms.Active[E_Alarm.AirPressureLow];
-
-// Allarmi "non calibrato" per asse: disabilitati (lo erano anche con la vecchia lista messaggi).]]></ST>
       </Implementation>
     </Action>
     <Action Name="MotorStatusManager" Id="{36e946b0-e202-4c4f-9ed8-295a4e79d5b3}">
@@ -1176,8 +1206,8 @@ END_IF]]></ST>
     <Action Name="ParameterWriteManager" Id="{56f6c64f-8ba6-4718-bffd-22c355c49067}">
       <Implementation>
         <ST><![CDATA[// Scrittura dei limiti software degli assi: su comando dell'HMI (WriteParameters) o quando cambia la morsa
-// (limitsRequest, InputMapping). Ogni FB_AxisModule scrive massimo e minimo del suo asse; la fine la valuta
-// AxisModules. Mentre si scrive la partenza ciclo aspetta (passo 0).
+// (limitsRequest, InputMapping). Ogni FB_AxisModule scrive massimo e minimo del suo asse; AxisModules
+// li avvia un asse alla volta e valuta la fine. Mentre si scrive la partenza ciclo aspetta (passo 0).
 limitsStart := writeParametersEvent OR limitsRequest;
 limitsRequest := FALSE;
 
@@ -1186,6 +1216,7 @@ IF limitsStart THEN
 	writeParametersDone := FALSE;
 	limitsWriting := TRUE;
 	limitsFailed := FALSE;
+	limitsAxis := 0;		// si riparte dal primo asse (AxisModules)
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -1270,6 +1301,15 @@ ELSIF autoMode THEN
 END_IF
 
 //*******************************************************************************************************************
+// Blocca lo start anche se calibrazione e pulsante Start arrivano nella stessa scansione.
+// I comandi calibStart sono gia' acquisiti da HmiInputs; gli esiti dei moduli sono del ciclo precedente.
+//*******************************************************************************************************************
+calibrationBusy := FALSE;
+FOR i := 1 TO Mach.MAX_AXIS_CFG DO
+	calibrationBusy := calibrationBusy OR calibStart[i] OR aAxisMod[i].nCalibrationStep <> 0;
+END_FOR
+
+//*******************************************************************************************************************
 // Gruppi e tabelle NC della sequenza (Core: FB_SequenceRunner)
 //*******************************************************************************************************************
 // Il comando viene dal passo del ciclo; il runner gira prima del CASE, cosi' i passi leggono il suo esito
@@ -1338,7 +1378,7 @@ CASE state OF
 	(*********************** IDLE **********************)
 	E_CycleState.Idle:	
 		// Con una scrittura limiti assi in corso (es. cambio morsa) la partenza aspetta.
-		IF startCondition AND NOT limitsWriting THEN
+		IF startCondition AND NOT limitsWriting AND NOT calibrationBusy THEN
 			state := E_CycleState.StartChecks;
 		END_IF
 		
@@ -2023,7 +2063,8 @@ END_IF
 // State Machine Info
 //*******************************************************************************************************************
 programIdle := state = E_CycleState.Idle;
-programCanExecute := NOT drivesError AND allDrivesEnabled AND ProgramDB.sequence[0].active AND autoMode;
+programCanExecute := NOT drivesError AND allDrivesEnabled AND ProgramDB.sequence[0].active AND autoMode
+	AND NOT calibrationBusy;
 programAborted := state >= E_CycleState.Abort AND state <= E_CycleState.WaitReset;
 programStopped := state >= E_CycleState.Stop AND state <= E_CycleState.ResumeResetWait;
 programRunning := state <> E_CycleState.Idle AND state < E_CycleState.Abort;
